@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "345104756367",
+    "firebase_url": "https://reimbursements-b84cd.firebaseio.com",
+    "project_id": "reimbursements-b84cd",
+    "storage_bucket": "reimbursements-b84cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345104756367:android:5c49b31f58bd34ca410afa",
+        "android_client_info": {
+          "package_name": "com.calebmaccarone.reimbursement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345104756367-ho032v0abm9cn8va1cr95lsi5sgvjqtr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhCwlAK05gGojWmoybsKqFDfper5ainns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345104756367-ho032v0abm9cn8va1cr95lsi5sgvjqtr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "345104756367-0lmu85819cjits6m85cipmc7esqbqfq5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.calebmaccarone.reimbursement"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
