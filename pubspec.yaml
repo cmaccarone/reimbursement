@@ -26,8 +26,8 @@ dependencies:
   cloud_firestore: ^0.12.9+6
   firebase_auth: ^0.14.0+5
   provider:
+  camera: ^0.5.2+1
   grouped_buttons: ^1.0.4
-  camera:
   path_provider: ^1.4.0
   path: ^1.6.4
 

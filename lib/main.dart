@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             Routes.mainTabBar : (context) => MainTabBar(),
             Routes.approveReimbursement : (context) => ApproveScreen(),
             Routes.profileScreen : (context) => ProfileScreen(),
-            Routes.camera : (context) => TakePictureScreen()
+            Routes.camera : (context) => CameraScreen()
           },
           theme: ThemeData(
             primarySwatch: Colors.blue,

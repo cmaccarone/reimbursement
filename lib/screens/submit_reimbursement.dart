@@ -1,3 +1,4 @@
+import 'package:camera/new/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:camera/camera.dart';
 import 'package:reimbursement/routes.dart';
 import 'package:reimbursement/screens/camera_view.dart';
 import 'camera_view.dart';
+import 'package:reimbursement/routes.dart';
 
 
 class SubmitReimbursementScreen extends StatelessWidget {
@@ -41,14 +43,14 @@ class SubmitReimbursementScreen extends StatelessWidget {
 
                         children: <Widget>[
                           CircleAvatar(backgroundColor:Colors.green,
-                            child: Icon(Icons.check,),
+                            child: Icon(Icons.check,color: Colors.white,),
                           ),
                           SizedBox(width: 10,),
-                          CircleAvatar(
-                            child: Icon(Icons.airplanemode_active),
+                          CircleAvatar(backgroundColor: Colors.blue,
+                            child: Icon(Icons.airplanemode_active,color: Colors.white,),
                           ),
                           SizedBox(width: 10,),
-                          CircleAvatar(child: Icon(Icons.school),),
+                          CircleAvatar(child: Icon(Icons.school,color: Colors.white,),backgroundColor: Colors.blue,),
                           SizedBox(width: 10,),
 
 
@@ -62,11 +64,8 @@ class SubmitReimbursementScreen extends StatelessWidget {
               ),
               Text('Select Category',style: kTitleStyle,),
               FlatButton(child: CircleAvatar(child: Icon(Icons.photo_camera)),onPressed: () async {
-                final cameras = await availableCameras();
-                print(cameras);
-                final firstCamera = cameras.first;
-                Navigator.push(context, MaterialPageRoute(builder:(context) => TakePictureScreen(camera: firstCamera) ));
-
+              //todo go to camera screen
+                Navigator.pushNamed(context, Routes.camera);
               },)
 
 
