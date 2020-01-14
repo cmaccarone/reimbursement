@@ -40,11 +40,11 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 40,),
               Text('Payment Method:',style: kSubTitleText,),
               SizedBox(height: 10,),
-              Text('   ${userData.paymentMethod.toUpperCase()}',style: kRegularText,),
+              Text('   ${userData.paymentMethod.toUpperCase() ?? 0}',style: kRegularText,),
               SizedBox(height: 40,),
               Text('User Type:',style: kSubTitleText,),
               SizedBox(height: 10,),
-              Text('   ${userData.userType.toUpperCase()}',style: kRegularText,)
+              Text('   ${userData.userType.toUpperCase() ?? 0}',style: kRegularText,)
 
             ],)
           ],

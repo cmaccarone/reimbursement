@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-     return ChangeNotifierProvider<User>(builder: (context) => User(),
+     return ChangeNotifierProvider<User>(create: (context) => User(),
        child: MaterialApp(
           darkTheme: ThemeData.dark(),
           routes: {
