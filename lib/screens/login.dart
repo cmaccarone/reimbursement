@@ -63,7 +63,6 @@ class LoginScreen extends StatelessWidget {
                     print(e);
                   }
                   final data = await _firestore.collection('users').document(currentUser.uid).get();
-                  print(data.data);
                   userData.updateData(
 
                       payMeBy: data.data[UserFields.payMeBy],

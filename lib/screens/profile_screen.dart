@@ -5,15 +5,14 @@ import 'package:reimbursement/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reimbursement/model/user.dart';
 
+
 class ProfileScreen extends StatelessWidget {
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
-
-
-
   @override
   Widget build(BuildContext context) {
+
+    FirebaseAuth _auth = FirebaseAuth.instance;
+
+
     return Consumer<User>(builder: (context,userData,child){
       return Scaffold(
         backgroundColor: Colors.lightBlueAccent,
@@ -40,11 +39,11 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 40,),
               Text('Payment Method:',style: kSubTitleText,),
               SizedBox(height: 10,),
-              Text('   ${userData.paymentMethod.toUpperCase() ?? 0}',style: kRegularText,),
+              Text('   ${userData.paymentMethod ?? "0"}',style: kRegularText,),
               SizedBox(height: 40,),
               Text('User Type:',style: kSubTitleText,),
               SizedBox(height: 10,),
-              Text('   ${userData.userType.toUpperCase() ?? 0}',style: kRegularText,)
+              Text('   ${userData.userType ?? "0"}',style: kRegularText,)
 
             ],)
           ],
