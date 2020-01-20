@@ -1,11 +1,23 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/user.dart';
-import 'package:reimbursement/routes.dart';
+
+import 'cameraPreviewScreen.dart';
 
 class SubmitReimbursementScreen extends StatelessWidget {
+  List<CameraDescription> cameras;
+  CameraDescription firstCamera;
+
+  Future<CameraDescription> _getCameras() async {
+    cameras = await availableCameras();
+    firstCamera = cameras.first;
+
+    // Get a specific camera from the list of available cameras.
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(
@@ -78,8 +90,17 @@ class SubmitReimbursementScreen extends StatelessWidget {
                 FlatButton(
                   child: CircleAvatar(child: Icon(Icons.photo_camera)),
                   onPressed: () async {
-                    //todo go to camera screen
-                    Navigator.pushNamed(context, Routes.cameraPreviewScreen);
+                    await _getCameras();
+                    print("cameras $cameras");
+                    Navigator.push(
+                      (context),
+                      MaterialPageRoute(
+                        builder: (context) => CameraPreviewScreen(
+                          cameras: cameras,
+                          camera: firstCamera,
+                        ),
+                      ),
+                    );
                   },
                 )
               ],

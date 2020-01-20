@@ -52,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () async {
                   await _getCameras();
-
+                  print("cameras $cameras");
                   Navigator.push(
                     (context),
                     MaterialPageRoute(
