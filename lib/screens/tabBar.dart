@@ -57,13 +57,12 @@ class _MainTabBarState extends State<MainTabBar> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
 //todo: remove the code below on production (it just bypasses the login screen)
-
+    signin();
 
     WidgetsBinding.instance.addPostFrameCallback((_)=> signin());
-    print(currentUser.email);
     return Consumer<User>(builder: (context,userData,child){
-      void updateData() async {
 
+      void updateData() async {
         //todo: remove in production begin
         final data = await Firestore.instance.collection('users').document(currentUser.uid).get();
         userData.updateData(
