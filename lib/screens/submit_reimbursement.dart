@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
-import 'package:reimbursement/model/user.dart';
+import 'package:reimbursement/providers/user_provider.dart';
 
 import 'cameraPreviewScreen.dart';
 
@@ -20,7 +20,7 @@ class SubmitReimbursementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
+    return Consumer<UserProvider>(
       builder: (context, userData, child) {
         return Scaffold(
           backgroundColor: Colors.lightBlueAccent,

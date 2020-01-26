@@ -7,7 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Collections {
  static final String users = 'users';
- static final String reimbursements = 'reimbursements';
+ static final String pendingApproval = 'pendingApproval';
+ static final String pendingReimbursement = 'pendingReimbursement';
+ static final String reimbursed = 'reimbursed';
 }
 
 class UserFields {
@@ -20,8 +22,12 @@ class UserFields {
   static final String email = 'email';
 }
 
+
 class ReimbursementFields {
   static final String pictureURLs = 'pictureURLs';
   static final String reimbursed = 'reimbursed';
   static final String reimbursement = 'reimbursement';
+  static final String submittedBy = 'submittedBy';
+  static final String dateSubmitted = 'dateSubmitted';
+  static final String dateReimbursed = 'dateReimbursed';
 }

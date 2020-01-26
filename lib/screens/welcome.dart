@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
-import 'package:reimbursement/model/user.dart';
+import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/routes.dart';
 import 'package:reimbursement/widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
+    return Consumer<UserProvider>(
       builder: (context, userData, child) {
         return Scaffold(
           backgroundColor: Colors.lightBlueAccent,

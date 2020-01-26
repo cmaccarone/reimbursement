@@ -9,6 +9,7 @@ abstract class Reimbursement {
   bool completed;
   String reimburseTo;
   String approvedBy;
+  DateTime dateSubmitted;
 
   List<String> reimbursementTypes = [];
 }
