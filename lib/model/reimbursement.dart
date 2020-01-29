@@ -11,7 +11,8 @@ class Reimbursement {
   bool completed;
   String reimburseTo;
   String approvedBy;
-  DateTime dateSubmitted;
+
+  DateTime dateReimbursed;
   List<String> photoURLS;
 
   List<String> reimbursementTypes = [];
@@ -19,7 +20,8 @@ class Reimbursement {
   Reimbursement.fromSnapshot({DocumentSnapshot snapshot})
       : amount = snapshot[ReimbursementFields.amount],
         submitted = snapshot[ReimbursementFields.dateSubmitted],
-        reimburseTo = snapshot[ReimbursementFields.submittedBy];
+        reimburseTo = snapshot[ReimbursementFields.submittedBy],
+        dateReimbursed = snapshot[ReimbursementFields.dateReimbursed];
 }
 
 //class AutoInsurance extends Reimbursement {

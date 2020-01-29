@@ -14,40 +14,65 @@ class ReimbursementProvider extends ChangeNotifier {
 
   List<Reimbursement> _pendingReimbursements;
 
-  void approveReimbursement(int indexOf) {
-    _pendingReimbursements.add(_pendingApproval[indexOf]);
-    _pendingApproval.removeAt(indexOf);
-    notifyListeners();
-    //todo add push notification reimbursement approved.
+  void approveReimbursement(int indexOf) async {
+    QuerySnapshot pendingApprovalList;
+    _firestore.runTransaction((transaction) async {
+      //adds reimbursement object to the pendingReimbursement list for treasury staff.
+      await transaction.set(
+          _firestore.collection(Collections.pendingReimbursement).document(), {
+        ReimbursementFields.dateSubmitted: _pendingApproval[indexOf].submitted,
+        ReimbursementFields.dateReimbursed: null,
+        ReimbursementFields.submittedBy: _pendingApproval[indexOf].reimburseTo,
+        ReimbursementFields.amount: _pendingApproval[indexOf].amount
+      });
+
+      //adds the reimbursement to the user pending reimbursement list.
+      await transaction.set(
+          _firestore.collection(Collections.users).document(_currentUser.uid).collection(Collections.pendingReimbursement).document(), {
+        ReimbursementFields.dateSubmitted: _pendingApproval[indexOf].submitted,
+        ReimbursementFields.dateReimbursed: null,
+        ReimbursementFields.submittedBy: _pendingApproval[indexOf].reimburseTo,
+        ReimbursementFields.amount: _pendingApproval[indexOf].amount
+      });
+      //todo(Caleb): Remove from the Admin Request Approval list and the User request Approval List.
+      transaction.get(_firestore.collection(Collections.pendingApproval).document()).then((snapshot){
+        snapshot.data[]
+      });
+      transaction.delete(documentReference)
+    });
     //move from pending approval collection to pendingreimbursement.
   }
 
   void requestApproval(Reimbursement reimbursement) async {
-    //adds reimbursement to admin pending approval list.
+    //function adds data to users pending approval list and the Admin pending approval list atomicly.
     try {
-      _currentUser = await _auth.currentUser();
-      await _firestore.collection(Collections.pendingApproval).add({
-        ReimbursementFields.dateSubmitted: DateTime.now(),
-        ReimbursementFields.dateReimbursed: null,
-        ReimbursementFields.submittedBy: _currentUser.email,
-        ReimbursementFields.amount: reimbursement.amount
+      await _firestore.runTransaction((transaction) async {
+        this._currentUser = await _auth.currentUser();
+        //adds reimbursement to admin pending approval list.
+        await transaction.set(
+            _firestore.collection(Collections.pendingApproval).document(), {
+          ReimbursementFields.dateSubmitted: DateTime.now(),
+          ReimbursementFields.dateReimbursed: null,
+          ReimbursementFields.submittedBy: _currentUser.email,
+          ReimbursementFields.amount: reimbursement.amount
+        });
+        //adds reimbursement to user pending approval list.
+        await transaction.set(
+            _firestore
+                .collection(Collections.users)
+                .document(_currentUser.uid)
+                .collection(Collections.pendingApproval)
+                .document(),
+            {
+              ReimbursementFields.dateSubmitted: DateTime.now(),
+              ReimbursementFields.dateReimbursed: null,
+              ReimbursementFields.submittedBy: _currentUser.email,
+              ReimbursementFields.amount: reimbursement.amount
+            });
       });
     } catch (e) {
       print(e);
     }
-    //adds reimbursement to user pending approval list.
-    try {
-      _currentUser = await _auth.currentUser();
-      await _firestore.collection(Collections.pendingApproval).add({
-        ReimbursementFields.dateSubmitted: DateTime.now(),
-        ReimbursementFields.dateReimbursed: null,
-        ReimbursementFields.submittedBy: _currentUser.email,
-        ReimbursementFields.amount: reimbursement.amount
-      });
-    } catch (e) {
-      print(e);
-    }
-    //create a new reimbursement Object and add it to firebase
   }
 
   // this funtion is to be used by admin users only.
@@ -76,6 +101,8 @@ class ReimbursementProvider extends ChangeNotifier {
   }
 
   void reimburse(int indexOf) {
+    //remove from pendingApprovalReimbursements
+    //add to pendingReimbursementList and move from
     _reimbursed.add(_pendingReimbursements[indexOf]);
     _pendingReimbursements.removeAt(indexOf);
     notifyListeners();
