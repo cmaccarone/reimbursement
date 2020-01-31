@@ -20,7 +20,9 @@ class ReimbursementFields {
   static final String reimbursed = 'reimbursed';
   static final String reimbursement = 'reimbursement';
   static final String submittedBy = 'submittedBy';
-  static final String dateSubmitted = 'dateSubmitted';
-  static final String dateReimbursed = 'dateReimbursed';
+  static final String timeSubmitted = 'timeSubmitted';
+  static final String timeReimbursed = 'timeReimbursed';
   static final String amount = "amount";
+  static final String reimbursementID = "Id";
+  static final String submittedByID = "submittedByID";
 }

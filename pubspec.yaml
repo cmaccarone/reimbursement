@@ -30,7 +30,7 @@ dependencies:
   grouped_buttons: ^1.0.4
   path_provider: ^1.4.0
   path: ^1.6.4
-
+  uuid:
 dev_dependencies:
   flutter_test:
     sdk: flutter

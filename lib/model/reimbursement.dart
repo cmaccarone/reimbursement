@@ -1,27 +1,53 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta/meta.dart';
 import 'package:reimbursement/model/receipt.dart';
+import 'package:uuid/uuid.dart';
 
 import 'databaseFields.dart';
 
 class Reimbursement {
+  final String reimbursementID = Uuid().v1();
+  DateTime timeSubmitted = DateTime.now();
+  DateTime timeReimbursed;
   List<Receipt> receipts;
   bool approved;
-  DateTime submitted;
   double amount;
-  bool completed;
+  bool reimbursed = false;
   String reimburseTo;
   String approvedBy;
-
-  DateTime dateReimbursed;
+  String submittedByUUID;
   List<String> photoURLS;
 
-  List<String> reimbursementTypes = [];
+  Reimbursement({
+    @required this.submittedByUUID,
+    this.reimbursed = false,
+    this.amount,
+    this.photoURLS,
+    this.approved,
+    this.approvedBy,
+    this.receipts,
+    this.timeReimbursed,
+    this.reimburseTo,
+  });
 
   Reimbursement.fromSnapshot({DocumentSnapshot snapshot})
       : amount = snapshot[ReimbursementFields.amount],
-        submitted = snapshot[ReimbursementFields.dateSubmitted],
+        timeSubmitted = snapshot[ReimbursementFields.timeSubmitted],
         reimburseTo = snapshot[ReimbursementFields.submittedBy],
-        dateReimbursed = snapshot[ReimbursementFields.dateReimbursed];
+        timeReimbursed = snapshot[ReimbursementFields.timeReimbursed],
+        submittedByUUID = snapshot[ReimbursementFields.submittedByID];
+
+  Map<String, dynamic> toMap(Reimbursement reimbursement) {
+    return {
+      ReimbursementFields.reimbursementID: reimbursement.reimbursementID,
+      ReimbursementFields.amount: reimbursement.amount,
+      ReimbursementFields.timeReimbursed: reimbursement.timeReimbursed,
+      ReimbursementFields.submittedBy: reimbursement.reimburseTo,
+      ReimbursementFields.pictureURLs: reimbursement.photoURLS,
+      ReimbursementFields.reimbursed: reimbursement.reimbursed,
+      ReimbursementFields.timeSubmitted: reimbursement.timeSubmitted
+    };
+  }
 }
 
 //class AutoInsurance extends Reimbursement {
