@@ -56,7 +56,7 @@ class LoginScreen extends StatelessWidget {
                   height: 10,
                 ),
                 SignInTextFields(
-                  inputText: 'Email',
+                  inputLabel: 'Email',
                   hideText: false,
                   onChanged: (newValue) {
                     emailField = newValue;
@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                   height: 10,
                 ),
                 SignInTextFields(
-                  inputText: 'Password',
+                  inputLabel: 'Password',
                   hideText: true,
                   onChanged: (newValue) {
                     passwordfield = newValue;

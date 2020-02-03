@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 10,
                   ),
                   Text(
-                    '   ${userData.address}\n   ${userData.city} ${userData.state}, ${userData.zipCode}',
+                    ' ${userData.address}\n   ${userData.city} ${userData.state}, ${userData.zipCode}',
                     style: kRegularText,
                   ),
                   SizedBox(

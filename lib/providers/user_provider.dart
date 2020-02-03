@@ -7,6 +7,7 @@ class UserProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
 
+  FirebaseUser currentUser;
   String currentUserEmail;
   String paymentMethod;
   String address;
@@ -14,6 +15,10 @@ class UserProvider extends ChangeNotifier {
   String state;
   String city;
   String userType;
+
+  Future<FirebaseUser> getUser() async {
+    currentUser = await _auth.currentUser();
+  }
 
   void updateData(
       {String payMeBy,
@@ -23,6 +28,7 @@ class UserProvider extends ChangeNotifier {
       String city,
       String userType,
       String email}) async {
+    await getUser();
     this.paymentMethod = payMeBy;
     this.address = address;
     this.zipCode = zipCode;

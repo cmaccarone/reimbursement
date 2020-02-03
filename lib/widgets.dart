@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'constants.dart';
 
 class SignInTextFields extends StatelessWidget {
+  SignInTextFields(
+      {this.inputAction = TextInputAction.continueAction,
+      @required this.inputLabel,
+      @required this.hideText = false,
+      @required this.onChanged,
+      this.inputType,
+      this.controller});
 
-  SignInTextFields({this.inputAction = TextInputAction.continueAction,@required this.inputText,@required this.hideText = false, @required this.onChanged});
-
-  final String inputText;
+  final TextEditingController controller;
+  final String inputLabel;
   final bool hideText;
   final Function onChanged;
   final TextInputAction inputAction;
-
+  final TextInputType inputType;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+        keyboardType: inputType,
+        controller: controller,
         textInputAction: inputAction,
         onChanged: onChanged,
         obscureText: hideText,
@@ -23,16 +32,18 @@ class SignInTextFields extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.blue,
-          hintText: inputText,
-          labelText: inputText,
+          hintText: inputLabel,
+          labelText: inputLabel,
           labelStyle: TextStyle(color: Colors.white),
-          hintStyle: TextStyle(color: Colors.white30,fontStyle: FontStyle.italic),
+          hintStyle:
+              TextStyle(color: Colors.white30, fontStyle: FontStyle.italic),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(color: Colors.blueAccent)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.redAccent,style: BorderStyle.solid )),
+              borderSide: BorderSide(
+                  color: Colors.redAccent, style: BorderStyle.solid)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(color: Colors.grey)),
@@ -43,25 +54,23 @@ class SignInTextFields extends StatelessWidget {
   }
 }
 
-
 class SubmitButton extends StatelessWidget {
-
-  SubmitButton({@required this.label,@required this.onTapped});
+  SubmitButton({@required this.label, @required this.onTapped});
 
   final String label;
   final Function onTapped;
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child: RaisedButton(
         color: kAppBarColor,
-        child: Text(label,style: kFlatButtonTextStlye,),
+        child: Text(
+          label,
+          style: kFlatButtonTextStlye,
+        ),
         onPressed: onTapped,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-
       ),
     );
   }

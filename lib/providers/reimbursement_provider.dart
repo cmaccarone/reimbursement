@@ -44,6 +44,7 @@ class ReimbursementProvider extends ChangeNotifier {
   }
 
   void requestApproval(Reimbursement reimbursement) async {
+    print("approval requested");
     //function adds data to users pending approval list and the Admin pending approval list atomicly.
     try {
       await _firestore.runTransaction((transaction) async {
@@ -66,8 +67,6 @@ class ReimbursementProvider extends ChangeNotifier {
       print(e);
     }
   }
-
-
 
   //this function should only be used by treasury staff.
   void reimburse(Reimbursement reimbursement) {
@@ -118,7 +117,6 @@ class ReimbursementProvider extends ChangeNotifier {
     }
   }
 
-
   //only used by Users
   Stream<Reimbursement> getPendingApproval() async* {
     Reimbursement reimbursement;
@@ -137,7 +135,6 @@ class ReimbursementProvider extends ChangeNotifier {
       }
     });
   }
-
 
   //only used by users
   Stream<Reimbursement> getPendingReimbursement() async* {
@@ -177,5 +174,3 @@ class ReimbursementProvider extends ChangeNotifier {
     });
   }
 }
-
-

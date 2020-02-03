@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'databaseFields.dart';
 
 class Reimbursement {
-  final String reimbursementID = Uuid().v1();
+  final String reimbursementID;
   DateTime timeSubmitted = DateTime.now();
   DateTime timeReimbursed;
   List<Receipt> receipts;
@@ -17,6 +17,8 @@ class Reimbursement {
   String approvedBy;
   String submittedByUUID;
   List<String> photoURLS;
+  String description;
+  String notes;
 
   Reimbursement({
     @required this.submittedByUUID,
@@ -27,25 +29,32 @@ class Reimbursement {
     this.approvedBy,
     this.receipts,
     this.timeReimbursed,
+    this.description,
+    this.notes,
     this.reimburseTo,
-  });
+  }) : this.reimbursementID = Uuid().v1();
 
   Reimbursement.fromSnapshot({DocumentSnapshot snapshot})
-      : amount = snapshot[ReimbursementFields.amount],
+      : amount = double.parse(snapshot[ReimbursementFields.amount]),
         timeSubmitted = snapshot[ReimbursementFields.timeSubmitted],
         reimburseTo = snapshot[ReimbursementFields.submittedBy],
         timeReimbursed = snapshot[ReimbursementFields.timeReimbursed],
-        submittedByUUID = snapshot[ReimbursementFields.submittedByID];
+        submittedByUUID = snapshot[ReimbursementFields.submittedByID],
+        reimbursementID = snapshot[ReimbursementFields.reimbursementID],
+        notes = snapshot[ReimbursementFields.notes],
+        description = snapshot[ReimbursementFields.description];
 
   Map<String, dynamic> toMap(Reimbursement reimbursement) {
     return {
       ReimbursementFields.reimbursementID: reimbursement.reimbursementID,
-      ReimbursementFields.amount: reimbursement.amount,
+      ReimbursementFields.amount: reimbursement.amount.toString(),
       ReimbursementFields.timeReimbursed: reimbursement.timeReimbursed,
       ReimbursementFields.submittedBy: reimbursement.reimburseTo,
       ReimbursementFields.pictureURLs: reimbursement.photoURLS,
       ReimbursementFields.reimbursed: reimbursement.reimbursed,
-      ReimbursementFields.timeSubmitted: reimbursement.timeSubmitted
+      ReimbursementFields.timeSubmitted: reimbursement.timeSubmitted,
+      ReimbursementFields.notes: reimbursement.notes,
+      ReimbursementFields.description: reimbursement.description
     };
   }
 }

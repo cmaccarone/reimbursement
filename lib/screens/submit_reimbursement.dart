@@ -1,14 +1,48 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
+import 'package:reimbursement/model/reimbursement.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
+import 'package:reimbursement/widgets.dart';
 
 import 'cameraPreviewScreen.dart';
 
-class SubmitReimbursementScreen extends StatelessWidget {
+class SubmitReimbursementScreen extends StatefulWidget {
+  @override
+  _SubmitReimbursementScreenState createState() =>
+      _SubmitReimbursementScreenState();
+}
+
+class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Please fill in all the fields"),
+          content: new Text("We need all info to submit the reimbursement"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<CameraDescription> cameras;
+
   CameraDescription firstCamera;
 
   Future<CameraDescription> _getCameras() async {
@@ -17,6 +51,18 @@ class SubmitReimbursementScreen extends StatelessWidget {
 
     // Get a specific camera from the list of available cameras.
   }
+
+  String description;
+
+  String notes;
+
+  String amountField;
+
+  String picturePath;
+
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +133,32 @@ class SubmitReimbursementScreen extends StatelessWidget {
                   'Select Category',
                   style: kTitleStyle,
                 ),
+                SignInTextFields(
+                  inputLabel: "Description",
+                  controller: descriptionController,
+                  onChanged: (value) {
+                    description = value;
+                    print(value);
+                  },
+                ),
+                SignInTextFields(
+                  inputLabel: "notes",
+                  controller: notesController,
+                  onChanged: (value) {
+                    notes = value;
+                    print(value);
+                  },
+                ),
+                SignInTextFields(
+                  inputLabel: "amount",
+                  inputType: TextInputType.numberWithOptions(
+                      signed: false, decimal: true),
+                  controller: amountController,
+                  onChanged: (value) {
+                    amountField = value;
+                    print(value);
+                  },
+                ),
                 FlatButton(
                   child: CircleAvatar(child: Icon(Icons.photo_camera)),
                   onPressed: () async {
@@ -101,6 +173,36 @@ class SubmitReimbursementScreen extends StatelessWidget {
                         ),
                       ),
                     );
+                  },
+                ),
+                SubmitButton(
+                  label: "Submit Reimbursement",
+                  onTapped: () async {
+                    setState(() {
+                      if ((description != null) &&
+                          (amountField != null) &&
+                          (description != null)) {
+                        Reimbursement reimbursement = Reimbursement(
+                            submittedByUUID: userData.currentUser.uid,
+                            reimbursed: false,
+                            amount: double.parse(amountField),
+                            approved: false,
+                            approvedBy: "",
+                            description: description,
+                            notes: notes,
+                            reimburseTo: userData.currentUser.email);
+                        print(amountField);
+                        print(notes);
+                        Provider.of<ReimbursementProvider>(context,
+                                listen: false)
+                            .requestApproval(reimbursement);
+                        notesController.clear();
+                        descriptionController.clear();
+                        amountController.clear();
+                      } else {
+                        _showDialog();
+                      }
+                    });
                   },
                 )
               ],

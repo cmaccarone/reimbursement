@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/approve_screen.dart';
 import 'package:reimbursement/screens/cameraPreviewScreen.dart';
@@ -23,8 +24,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UserProvider>(
-      create: (context) => UserProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider()),
+        ChangeNotifierProvider<ReimbursementProvider>(
+            create: (context) => ReimbursementProvider())
+      ],
       child: MaterialApp(
         routes: {
           Routes.welcomeScreen: (context) => WelcomeScreen(),

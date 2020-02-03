@@ -64,7 +64,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'Email',
+                      inputLabel: 'Email',
                       hideText: false,
                       onChanged: (newValue) {
                         emailField = newValue;
@@ -74,7 +74,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'Password',
+                      inputLabel: 'Password',
                       hideText: true,
                       onChanged: (newValue) {
                         passwordfield = newValue;
@@ -84,7 +84,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'Address',
+                      inputLabel: 'Address',
                       onChanged: (newValue) {
                         addressField = newValue;
                       },
@@ -93,7 +93,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'City',
+                      inputLabel: 'City',
                       onChanged: (newValue) {
                         cityField = newValue;
                       },
@@ -102,7 +102,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'State',
+                      inputLabel: 'State',
                       onChanged: (newValue) {
                         stateField = newValue;
                       },
@@ -111,7 +111,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
-                      inputText: 'Zip Code',
+                      inputLabel: 'Zip Code',
                       onChanged: (newValue) {
                         zipCodeField = newValue;
                       },

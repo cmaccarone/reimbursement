@@ -25,4 +25,6 @@ class ReimbursementFields {
   static final String amount = "amount";
   static final String reimbursementID = "Id";
   static final String submittedByID = "submittedByID";
+  static final String description = "description";
+  static final String notes = 'notes';
 }
