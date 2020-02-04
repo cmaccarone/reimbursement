@@ -20,37 +20,40 @@ class SignInTextFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-        keyboardType: inputType,
-        controller: controller,
-        textInputAction: inputAction,
-        onChanged: onChanged,
-        obscureText: hideText,
-        style: TextStyle(color: Colors.white),
-        textAlign: TextAlign.center,
-        autofocus: true,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.blue,
-          hintText: inputLabel,
-          labelText: inputLabel,
-          labelStyle: TextStyle(color: Colors.white),
-          hintStyle:
-              TextStyle(color: Colors.white30, fontStyle: FontStyle.italic),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.blueAccent)),
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(
-                  color: Colors.redAccent, style: BorderStyle.solid)),
-          disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.grey)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.white)),
-        ));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+          keyboardType: inputType,
+          controller: controller,
+          textInputAction: inputAction,
+          onChanged: onChanged,
+          obscureText: hideText,
+          style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
+          autofocus: true,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.blue,
+            hintText: inputLabel,
+            labelText: inputLabel,
+            labelStyle: TextStyle(color: Colors.white),
+            hintStyle:
+                TextStyle(color: Colors.white30, fontStyle: FontStyle.italic),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.blueAccent)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(
+                    color: Colors.redAccent, style: BorderStyle.solid)),
+            disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.white)),
+          )),
+    );
   }
 }
 

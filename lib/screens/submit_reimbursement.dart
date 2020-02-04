@@ -133,31 +133,38 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                   'Select Category',
                   style: kTitleStyle,
                 ),
-                SignInTextFields(
-                  inputLabel: "Description",
-                  controller: descriptionController,
-                  onChanged: (value) {
-                    description = value;
-                    print(value);
-                  },
-                ),
-                SignInTextFields(
-                  inputLabel: "notes",
-                  controller: notesController,
-                  onChanged: (value) {
-                    notes = value;
-                    print(value);
-                  },
-                ),
-                SignInTextFields(
-                  inputLabel: "amount",
-                  inputType: TextInputType.numberWithOptions(
-                      signed: false, decimal: true),
-                  controller: amountController,
-                  onChanged: (value) {
-                    amountField = value;
-                    print(value);
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      SignInTextFields(
+                        inputLabel: "Description",
+                        controller: descriptionController,
+                        onChanged: (value) {
+                          description = value;
+                          print(value);
+                        },
+                      ),
+                      SignInTextFields(
+                        inputLabel: "notes",
+                        controller: notesController,
+                        onChanged: (value) {
+                          notes = value;
+                          print(value);
+                        },
+                      ),
+                      SignInTextFields(
+                        inputLabel: "amount",
+                        inputType: TextInputType.numberWithOptions(
+                            signed: false, decimal: true),
+                        controller: amountController,
+                        onChanged: (value) {
+                          amountField = value;
+                          print(value);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 FlatButton(
                   child: CircleAvatar(child: Icon(Icons.photo_camera)),
