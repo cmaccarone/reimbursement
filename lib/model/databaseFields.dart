@@ -27,4 +27,18 @@ class ReimbursementFields {
   static final String submittedByID = "submittedByID";
   static final String description = "description";
   static final String notes = 'notes';
+  static final String approval = 'approval';
+}
+
+class ApprovalFields {
+  static final String dateRequested = 'dateRequested';
+  static final String dateApproved = 'dateApproved';
+  static final String tripStartDate = 'tripStartDate';
+  static final String tripEndDate = 'tripEndDate';
+  static final String approvedBy = 'approvedBy';
+  static final String requestedBy = 'requestedBy';
+  static final String tripName = 'tripName';
+  static final String id = 'id';
+  static final String requestedCost = 'requestedCost';
+  static final String approvedCost = 'approvedCost';
 }

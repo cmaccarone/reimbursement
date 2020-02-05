@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:reimbursement/model/approval.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,20 +20,22 @@ class Reimbursement {
   List<String> photoURLS;
   String description;
   String notes;
+  Approval approval;
 
-  Reimbursement({
-    @required this.submittedByUUID,
-    this.reimbursed = false,
-    this.amount,
-    this.photoURLS,
-    this.approved,
-    this.approvedBy,
-    this.receipts,
-    this.timeReimbursed,
-    this.description,
-    this.notes,
-    this.reimburseTo,
-  }) : this.reimbursementID = Uuid().v1();
+  Reimbursement(
+      {@required this.submittedByUUID,
+      this.reimbursed = false,
+      this.amount,
+      this.photoURLS,
+      this.approved,
+      this.approvedBy,
+      this.receipts,
+      this.timeReimbursed,
+      this.description,
+      this.notes,
+      this.reimburseTo,
+      this.approval})
+      : this.reimbursementID = Uuid().v1();
 
   Reimbursement.fromSnapshot({DocumentSnapshot snapshot})
       : amount = double.parse(snapshot[ReimbursementFields.amount]),
@@ -42,7 +45,8 @@ class Reimbursement {
         submittedByUUID = snapshot[ReimbursementFields.submittedByID],
         reimbursementID = snapshot[ReimbursementFields.reimbursementID],
         notes = snapshot[ReimbursementFields.notes],
-        description = snapshot[ReimbursementFields.description];
+        description = snapshot[ReimbursementFields.description],
+        approval = Approval.fromMap(snapshot[ReimbursementFields.approval]);
 
   Map<String, dynamic> toMap(Reimbursement reimbursement) {
     return {
@@ -54,7 +58,8 @@ class Reimbursement {
       ReimbursementFields.reimbursed: reimbursement.reimbursed,
       ReimbursementFields.timeSubmitted: reimbursement.timeSubmitted,
       ReimbursementFields.notes: reimbursement.notes,
-      ReimbursementFields.description: reimbursement.description
+      ReimbursementFields.description: reimbursement.description,
+      ReimbursementFields.approval: approval.toMap(approval)
     };
   }
 }
