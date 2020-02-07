@@ -9,4 +9,5 @@ class Routes {
   static final String mainTabBar = '/mainTabBar';
   static final String profileScreen = '/profileScreen';
   static final String cameraPreviewScreen = '/cameraPreviewScreen';
+  static final String requestApprovalScreen = '/requestApprovalScreen';
 }

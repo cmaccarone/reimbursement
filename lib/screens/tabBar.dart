@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/profile_screen.dart';
+import 'package:reimbursement/screens/requestApprovalScreen.dart';
 
 import 'profile_screen.dart';
-import 'submit_reimbursement.dart';
 import 'submitted_reimbursements.dart';
 
 class MainTabBar extends StatefulWidget {
@@ -106,7 +106,7 @@ class _MainTabBarState extends State<MainTabBar>
             controller: controller,
             children: <Widget>[
               ProfileScreen(),
-              SubmitReimbursementScreen(),
+              RequestApprovalScreen(),
               SubmittedReimbursementScreen()
             ],
           ),

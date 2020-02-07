@@ -5,6 +5,7 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/approve_screen.dart';
 import 'package:reimbursement/screens/cameraPreviewScreen.dart';
 import 'package:reimbursement/screens/profile_screen.dart';
+import 'package:reimbursement/screens/requestApprovalScreen.dart';
 import 'package:reimbursement/screens/tabBar.dart';
 
 import 'routes.dart';
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
           Routes.mainTabBar: (context) => MainTabBar(),
           Routes.approveReimbursement: (context) => ApproveScreen(),
           Routes.profileScreen: (context) => ProfileScreen(),
-          Routes.cameraPreviewScreen: (context) => CameraPreviewScreen()
+          Routes.cameraPreviewScreen: (context) => CameraPreviewScreen(),
+          Routes.requestApprovalScreen: (context) => RequestApprovalScreen()
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,
