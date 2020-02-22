@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/routes.dart';
 import 'package:reimbursement/widgets.dart';
@@ -89,9 +90,9 @@ class LoginScreen extends StatelessWidget {
                         }
                         Provider.of<UserProvider>(context, listen: false)
                             .getUserDataOnLogin();
-//                        Provider.of<ReimbursementProvider>(context,
-//                                listen: false)
-//                            .initStreams();
+                        Provider.of<ReimbursementProvider>(context,
+                                listen: false)
+                            .initStreams();
                         Navigator.pushReplacementNamed(
                             context, Routes.mainTabBar);
                       }
