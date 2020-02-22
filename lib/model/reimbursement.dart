@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
-import 'package:reimbursement/model/approval.dart';
 import 'package:reimbursement/model/receipt.dart';
+import 'package:reimbursement/model/tripApproval.dart';
 import 'package:uuid/uuid.dart';
 
 import 'databaseFields.dart';
@@ -20,7 +20,7 @@ class Reimbursement {
   List<String> photoURLS;
   String description;
   String notes;
-  Approval approval;
+  TripApproval tripApproval;
 
   Reimbursement(
       {@required this.submittedByUUID,
@@ -34,7 +34,7 @@ class Reimbursement {
       this.description,
       this.notes,
       this.reimburseTo,
-      this.approval})
+      this.tripApproval})
       : this.reimbursementID = Uuid().v1();
 
   Reimbursement.fromSnapshot({DocumentSnapshot snapshot})
@@ -46,7 +46,8 @@ class Reimbursement {
         reimbursementID = snapshot[ReimbursementFields.reimbursementID],
         notes = snapshot[ReimbursementFields.notes],
         description = snapshot[ReimbursementFields.description],
-        approval = Approval.fromMap(snapshot[ReimbursementFields.approval]);
+        tripApproval = TripApproval.fromSnapshot(
+            snapshotData: snapshot[ReimbursementFields.tripApproval]);
 
   Map<String, dynamic> toMap(Reimbursement reimbursement) {
     return {
@@ -59,7 +60,7 @@ class Reimbursement {
       ReimbursementFields.timeSubmitted: reimbursement.timeSubmitted,
       ReimbursementFields.notes: reimbursement.notes,
       ReimbursementFields.description: reimbursement.description,
-      ReimbursementFields.approval: approval.toMap(approval)
+      ReimbursementFields.tripApproval: tripApproval.toMap(tripApproval)
     };
   }
 }

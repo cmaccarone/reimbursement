@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserProvider>(
             create: (context) => UserProvider()),
-        ChangeNotifierProvider<ReimbursementProvider>(
+        Provider<ReimbursementProvider>(
             create: (context) => ReimbursementProvider())
       ],
       child: MaterialApp(

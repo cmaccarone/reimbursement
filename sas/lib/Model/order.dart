@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'seat.dart';
 
 class Order {
@@ -26,14 +25,6 @@ class Order {
   int confirmationCode;
   int expirationDate;
   DateTime orderDate;
-
 }
 
-enum orderStatus {
-  Received,
-  POIncomplete,
-  InProgress,
-  Finished,
-  Shipped
-}
-
+enum orderStatus { Received, POIncomplete, InProgress, Finished, Shipped }

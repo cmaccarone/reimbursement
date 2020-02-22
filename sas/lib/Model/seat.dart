@@ -1,8 +1,4 @@
-import 'dart:math';
-
-class  Seat {
-
-
+class Seat {
   foamOptions foamOption;
   double foamThickness;
   int fabricNeeded;
@@ -10,8 +6,8 @@ class  Seat {
   planeModels planeModel;
   designOptions designOption;
 
-  Seat(this.foamOption,this.foamThickness,this.planeType,this.planeModel,this.designOption);
-
+  Seat(this.foamOption, this.foamThickness, this.planeType, this.planeModel,
+      this.designOption);
 }
 
 enum foamOptions {
@@ -25,8 +21,6 @@ enum foamOptions {
 //orderInProgress
 //orderFinished
 //orderShipped
-
-
 
 enum planeTypes {
   cessna,

@@ -8,19 +8,36 @@ class UserProvider extends ChangeNotifier {
   final Firestore _firestore = Firestore.instance;
 
   FirebaseUser currentUser;
-  String currentUserEmail;
-  String paymentMethod;
+  String email;
+  String payMeBy;
   String address;
   String zipCode;
   String state;
   String city;
   String userType;
 
-  Future<FirebaseUser> getUser() async {
+  void getUser() async {
     currentUser = await _auth.currentUser();
   }
 
-  void updateData(
+  void getUserDataOnLogin() async {
+    await getUser();
+    final data = await _firestore
+        .collection(Collections.users)
+        .document(currentUser.uid)
+        .get();
+    print(data.data);
+    payMeBy = data.data[UserFields.payMeBy];
+    email = data.data[UserFields.email];
+    address = data.data[UserFields.address];
+    city = data.data[UserFields.city];
+    state = data.data[UserFields.state];
+    zipCode = data.data[UserFields.zipCode];
+    userType = data.data[UserFields.userType];
+    notifyListeners();
+  }
+
+  void registerUser(
       {String payMeBy,
       String address,
       String zipCode,
@@ -28,33 +45,16 @@ class UserProvider extends ChangeNotifier {
       String city,
       String userType,
       String email}) async {
-    await getUser();
-    this.paymentMethod = payMeBy;
+    //load property values
     this.address = address;
     this.zipCode = zipCode;
     this.state = state;
     this.city = city;
     this.userType = userType;
-    this.currentUserEmail = email;
-    await _addUserDataToFirebase(
-        address: address,
-        city: city,
-        state: state,
-        zipCode: zipCode,
-        reimbursementType: "Special Travel",
-        email: email);
-    notifyListeners();
-  }
+    this.email = email;
 
-  void _addUserDataToFirebase(
-      {String address,
-      String city,
-      String state,
-      String zipCode,
-      String reimbursementType,
-      String email}) async {
     try {
-      FirebaseUser currentUser = await _auth.currentUser();
+      getUser();
       var path = _firestore
           .collection(Collections.users)
           .document('${currentUser.uid}');
@@ -63,13 +63,14 @@ class UserProvider extends ChangeNotifier {
         UserFields.city: city,
         UserFields.state: state,
         UserFields.zipCode: zipCode,
-        UserFields.payMeBy: reimbursementType,
+        UserFields.payMeBy: payMeBy,
         UserFields.userType: 'office',
         UserFields.email: email
       }, merge: true);
     } catch (e) {
       print(e);
     }
+    notifyListeners();
   }
 }
 

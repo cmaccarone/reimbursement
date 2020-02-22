@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     List<CameraDescription> cameras;
     CameraDescription firstCamera;
 
-    Future<CameraDescription> _getCameras() async {
+    void _getCameras() async {
       cameras = await availableCameras();
       firstCamera = cameras.first;
 
@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  await _getCameras();
+                  _getCameras();
                   Navigator.push(
                     (context),
                     MaterialPageRoute(
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 10,
               ),
               Text(
-                '${userData.currentUserEmail}',
+                '${userData.email}',
                 style: kSubHeadingText,
               ),
               SizedBox(
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 10,
                   ),
                   Text(
-                    '   ${userData.paymentMethod ?? "0"}',
+                    '   ${userData.payMeBy ?? "0"}',
                     style: kRegularText,
                   ),
                   SizedBox(

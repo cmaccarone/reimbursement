@@ -45,7 +45,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
 
   CameraDescription firstCamera;
 
-  Future<CameraDescription> _getCameras() async {
+  void _getCameras() async {
     cameras = await availableCameras();
     firstCamera = cameras.first;
 
@@ -138,6 +138,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                   child: Column(
                     children: <Widget>[
                       SignInTextFields(
+                        hideText: false,
                         inputLabel: "Description",
                         controller: descriptionController,
                         onChanged: (value) {
@@ -146,6 +147,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                         },
                       ),
                       SignInTextFields(
+                        hideText: false,
                         inputLabel: "notes",
                         controller: notesController,
                         onChanged: (value) {
@@ -154,6 +156,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                         },
                       ),
                       SignInTextFields(
+                        hideText: false,
                         inputLabel: "amount",
                         inputType: TextInputType.numberWithOptions(
                             signed: false, decimal: true),
@@ -169,7 +172,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                 FlatButton(
                   child: CircleAvatar(child: Icon(Icons.photo_camera)),
                   onPressed: () async {
-                    await _getCameras();
+                    _getCameras();
                     print("cameras $cameras");
                     Navigator.push(
                       (context),
@@ -202,7 +205,9 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                         print(notes);
                         Provider.of<ReimbursementProvider>(context,
                                 listen: false)
-                            .requestApproval(reimbursement);
+                            .requestReimbursement(
+                                reimbursement: reimbursement,
+                                approvedTrip: reimbursement.tripApproval);
                         notesController.clear();
                         descriptionController.clear();
                         amountController.clear();

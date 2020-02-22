@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
-import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/routes.dart';
 import 'package:reimbursement/widgets.dart';
@@ -88,20 +87,13 @@ class LoginScreen extends StatelessWidget {
                         } catch (e) {
                           print(e);
                         }
-                        final data = await _firestore
-                            .collection('users')
-                            .document(currentUser.uid)
-                            .get();
-                        userData.updateData(
-                            payMeBy: data.data[UserFields.payMeBy],
-                            email: data.data[UserFields.email],
-                            address: data.data[UserFields.address],
-                            city: data.data[UserFields.city],
-                            state: data.data[UserFields.state],
-                            zipCode: data.data[UserFields.zipCode],
-                            userType: data.data[UserFields.userType]);
-
-                        Navigator.popAndPushNamed(context, Routes.mainTabBar);
+                        Provider.of<UserProvider>(context, listen: false)
+                            .getUserDataOnLogin();
+//                        Provider.of<ReimbursementProvider>(context,
+//                                listen: false)
+//                            .initStreams();
+                        Navigator.pushReplacementNamed(
+                            context, Routes.mainTabBar);
                       }
                     }),
               ],

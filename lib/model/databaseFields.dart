@@ -1,8 +1,9 @@
 class Collections {
   static final String users = 'users';
+  static final String trips = 'trips';
   static final String pendingApproval = 'pendingApproval';
   static final String pendingReimbursement = 'pendingReimbursement';
-  static final String reimbursed = 'reimbursed';
+  static final String reimbursements = 'reimbursements';
 }
 
 class UserFields {
@@ -27,7 +28,7 @@ class ReimbursementFields {
   static final String submittedByID = "submittedByID";
   static final String description = "description";
   static final String notes = 'notes';
-  static final String approval = 'approval';
+  static final String tripApproval = 'tripApproval';
 }
 
 class ApprovalFields {
@@ -41,4 +42,6 @@ class ApprovalFields {
   static final String id = 'id';
   static final String requestedCost = 'requestedCost';
   static final String approvedCost = 'approvedCost';
+  static final String approved = "approved";
+  static final String submittedByID = "submittedByID";
 }

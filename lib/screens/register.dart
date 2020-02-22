@@ -84,6 +84,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
+                      hideText: false,
                       inputLabel: 'Address',
                       onChanged: (newValue) {
                         addressField = newValue;
@@ -93,6 +94,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
+                      hideText: false,
                       inputLabel: 'City',
                       onChanged: (newValue) {
                         cityField = newValue;
@@ -102,6 +104,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
+                      hideText: false,
                       inputLabel: 'State',
                       onChanged: (newValue) {
                         stateField = newValue;
@@ -111,6 +114,7 @@ class RegisterScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SignInTextFields(
+                      hideText: false,
                       inputLabel: 'Zip Code',
                       onChanged: (newValue) {
                         zipCodeField = newValue;
@@ -146,7 +150,7 @@ class RegisterScreen extends StatelessWidget {
                               print(e);
                             }
 
-                            userData.updateData(
+                            userData.registerUser(
                                 email: currentUser.email,
                                 payMeBy: reimbursementType,
                                 address: addressField,

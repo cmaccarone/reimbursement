@@ -1,49 +1,114 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/model/reimbursement.dart';
+import 'package:reimbursement/model/tripApproval.dart';
+import 'package:reimbursement/util/list_stream.dart';
 
-class ReimbursementProvider extends ChangeNotifier {
+//return 3 different streams.
+//stream recieve the data,
+//use object constructor to create new object from new data
+// push the new object into some sort of list that can be used and analized.
+// push the new data into a stream.
+// need separate streams for trip approval list, trips, and pending reimbursements,
+//also need to figure out how to get reimbursements since they will be nested in each trip.
+//reimbursements for each trip will be mapped out and then displayed in the UI
+//todo imports
+//todo list of data
+//todo stream controllers
+//todo stream sink getter
+//todo constructor - add data listen to streams
+//todo dispose
+//todo core functions
+
+class ReimbursementProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
-  FirebaseUser _currentUser;
-  List<Reimbursement> _reimbursed;
+  FirebaseUser currentUser;
 
-  List<Reimbursement> _pendingApproval;
+  //lists
 
-  List<Reimbursement> _pendingReimbursements;
+  List<Reimbursement> _userReimbursements = [];
 
-  void approveReimbursement(Reimbursement reimbursement) async {
-    _firestore.runTransaction((transaction) async {
-      //adds reimbursement object to the pendingReimbursement list for treasury staff.
-      await transaction.set(
-          _firestore
-              .collection(Collections.pendingReimbursement)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
-      //adds the reimbursement to the user pending reimbursement list.
-      await transaction.set(
-          _firestore
-              .collection(Collections.users)
-              .document(reimbursement.submittedByUUID)
-              .collection(Collections.pendingReimbursement)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
-      //removes reimbursement from the admin pendingApproval list
-      await transaction.delete(_firestore
-          .collection(Collections.pendingApproval)
-          .document(reimbursement.reimbursementID));
-      //removes reimbursement from User pendingApproval list
-      await transaction.delete(_firestore
-          .collection(Collections.users)
-          .document(reimbursement.submittedByUUID)
-          .collection(Collections.pendingApproval)
-          .document(reimbursement.reimbursementID));
+  List<Reimbursement> _pendingReimbursements = [];
+
+  List<TripApproval> _pendingApprovalTrips = [];
+
+  List<TripApproval> _trips = [];
+
+  void dispose() {}
+
+  //External Stream Subs
+
+  StreamSubscription<QuerySnapshot> _pendingReimbursementStream;
+  StreamSubscription<QuerySnapshot> _userTripsStream;
+  StreamSubscription<QuerySnapshot> _pendingTripsStream;
+  StreamSubscription<QuerySnapshot> _userReimbursementStream;
+
+  Stream<List<TripApproval>> _tripsStream;
+
+  //internal Streams - output complex objects instead of raw data.
+  ListStream<Reimbursement> pendReimbursement = ListStream();
+  ListStream<TripApproval> tripStream = ListStream();
+  ListStream<TripApproval> pendTripStream = ListStream();
+  ListStream<Reimbursement> reimbursementStream = ListStream();
+
+  //firebase streams
+  ReimbursementProvider() {
+    initStreams();
+    //initialize PendingReimbursement Stream..
+  }
+
+  Stream<List<TripApproval>> get stream => _tripsStream;
+
+  void initStreams() async {
+    currentUser = await _auth.currentUser();
+    print(currentUser.uid);
+
+    //initilize User Trips Stream
+    print("here");
+    _tripsStream = _firestore
+        .collection(Collections.users)
+        .document(currentUser.uid)
+        .collection(Collections.trips)
+        .snapshots()
+        .map((data) {
+      return data.documents
+          .map((doc) {
+            if (doc.data.isNotEmpty) {
+              return TripApproval.fromSnapshot(snapshotData: doc);
+            } else {
+              return null;
+            }
+          })
+          .where((item) => item != null)
+          .toList();
     });
   }
 
-  void requestApproval(Reimbursement reimbursement) async {
+  //FOR ADMIN ONLY
+  void approveTrip({TripApproval tripApproval}) async {
+    _firestore.runTransaction((transaction) async {
+      //Updates users trip status to approved (this happens in the UI) the new mutated trip is passed in as the new data to be updated.
+      await transaction.update(
+          _firestore
+              .collection(Collections.users)
+              .document(tripApproval.submittedByID)
+              .collection(Collections.trips)
+              .document(tripApproval.id),
+          tripApproval.toMap(tripApproval));
+      //removes reimbursement from the admin pendingApproval list
+      await transaction.delete(_firestore
+          .collection(Collections.pendingApproval)
+          .document(tripApproval.id));
+    });
+  }
+
+  //Requests approval for trip
+  void requestApprovalForTrip({TripApproval tripApproval}) async {
     print("approval requested");
     //function adds data to users pending approval list and the Admin pending approval list atomicly.
     try {
@@ -52,39 +117,56 @@ class ReimbursementProvider extends ChangeNotifier {
         await transaction.set(
             _firestore
                 .collection(Collections.pendingApproval)
-                .document(reimbursement.reimbursementID),
-            reimbursement.toMap(reimbursement));
+                .document(tripApproval.id),
+            tripApproval.toMap(tripApproval));
         //adds reimbursement to user pending approval list.
         await transaction.set(
             _firestore
                 .collection(Collections.users)
-                .document(reimbursement.submittedByUUID)
-                .collection(Collections.pendingApproval)
-                .document(reimbursement.reimbursementID),
-            reimbursement.toMap(reimbursement));
+                .document(tripApproval.submittedByID)
+                .collection(Collections.trips)
+                .document(tripApproval.id),
+            tripApproval.toMap(tripApproval));
       });
     } catch (e) {
       print(e);
     }
   }
 
-  //this function should only be used by treasury staff.
-  void reimburse(Reimbursement reimbursement) {
+  //Requests Reimbursement for a specific trip. (USERS)
+  void requestReimbursement(
+      {@required Reimbursement reimbursement,
+      @required TripApproval approvedTrip}) {
+    print("reimbursement requested");
     _firestore.runTransaction((transaction) async {
       //add reimbursement to the reimbursed list for the user.
       await transaction.set(
           _firestore
               .collection(Collections.users)
               .document(reimbursement.submittedByUUID)
-              .collection(Collections.reimbursed)
+              .collection(Collections.reimbursements)
               .document(reimbursement.reimbursementID),
           reimbursement.toMap(reimbursement));
-      //remove from the user pending Reimbursement list.
-      await transaction.delete(_firestore
-          .collection(Collections.users)
-          .document(reimbursement.submittedByUUID)
-          .collection(Collections.pendingReimbursement)
-          .document(reimbursement.reimbursementID));
+      //add to the treasury pendingReimbursement list
+      await transaction.set(
+          _firestore
+              .collection(Collections.pendingReimbursement)
+              .document(reimbursement.reimbursementID),
+          reimbursement.toMap(reimbursement));
+    });
+  }
+
+  //reimburse pending reimbursement (TREASURY USERS ONLY)
+  void reimburse(Reimbursement reimbursement) {
+    _firestore.runTransaction((transaction) async {
+      //add reimbursement to the reimbursed list for the user.
+      await transaction.update(
+          _firestore
+              .collection(Collections.users)
+              .document(reimbursement.submittedByUUID)
+              .collection(Collections.reimbursements)
+              .document(reimbursement.reimbursementID),
+          reimbursement.toMap(reimbursement));
       //remove the reimbursement object from the treasury pendingReimbursement list
       await transaction.delete(_firestore
           .collection(Collections.pendingReimbursement)
@@ -92,85 +174,64 @@ class ReimbursementProvider extends ChangeNotifier {
     });
   }
 
-  // this funtion is to be used by admin users only.
-  void getPendingApprovalReimbursements() async {
-    var userType;
-    Reimbursement reimbursement;
-    _currentUser = await _auth.currentUser();
-    var snapshot = await _firestore
+  // Returns all the trip requests (FOR ADMIN USERS ONLY)
+//  void getTripRequests(QuerySnapshot snapshot) async {
+//
+//    var userType;
+//    TripApproval approval;
+//    var snapshots = await _firestore
+//        .collection(Collections.users)
+//        .document(currentUser.uid)
+//        .get();
+//    userType = snapshots.data[UserFields.userType] ?? "userType";
+//    if (userType == "admin") {
+//      snapshot.documents.forEach((item) {
+//          TripApproval.fromSnapshot(snapshotData: item);
+//          _pendingApprovalTrips.add(approval);
+//          pendingTripApprovals.sink.add(_pendingApprovalTrips);
+//          notifyListeners();
+//      });
+//    }
+//  }
+
+//  //only used by users
+//  Stream<TripApproval> getTrips() async* {
+//    TripApproval trip;
+//    _currentUser = await _auth.currentUser();
+//    print("Email: ${_currentUser.email} id: ${_currentUser.uid}");
+//   tripsStream.sink.addStream( _firestore
+//        .collection(Collections.users)
+//        .document(_currentUser.uid)
+//        .collection(Collections.trips)
+//        .snapshots());
+//      for (var trip in tripsStream.) {
+//        TripApproval newTrip = TripApproval.fromSnapshot(snapshotData: trip);
+//         newTrip;
+//      }
+//
+//  }
+
+  //only used by users gets all the reimbursements for a specific trip.
+  Future<List<Reimbursement>> getReimbursements(TripApproval forTrip) async {
+    List<Reimbursement> reimbursements;
+
+    var snapshots = _firestore
         .collection(Collections.users)
-        .document(_currentUser.uid)
-        .get();
-    userType = snapshot.data[UserFields.userType] ?? "userType";
-    if (userType == "admin") {
-      var snapshots = await _firestore
-          .collection(Collections.pendingApproval)
-          .orderBy(ReimbursementFields.timeSubmitted)
-          .snapshots();
-      snapshots.forEach((item) {
-        for (var snap in item.documents) {
-          reimbursement = Reimbursement.fromSnapshot(snapshot: snap);
-          _pendingApproval.add(reimbursement);
-          notifyListeners();
+        .document(currentUser.uid)
+        .collection(Collections.reimbursements)
+        .orderBy(ReimbursementFields.timeSubmitted)
+        .snapshots();
+    snapshots.forEach((item) {
+      for (var snap in item.documents) {
+        Reimbursement reimbursement =
+            Reimbursement.fromSnapshot(snapshot: snap);
+        if (reimbursement.tripApproval.id == forTrip.id) {
+          reimbursements.add(reimbursement);
         }
-      });
-    }
-  }
-
-  //only used by Users
-  Stream<Reimbursement> getPendingApproval() async* {
-    Reimbursement reimbursement;
-    _currentUser = await _auth.currentUser();
-    var snapshots = _firestore
-        .collection(Collections.users)
-        .document(_currentUser.uid)
-        .collection(Collections.pendingApproval)
-        .orderBy(ReimbursementFields.timeSubmitted)
-        .snapshots();
-    snapshots.forEach((item) {
-      for (var snap in item.documents) {
-        reimbursement = Reimbursement.fromSnapshot(snapshot: snap);
-        _pendingApproval.add(reimbursement);
-        notifyListeners();
       }
     });
+    return reimbursements;
   }
 
-  //only used by users
-  Stream<Reimbursement> getPendingReimbursement() async* {
-    Reimbursement reimbursement;
-    _currentUser = await _auth.currentUser();
-    var snapshots = _firestore
-        .collection(Collections.users)
-        .document(_currentUser.uid)
-        .collection(Collections.pendingReimbursement)
-        .orderBy(ReimbursementFields.timeSubmitted)
-        .snapshots();
-    snapshots.forEach((item) {
-      for (var snap in item.documents) {
-        reimbursement = Reimbursement.fromSnapshot(snapshot: snap);
-        _pendingReimbursements.add(reimbursement);
-        notifyListeners();
-      }
-    });
-  }
-
-  //only used by users
-  Stream<Reimbursement> getReimbursed() async* {
-    Reimbursement reimbursement;
-    _currentUser = await _auth.currentUser();
-    var snapshots = _firestore
-        .collection(Collections.users)
-        .document(_currentUser.uid)
-        .collection(Collections.reimbursed)
-        .orderBy(ReimbursementFields.timeSubmitted)
-        .snapshots();
-    snapshots.forEach((item) {
-      for (var snap in item.documents) {
-        reimbursement = Reimbursement.fromSnapshot(snapshot: snap);
-        _reimbursed.add(reimbursement);
-        notifyListeners();
-      }
-    });
-  }
+  //todo: add function to deal with when someone completes a trip and finishes submitting all their reimbursements.
 }

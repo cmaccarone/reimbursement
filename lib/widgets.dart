@@ -6,7 +6,7 @@ class SignInTextFields extends StatelessWidget {
   SignInTextFields(
       {this.inputAction = TextInputAction.continueAction,
       @required this.inputLabel,
-      @required this.hideText = false,
+      this.hideText = false,
       @required this.onChanged,
       this.inputType,
       this.controller});
