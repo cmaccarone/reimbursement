@@ -32,6 +32,7 @@ dependencies:
   path: ^1.6.4
   uuid:
   rxdart:
+  equatable: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -17,91 +17,100 @@ class LoginScreen extends StatelessWidget {
   String passwordfield;
   FirebaseUser currentUser;
 
-  void getData() async {}
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(
-      builder: (context, userData, child) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: kAppBarColor,
-          ),
-          body: Container(
-            padding: EdgeInsets.all(30),
-            color: Colors.lightBlueAccent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Hero(
-                    tag: 'dollar',
-                    child: CircleAvatar(
-                      child: Icon(
-                        Icons.attach_money,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                      radius: 40,
-                      backgroundColor: Colors.greenAccent,
-                    )),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                    child: Text(
-                  'Sign In',
-                  style: kTitleStyle,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kAppBarColor,
+      ),
+      body: Container(
+        padding: EdgeInsets.all(30),
+        color: Colors.lightBlueAccent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Hero(
+                tag: 'dollar',
+                child: CircleAvatar(
+                  child: Icon(
+                    Icons.attach_money,
+                    size: 60,
+                    color: Colors.white,
+                  ),
+                  radius: 40,
+                  backgroundColor: Colors.greenAccent,
                 )),
-                SizedBox(
-                  height: 10,
-                ),
-                SignInTextFields(
-                  inputLabel: 'Email',
-                  hideText: false,
-                  onChanged: (newValue) {
-                    emailField = newValue;
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SignInTextFields(
-                  inputLabel: 'Password',
-                  hideText: true,
-                  onChanged: (newValue) {
-                    passwordfield = newValue;
-                    print(newValue);
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SubmitButton(
-                    label: 'Login',
-                    onTapped: () async {
-                      print('$emailField and $passwordfield');
-                      if ((passwordfield != null) && (emailField != null)) {
-                        try {
-                          await _auth.signInWithEmailAndPassword(
-                              email: emailField, password: passwordfield);
-                          currentUser = await _auth.currentUser();
-                        } catch (e) {
-                          print(e);
-                        }
-                        Provider.of<UserProvider>(context, listen: false)
-                            .getUserDataOnLogin();
-                        Provider.of<ReimbursementProvider>(context,
-                                listen: false)
-                            .initStreams();
-                        Navigator.pushReplacementNamed(
-                            context, Routes.mainTabBar);
-                      }
-                    }),
-              ],
+            SizedBox(
+              height: 20,
             ),
-          ),
-        );
-      },
+            Center(
+                child: Text(
+              'Sign In',
+              style: kTitleStyle,
+            )),
+            SizedBox(
+              height: 10,
+            ),
+            SignInTextFields(
+              inputLabel: 'Email',
+              hideText: false,
+              onChanged: (newValue) {
+                emailField = newValue;
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SignInTextFields(
+              inputLabel: 'Password',
+              hideText: true,
+              onChanged: (newValue) {
+                passwordfield = newValue;
+                print(newValue);
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SubmitButton(
+                label: 'Login',
+                onTapped: () async {
+                  print('$emailField and $passwordfield');
+                  if ((passwordfield != null) && (emailField != null)) {
+                    try {
+                      await _auth
+                          .signInWithEmailAndPassword(
+                              email: emailField, password: passwordfield)
+                          .then((AuthResult auth) async {
+                        print("auth: ${auth.user.email}");
+                        if (auth != null) {
+                          await getUserData(context);
+                        }
+                      });
+                    } catch (e) {
+                      print(e);
+                    }
+                  }
+                }),
+          ],
+        ),
+      ),
     );
+  }
+
+  Future<void> getUserData(BuildContext context) async {
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserDataOnLogin();
+    currentUser = await _auth.currentUser();
+
+    //TODO FIND A BETTER WAY TO INITIALIZE THE USERTYPE. SPLASH SCREEN?
+    Provider.of<ReimbursementProvider>(context, listen: false).userType =
+        Provider.of<UserProvider>(context, listen: false).userType;
+    print(
+        'userType: ${Provider.of<UserProvider>(context, listen: false).userType}');
+    Provider.of<ReimbursementProvider>(context, listen: false).initStreams();
+
+    Navigator.pushReplacementNamed(context, Routes.mainTabBar);
   }
 }

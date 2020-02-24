@@ -1,7 +1,7 @@
 class Collections {
   static final String users = 'users';
   static final String trips = 'trips';
-  static final String pendingApproval = 'pendingApproval';
+  static final String unapprovedTrips = 'unapprovedTrips';
   static final String pendingReimbursement = 'pendingReimbursement';
   static final String reimbursements = 'reimbursements';
 }

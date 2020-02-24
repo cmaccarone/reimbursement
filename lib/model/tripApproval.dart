@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:uuid/uuid.dart';
 
-class TripApproval {
+class TripApproval extends Equatable {
   String submittedByID;
   DateTime dateRequested;
   DateTime dateApproved;
@@ -17,6 +18,22 @@ class TripApproval {
   String requestedCost;
   String approvedCost;
   bool approved;
+
+  @override
+  List<Object> get props => [
+        submittedByID,
+        dateRequested,
+        dateApproved,
+        tripStartDate,
+        tripEndDate,
+        approvedBy,
+        requestedBy,
+        tripName,
+        id,
+        requestedCost,
+        approvedCost,
+        approved
+      ];
 
   //Contructor - create object in App
   TripApproval(

@@ -19,11 +19,8 @@ class _MainTabBarState extends State<MainTabBar>
 
   @override
   void initState() {
-    //todo: remove the code below on production (it just bypasses the login screen)
-
-    // TODO: implement initState
     super.initState();
-    controller = TabController(initialIndex: 1, length: 3, vsync: this);
+    controller = TabController(initialIndex: 1, length: 4, vsync: this);
   }
 
   @override
@@ -35,9 +32,6 @@ class _MainTabBarState extends State<MainTabBar>
 
   @override
   Widget build(BuildContext context) {
-//todo: remove the code below on production (it just bypasses the login screen)
-
-    //todo: end remove in production
     return Scaffold(
       bottomNavigationBar: TabBar(
         indicatorWeight: 20,
@@ -63,6 +57,9 @@ class _MainTabBarState extends State<MainTabBar>
           Tab(
             icon: Icon(Icons.list, color: Colors.black45),
           ),
+          Tab(
+            icon: Icon(Icons.list, color: Colors.black45),
+          ),
         ],
       ),
       body: TabBarView(
@@ -70,7 +67,8 @@ class _MainTabBarState extends State<MainTabBar>
         children: <Widget>[
           ProfileScreen(),
           RequestApprovalScreen(),
-          SubmittedReimbursementScreen()
+          SubmittedReimbursementScreen(),
+          ProfileScreen(),
         ],
       ),
     );

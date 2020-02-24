@@ -54,8 +54,8 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                 children: [
                   Flexible(
                     child: StreamBuilder<List<TripApproval>>(
-                      stream:
-                          Provider.of<ReimbursementProvider>(context).stream,
+                      stream: Provider.of<ReimbursementProvider>(context)
+                          .tripStream,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<TripApproval>> snapshot) {
                         if (snapshot.hasError)
@@ -69,8 +69,12 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                             return ListView.builder(
                                 itemCount: snapshot.data.length ?? 0,
                                 itemBuilder: (context, index) {
+                                  print(snapshot.data);
                                   return TripCell(
-                                    title: 'new',
+                                    onPressed: () {
+                                      print(index);
+                                    },
+                                    title: snapshot.data[index].tripName,
                                     reimbursementTotal:
                                         snapshot.data[index].requestedCost,
                                     approvalStatus:
@@ -179,46 +183,54 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
 }
 
 class TripCell extends StatelessWidget {
+  Function onPressed;
   final String title;
   final bool approvalStatus;
   final String reimbursementTotal;
 
-  TripCell({this.title, this.reimbursementTotal, this.approvalStatus});
+  TripCell(
+      {this.onPressed,
+      this.title,
+      this.reimbursementTotal,
+      this.approvalStatus});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Icon(
-              Icons.airplanemode_active,
-              color: Colors.blueAccent,
-              size: 50,
-            ),
-            SizedBox(
-              width: 50,
-            ),
-            Column(
-              children: <Widget>[
-                Text(title),
-                Text(
-                  approvalStatus ? "approved" : "denied" ?? "pending",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-            SizedBox(
-              width: 50,
-            ),
-            Text(
-              reimbursementTotal,
-              style: TextStyle(color: Colors.green),
-            )
-          ],
-        ),
-        Text("--------------------------------------------")
-      ],
+    return FlatButton(
+      onPressed: onPressed,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.airplanemode_active,
+                color: Colors.blueAccent,
+                size: 50,
+              ),
+              SizedBox(
+                width: 50,
+              ),
+              Column(
+                children: <Widget>[
+                  Text(title),
+                  Text(
+                    approvalStatus ? "approved" : "denied" ?? "pending",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 50,
+              ),
+              Text(
+                reimbursementTotal,
+                style: TextStyle(color: Colors.green),
+              )
+            ],
+          ),
+          Text("--------------------------------------------")
+        ],
+      ),
     );
   }
 }

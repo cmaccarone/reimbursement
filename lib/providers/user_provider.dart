@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 
-class UserProvider extends ChangeNotifier {
+class UserProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
 
@@ -14,10 +13,14 @@ class UserProvider extends ChangeNotifier {
   String zipCode;
   String state;
   String city;
+
+  /// use the User class and its properties to define the UserType in a structured way.
+  /// ex. User.admin = "admin";
   String userType;
 
-  void getUser() async {
+  Future<FirebaseUser> getUser() async {
     currentUser = await _auth.currentUser();
+    return currentUser;
   }
 
   void getUserDataOnLogin() async {
@@ -34,7 +37,6 @@ class UserProvider extends ChangeNotifier {
     state = data.data[UserFields.state];
     zipCode = data.data[UserFields.zipCode];
     userType = data.data[UserFields.userType];
-    notifyListeners();
   }
 
   void registerUser(
@@ -54,7 +56,7 @@ class UserProvider extends ChangeNotifier {
     this.email = email;
 
     try {
-      getUser();
+      await getUser();
       var path = _firestore
           .collection(Collections.users)
           .document('${currentUser.uid}');
@@ -64,13 +66,12 @@ class UserProvider extends ChangeNotifier {
         UserFields.state: state,
         UserFields.zipCode: zipCode,
         UserFields.payMeBy: payMeBy,
-        UserFields.userType: 'office',
+        UserFields.userType: Users.employee,
         UserFields.email: email
       }, merge: true);
     } catch (e) {
       print(e);
     }
-    notifyListeners();
   }
 }
 
@@ -87,12 +88,8 @@ enum PayMeBy { ach, check }
 
 //todo: add a reminder for admin user to update the remuneration rate each year.
 
-enum Departments {
-  ministerial,
-  SSL,
-  Admin,
-  Treasury,
-  Education,
-  Spanish,
-  Evangelism,
+class Users {
+  static final String admin = "admin";
+  static final String treasury = "treasury";
+  static final String employee = "employee";
 }
