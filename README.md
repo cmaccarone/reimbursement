@@ -7,10 +7,11 @@ A Reimbursement Application for Android and IOS that will handle reimbursements 
 Main Features
 
 - Users submit Trip Approval Requests
-     - admin approved these
+     - admin approves these
      - user then submits receipts
+          - imported receipts are checked with past receipts for duplicates
      - Treasury then reimburses receipts
-     - These receipts are exported in aggregate into two different csv files and two different pdf files (with pictures of the   receipts for backup), the csv's can then be imported into APS, or AASI and the PDF's used for back up.
+     - These receipts are exported in aggregate into two different csv files and two different pdf files (with pictures of the   receipts for backup), the csv's can then be imported into APS, or AASI and the PDF's used for back up. (this speeds up the reimbursement process.
 
 ### Potential Future Features
 
