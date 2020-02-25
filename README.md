@@ -15,9 +15,9 @@ Main Features
 ### Potential Future Features
 
 - Integration with APS/AASI Servers 
-      - for looking up User ID's
-      - importing reimbursements
-      - Reading Departmental Budget values
+     - for looking up User ID's
+     - importing reimbursements
+     - Reading Departmental Budget values
       
 - Messaging (for users to ask questions about their reimbursements/for us to communicate potential problems or clarify issues)
     - Trip Specific?
