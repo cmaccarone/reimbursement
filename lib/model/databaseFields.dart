@@ -16,7 +16,9 @@ class UserFields {
   static final String email = 'email';
 }
 
-class ReimbursementFields {
+class ReceiptFields {
+  static final String receiptDate = 'receiptDate';
+  static final String vendor = 'vendor';
   static final String pictureURLs = 'pictureURLs';
   static final String reimbursed = 'reimbursed';
   static final String reimbursement = 'reimbursement';

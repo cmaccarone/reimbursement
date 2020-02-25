@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:reimbursement/model/databaseFields.dart';
-import 'package:reimbursement/model/reimbursement.dart';
+import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 
 import 'user_provider.dart';
@@ -33,14 +33,14 @@ class ReimbursementProvider {
   /// ex. User.admin = "admin";
   String userType;
   FirebaseUser currentUser;
-  List<Reimbursement> reimbursements;
+  List<Receipt> reimbursements;
 
   void dispose() {}
 
   Stream<List<TripApproval>> _tripsStream;
-  Stream<List<Reimbursement>> _reimbursementStream;
+  Stream<List<Receipt>> _reimbursementStream;
   Stream<List<TripApproval>> _pendingTripStream;
-  Stream<List<Reimbursement>> _pendingReimbursementStream;
+  Stream<List<Receipt>> _pendingReimbursementStream;
 
   //firebase streams
   ReimbursementProvider() {
@@ -50,8 +50,8 @@ class ReimbursementProvider {
 
   Stream<List<TripApproval>> get tripStream => _tripsStream;
   Stream<List<TripApproval>> get pendingTripStream => _pendingTripStream;
-  Stream<List<Reimbursement>> get reimbursementStream => _reimbursementStream;
-  Stream<List<Reimbursement>> get pendingReimbursementStream =>
+  Stream<List<Receipt>> get reimbursementStream => _reimbursementStream;
+  Stream<List<Receipt>> get pendingReimbursementStream =>
       _pendingReimbursementStream;
 
   void initStreams() async {
@@ -100,8 +100,7 @@ class ReimbursementProvider {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
-              Reimbursement reimbursement =
-                  Reimbursement.fromSnapshot(snapshot: doc);
+              Receipt reimbursement = Receipt.fromSnapshot(snapshot: doc);
               reimbursements.add(reimbursement);
               return reimbursement;
             } else {
@@ -140,7 +139,7 @@ class ReimbursementProvider {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
-              return Reimbursement.fromSnapshot(snapshot: doc);
+              return Receipt.fromSnapshot(snapshot: doc);
             } else {
               return null;
             }
@@ -196,8 +195,7 @@ class ReimbursementProvider {
 
   //Requests Reimbursement for a specific trip. (USERS)
   void requestReimbursement(
-      {@required Reimbursement reimbursement,
-      @required TripApproval approvedTrip}) {
+      {@required Receipt reimbursement, @required TripApproval approvedTrip}) {
     print("reimbursement requested");
     _firestore.runTransaction((transaction) async {
       //add reimbursement to the reimbursed list for the user.
@@ -218,7 +216,7 @@ class ReimbursementProvider {
   }
 
   //reimburse pending reimbursement (TREASURY USERS ONLY)
-  void reimburse(Reimbursement reimbursement) {
+  void reimburse(Receipt reimbursement) {
     _firestore.runTransaction((transaction) async {
       //add reimbursement to the reimbursed list for the user.
       await transaction.update(
@@ -236,9 +234,19 @@ class ReimbursementProvider {
   }
 
   ///Use this method to return all the reimbursements for a specific trip. When a user clicks on that trip.
-  List<Reimbursement> getReimbursements(TripApproval forTrip) {
+  List<Receipt> getReimbursements({TripApproval forTrip}) {
     return reimbursements.where(
         (reimbursements) => reimbursements.tripApproval.id == forTrip.id);
+  }
+
+  //todo: Create function to check all reimbursement to see if the receipt has already been reimbursed.
+  //todo: add a single map to the user database for quickly checking if the receipt was already reimbursed.
+  //todo finish getTotalSpentForTrip (totaling all the receipts so far and returning value)
+  double getTotalSpent({TripApproval onTrip}) {
+    double total;
+    reimbursements.map((reimbursement) {
+      // reimbursement.
+    });
   }
 
   //todo: add function to deal with when someone completes a trip and finishes submitting all their reimbursements.

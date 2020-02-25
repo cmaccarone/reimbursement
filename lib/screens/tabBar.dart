@@ -38,11 +38,11 @@ class _MainTabBarState extends State<MainTabBar>
         indicator: UnderlineTabIndicator(
           borderSide: BorderSide(
             color: Colors.blueGrey,
-            width: 80,
+            width: 66,
           ),
         ),
         indicatorColor: Colors.black45,
-        indicatorSize: TabBarIndicatorSize.label,
+        indicatorSize: TabBarIndicatorSize.tab,
         controller: controller,
         tabs: <Widget>[
           Tab(

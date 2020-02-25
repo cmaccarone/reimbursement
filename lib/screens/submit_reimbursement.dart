@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
-import 'package:reimbursement/model/reimbursement.dart';
+import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/widgets.dart';
@@ -192,11 +192,10 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                       if ((description != null) &&
                           (amountField != null) &&
                           (description != null)) {
-                        Reimbursement reimbursement = Reimbursement(
+                        Receipt reimbursement = Receipt(
                             submittedByUUID: userData.currentUser.uid,
                             reimbursed: false,
                             amount: double.parse(amountField),
-                            approved: false,
                             approvedBy: "",
                             description: description,
                             notes: notes,

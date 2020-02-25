@@ -17,7 +17,9 @@ class TripApproval extends Equatable {
   String id = Uuid().v1();
   String requestedCost;
   String approvedCost;
-  bool approved;
+
+  ///use approvalState
+  String approved = ApprovalState.pending;
 
   @override
   List<Object> get props => [
@@ -32,7 +34,7 @@ class TripApproval extends Equatable {
         id,
         requestedCost,
         approvedCost,
-        approved
+        approved = ApprovalState.pending
       ];
 
   //Contructor - create object in App
@@ -47,7 +49,7 @@ class TripApproval extends Equatable {
       this.approvedCost,
       this.requestedCost,
       this.tripName,
-      this.approved = false});
+      this.approved});
 
   //Constructor - Create object coming from firebase
   TripApproval.fromSnapshot({DocumentSnapshot snapshotData}) {
@@ -70,7 +72,7 @@ class TripApproval extends Equatable {
     id = snapshot[ApprovalFields.id];
     requestedCost = snapshot[ApprovalFields.requestedCost] ?? 'unknown for now';
     approvedCost = snapshot[ApprovalFields.approvedCost];
-    approved = snapshot[ApprovalFields.approved] ?? false;
+    approved = snapshot[ApprovalFields.approved];
     submittedByID = snapshot[ApprovalFields.submittedByID];
   }
   //Convert Object into Map for firebase
@@ -91,7 +93,7 @@ class TripApproval extends Equatable {
   }
 
   void approveTrip({String approvedCost}) {
-    approved = true;
+    approved = ApprovalState.approved;
     if (approvedCost == null) {
       this.approvedCost = requestedCost;
     } else {
@@ -100,7 +102,13 @@ class TripApproval extends Equatable {
   }
 
   void denyTrip() {
-    approved = false;
+    approved = ApprovalState.denied;
     approvedCost = "0";
   }
+}
+
+class ApprovalState {
+  static final String approved = "approved";
+  static final String denied = "denied";
+  static final String pending = "pending";
 }

@@ -10,4 +10,5 @@ class Routes {
   static final String profileScreen = '/profileScreen';
   static final String cameraPreviewScreen = '/cameraPreviewScreen';
   static final String requestApprovalScreen = '/requestApprovalScreen';
+  static final String reimbursementScreen = '/reimbursementScreen';
 }
