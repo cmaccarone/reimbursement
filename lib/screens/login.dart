@@ -111,6 +111,6 @@ class LoginScreen extends StatelessWidget {
         'userType: ${Provider.of<UserProvider>(context, listen: false).userType}');
     Provider.of<ReimbursementProvider>(context, listen: false).initStreams();
 
-    Navigator.pushReplacementNamed(context, Routes.mainTabBar);
+    Navigator.pushNamedAndRemoveUntil(context, Routes.mainTabBar, (_) => false);
   }
 }

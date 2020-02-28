@@ -17,13 +17,6 @@ import 'user_provider.dart';
 // need separate streams for trip approval list, trips, and pending reimbursements,
 //also need to figure out how to get reimbursements since they will be nested in each trip.
 //reimbursements for each trip will be mapped out and then displayed in the UI
-//todo imports
-//todo list of data
-//todo stream controllers
-//todo stream sink getter
-//todo constructor - add data listen to streams
-//todo dispose
-//todo core functions
 
 class ReimbursementProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,14 +26,15 @@ class ReimbursementProvider {
   /// ex. User.admin = "admin";
   String userType;
   FirebaseUser currentUser;
-  List<Receipt> reimbursements;
+  List<Receipt> receipts;
 
   void dispose() {}
 
   Stream<List<TripApproval>> _tripsStream;
-  Stream<List<Receipt>> _reimbursementStream;
+  Stream<List<Receipt>> _receiptStream;
+  double amount;
   Stream<List<TripApproval>> _pendingTripStream;
-  Stream<List<Receipt>> _pendingReimbursementStream;
+  Stream<List<Receipt>> _pendingReceiptsStream;
 
   //firebase streams
   ReimbursementProvider() {
@@ -50,9 +44,9 @@ class ReimbursementProvider {
 
   Stream<List<TripApproval>> get tripStream => _tripsStream;
   Stream<List<TripApproval>> get pendingTripStream => _pendingTripStream;
-  Stream<List<Receipt>> get reimbursementStream => _reimbursementStream;
+  Stream<List<Receipt>> get reimbursementStream => _receiptStream;
   Stream<List<Receipt>> get pendingReimbursementStream =>
-      _pendingReimbursementStream;
+      _pendingReceiptsStream;
 
   void initStreams() async {
     currentUser = await _auth.currentUser();
@@ -91,7 +85,7 @@ class ReimbursementProvider {
   }
 
   void _startReimbursementStream() {
-    _reimbursementStream = _firestore
+    _receiptStream = _firestore
         .collection(Collections.users)
         .document(currentUser.uid)
         .collection(Collections.reimbursements)
@@ -101,7 +95,7 @@ class ReimbursementProvider {
           .map((doc) {
             if (doc.data.isNotEmpty) {
               Receipt reimbursement = Receipt.fromSnapshot(snapshot: doc);
-              reimbursements.add(reimbursement);
+              receipts.add(reimbursement);
               return reimbursement;
             } else {
               return null;
@@ -132,7 +126,7 @@ class ReimbursementProvider {
   }
 
   void _startPendingReimbursementStream() {
-    _pendingReimbursementStream = _firestore
+    _pendingReceiptsStream = _firestore
         .collection(Collections.reimbursements)
         .snapshots()
         .map((data) {
@@ -235,16 +229,16 @@ class ReimbursementProvider {
 
   ///Use this method to return all the reimbursements for a specific trip. When a user clicks on that trip.
   List<Receipt> getReimbursements({TripApproval forTrip}) {
-    return reimbursements.where(
+    return receipts.where(
         (reimbursements) => reimbursements.tripApproval.id == forTrip.id);
   }
 
   //todo: Create function to check all reimbursement to see if the receipt has already been reimbursed.
-  //todo: add a single map to the user database for quickly checking if the receipt was already reimbursed.
+  //todo: add a single ARRAY to the user database for quickly checking if the receipt was already reimbursed.
   //todo finish getTotalSpentForTrip (totaling all the receipts so far and returning value)
   double getTotalSpent({TripApproval onTrip}) {
     double total;
-    reimbursements.map((reimbursement) {
+    receipts.map((reimbursement) {
       // reimbursement.
     });
   }
