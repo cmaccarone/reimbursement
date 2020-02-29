@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reimbursement/constants.dart';
+import 'package:reimbursement/model/my_custom_icons_icons.dart';
 import 'package:reimbursement/screens/profile_screen.dart';
 import 'package:reimbursement/screens/requestApprovalScreen.dart';
 
@@ -33,36 +35,44 @@ class _MainTabBarState extends State<MainTabBar>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: TabBar(
-        indicatorWeight: 20,
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(
-            color: Colors.blueGrey,
-            width: 66,
-          ),
-        ),
-        indicatorColor: Colors.black45,
-        indicatorSize: TabBarIndicatorSize.tab,
-        controller: controller,
-        tabs: <Widget>[
-          Tab(
-            icon: Icon(
-              Icons.person_outline,
-              color: Colors.black45,
+      bottomNavigationBar: Material(
+        color: kTabBarColor,
+        child: TabBar(
+          unselectedLabelStyle: TextStyle(color: kTabBarIconInactive),
+          labelStyle: TextStyle(color: kTabBarIconActive),
+          isScrollable: false,
+          unselectedLabelColor: kTabBarIconInactive,
+          indicatorWeight: 30,
+          indicator: UnderlineTabIndicator(
+            borderSide: BorderSide(
+              color: Color.fromRGBO(255, 255, 255, 0),
+              width: 66,
             ),
           ),
-          Tab(
-            icon: Icon(Icons.attach_money, color: Colors.black45),
-          ),
-          Tab(
-            icon: Icon(Icons.list, color: Colors.black45),
-          ),
-          Tab(
-            icon: Icon(Icons.list, color: Colors.black45),
-          ),
-        ],
+          indicatorSize: TabBarIndicatorSize.tab,
+          controller: controller,
+          tabs: <Widget>[
+            Tab(
+              icon: Icon(
+                Icons.person_outline,
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.attach_money),
+            ),
+            Tab(
+              icon: Icon(Icons.list),
+            ),
+            Tab(
+              icon: Icon(
+                MyCustomIcons.account_cash__1_,
+              ),
+            ),
+          ],
+        ),
       ),
       body: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: <Widget>[
           ProfileScreen(),

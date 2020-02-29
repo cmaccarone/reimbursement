@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:uuid/uuid.dart';
 
@@ -39,7 +37,7 @@ class TripApproval extends Equatable {
 
   //Contructor - create object in App
   TripApproval(
-      {@required this.submittedByID,
+      {this.submittedByID,
       this.dateRequested,
       this.dateApproved,
       this.tripStartDate,
@@ -78,6 +76,7 @@ class TripApproval extends Equatable {
   //Convert Object into Map for firebase
   Map<String, dynamic> toMap(TripApproval approval) {
     return {
+      ApprovalFields.submittedByID: approval.submittedByID,
       ApprovalFields.dateRequested: approval.dateRequested,
       ApprovalFields.dateApproved: approval.dateApproved,
       ApprovalFields.tripStartDate: approval.tripStartDate,

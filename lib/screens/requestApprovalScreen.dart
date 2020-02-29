@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/screens/reimbursementsScreen.dart';
@@ -26,6 +28,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
   String endDate;
   String cost;
   String notes;
+  Stream _stream;
 
   void _toogleExpand() {
     setState(() {
@@ -39,14 +42,29 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
     startDateController.clear();
     notesController.clear();
     descriptionController.clear();
+    description = null;
+    startDate = null;
+    endDate = null;
+    cost = null;
+    notes = null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    _stream = Provider.of<ReimbursementProvider>(context).tripStream;
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: kBackGroundColor,
         appBar: AppBar(
-          title: Text("Submit Travel Request"),
+          title: Text(
+            "Submit Travel Request",
+            style: TextStyle(color: kMainTextColor),
+          ),
         ),
         body: Column(
           children: <Widget>[
@@ -55,10 +73,10 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                 children: [
                   Flexible(
                     child: StreamBuilder<List<TripApproval>>(
-                      stream: Provider.of<ReimbursementProvider>(context)
-                          .tripStream,
+                      stream: _stream,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<TripApproval>> snapshot) {
+                        print(snapshot.data);
                         if (snapshot.hasError)
                           return Text('Error: ${snapshot.error}');
                         switch (snapshot.connectionState) {
@@ -73,6 +91,23 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                   //todo figure out why this is printing twice?
                                   print(snapshot.data);
                                   return TripCell(
+                                    onDismissed: (direction) {
+                                      if (snapshot.data[index].approved ==
+                                          "approved") {
+                                        Provider.of<ReimbursementProvider>(
+                                                context,
+                                                listen: false)
+                                            .completeApprovedTrip(
+                                                trip: snapshot.data[index]);
+                                      } else {
+                                        print("completed");
+                                        Provider.of<ReimbursementProvider>(
+                                                context,
+                                                listen: false)
+                                            .cancelPendingTrip(
+                                                trip: snapshot.data[index]);
+                                      }
+                                    },
                                     onPressed: () {
                                       if (snapshot.data[index].approved ==
                                           ApprovalState.approved) {
@@ -160,10 +195,12 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
               ),
             ),
             FlatButton(
-              onPressed: () async {
-                FirebaseAuth _auth = FirebaseAuth.instance;
-                FirebaseUser currentUser = await _auth.currentUser();
+              onPressed: () {
+                FirebaseUser currentUser =
+                    Provider.of<ReimbursementProvider>(context, listen: false)
+                        .currentUser;
                 TripApproval trip = TripApproval(
+                    approved: ApprovalState.pending,
                     tripName: description,
                     requestedCost: cost,
                     submittedByID: currentUser.uid,
@@ -181,14 +218,18 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                 });
               },
               child: CircleAvatar(
+                backgroundColor: kTealColor,
                 child: Icon(Icons.add),
               ),
             ),
             Center(
                 child: Text(
-              'Add New Trip Request',
-              style: TextStyle(color: Colors.blueAccent),
-            ))
+              'Add Trip',
+              style: GoogleFonts.roboto(color: Colors.white),
+            )),
+            SizedBox(
+              height: kPadding,
+            ),
           ],
         ),
       ),

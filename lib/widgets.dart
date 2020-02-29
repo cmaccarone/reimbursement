@@ -61,58 +61,184 @@ class TripCell extends StatelessWidget {
   final String title;
   final String approvalStatus;
   final String reimbursementTotal;
+  Function(DismissDirection) onDismissed;
 
   TripCell(
-      {this.onPressed,
+      {this.onDismissed,
+      this.onPressed,
       this.title,
       this.reimbursementTotal,
       this.approvalStatus});
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: onPressed,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.airplanemode_active,
-                color: Colors.blueAccent,
-                size: 50,
-              ),
-              SizedBox(
-                width: 50,
-              ),
-              Column(
-                children: <Widget>[
-                  Text(title),
-                  Text(approvalStatus,
-                      style: approvalStatus == ApprovalState.approved
-                          ? TextStyle(color: Colors.green)
-                          : approvalStatus == ApprovalState.denied
-                              ? TextStyle(color: Colors.red)
-                              : TextStyle(color: Colors.orange)
+    return approvalStatus == ApprovalState.pending ||
+            approvalStatus == ApprovalState.denied
+        ? Dismissible(
+            onDismissed: (direction) {
+              onDismissed(direction);
+            },
+            direction: DismissDirection.endToStart,
+            background: Container(
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.centerRight,
+                color: kCancelColor,
+                child: Text(
+                  "CANCEL",
+                  style: TextStyle(color: Colors.white),
+                )),
+            key: UniqueKey(),
+            child: FlatButton(
+              color: kTripCellColor,
+              onPressed: onPressed,
+              child: Container(
+                color: kTripCellColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.airplanemode_active,
+                              color: Colors.blueAccent,
+                              size: 30,
+                            ),
+                            SizedBox(
+                              width: 40,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(title),
+                                Text(approvalStatus,
+                                    style: approvalStatus ==
+                                            ApprovalState.approved
+                                        ? TextStyle(color: Colors.green)
+                                        : approvalStatus == ApprovalState.denied
+                                            ? TextStyle(color: Colors.red)
+                                            : TextStyle(color: Colors.orange)
 
 //                    approvalStatus == ApprovalState.approved
 //                        ?
 //                        : ,
-                      ),
-                ],
+                                    ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              reimbursementTotal,
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      color: kTripCellShaddow,
+                      height: 4,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(
-                width: 50,
+            ),
+          )
+        : Dismissible(
+            onDismissed: (direction) {
+              onDismissed(direction);
+            },
+            background: Container(
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.centerRight,
+                color: kTealColor,
+                child: Text(
+                  "COMPLETE",
+                  style: TextStyle(color: Colors.white),
+                )),
+            key: UniqueKey(),
+            child: FlatButton(
+              color: kTripCellColor,
+              onPressed: onPressed,
+              child: Container(
+                color: kTripCellColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.airplanemode_active,
+                              color: Colors.blueAccent,
+                              size: 30,
+                            ),
+                            SizedBox(
+                              width: 40,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(title),
+                                Text(approvalStatus,
+                                    style: approvalStatus ==
+                                            ApprovalState.approved
+                                        ? TextStyle(color: Colors.green)
+                                        : approvalStatus == ApprovalState.denied
+                                            ? TextStyle(color: Colors.red)
+                                            : TextStyle(color: Colors.orange)
+
+//                    approvalStatus == ApprovalState.approved
+//                        ?
+//                        : ,
+                                    ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              reimbursementTotal,
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      color: kTripCellShaddow,
+                      height: 4,
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                reimbursementTotal,
-                style: TextStyle(color: Colors.green),
-              )
-            ],
-          ),
-          Text("--------------------------------------------")
-        ],
-      ),
-    );
+            ),
+          );
   }
 }
 

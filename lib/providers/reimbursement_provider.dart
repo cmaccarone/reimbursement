@@ -209,6 +209,39 @@ class ReimbursementProvider {
     });
   }
 
+  //this moves the trip to the user's completed trips list.
+  void completeApprovedTrip({TripApproval trip}) {
+    _firestore.runTransaction((transaction) async {
+      await transaction.delete(_firestore
+          .collection(Collections.users)
+          .document(trip.submittedByID)
+          .collection(Collections.trips)
+          .document(trip.id));
+
+      await transaction.set(
+          _firestore
+              .collection(Collections.users)
+              .document(trip.submittedByID)
+              .collection(Collections.completedTrips)
+              .document(trip.id),
+          trip.toMap(trip));
+    });
+  }
+
+//called if the user swipes to delete the trip while its still pending.
+  void cancelPendingTrip({TripApproval trip}) {
+    _firestore.runTransaction((transaction) async {
+      await transaction.delete(_firestore
+          .collection(Collections.users)
+          .document(trip.submittedByID)
+          .collection(Collections.trips)
+          .document(trip.id));
+
+      await transaction.delete(
+          _firestore.collection(Collections.unapprovedTrips).document(trip.id));
+    });
+  }
+
   //reimburse pending reimbursement (TREASURY USERS ONLY)
   void reimburse(Receipt reimbursement) {
     _firestore.runTransaction((transaction) async {

@@ -4,6 +4,7 @@ class Collections {
   static final String unapprovedTrips = 'unapprovedTrips';
   static final String pendingReimbursement = 'pendingReimbursement';
   static final String reimbursements = 'reimbursements';
+  static final String completedTrips = 'completedTrips';
 }
 
 class UserFields {
