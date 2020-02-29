@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/providers/user_provider.dart';
+import 'package:reimbursement/routes.dart';
 import 'package:reimbursement/screens/cameraPreviewScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -70,7 +71,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () async {
                   await _auth.signOut();
-                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.welcomeScreen, (_) => false);
                 },
               ),
               SizedBox(

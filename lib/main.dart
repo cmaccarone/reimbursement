@@ -7,11 +7,12 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/approve_screen.dart';
 import 'package:reimbursement/screens/cameraPreviewScreen.dart';
 import 'package:reimbursement/screens/profile_screen.dart';
-import 'package:reimbursement/screens/reimbursementsScreen.dart';
+import 'package:reimbursement/screens/reimburseScreen.dart';
 import 'package:reimbursement/screens/requestApprovalScreen.dart';
 import 'package:reimbursement/screens/tabBar.dart';
 
 import 'routes.dart';
+import 'screens/completedTripsScreen.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
 import 'screens/reset_password.dart';
@@ -47,11 +48,12 @@ class MyApp extends StatelessWidget {
             Routes.submittedReimbursements: (context) =>
                 SubmittedReimbursementScreen(),
             Routes.mainTabBar: (context) => MainTabBar(),
-            Routes.approveReimbursement: (context) => ApproveScreen(),
+            Routes.approveTripScreen: (context) => ApproveTripScreen(),
             Routes.profileScreen: (context) => ProfileScreen(),
             Routes.cameraPreviewScreen: (context) => CameraPreviewScreen(),
             Routes.requestApprovalScreen: (context) => RequestApprovalScreen(),
-            Routes.reimbursementScreen: (context) => ReimbursementScreen()
+            Routes.reimburseScreen: (context) => ReimburseScreen(),
+            Routes.completedTrips: (context) => CompletedTripsScreen()
           },
           home: WelcomeScreen(),
           theme: ThemeData(

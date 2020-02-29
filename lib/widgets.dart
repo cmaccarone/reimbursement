@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 
 import 'constants.dart';
+import 'model/my_custom_icons_icons.dart';
+import 'screens/approve_screen.dart';
+import 'screens/completedTripsScreen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/requestApprovalScreen.dart';
 
 class ReimbursementCell extends StatelessWidget {
   Function onPressed;
@@ -375,3 +380,75 @@ class SignInTextFields extends StatelessWidget {
     );
   }
 }
+
+List<Widget> adminTabs = [
+  Tab(
+    icon: Icon(
+      Icons.person_outline,
+    ),
+  ),
+  Tab(
+    icon: Icon(Icons.attach_money),
+  ),
+  Tab(
+    icon: Icon(Icons.list),
+  ),
+  Tab(
+    icon: Icon(
+      Icons.check,
+    ),
+  ),
+];
+
+List<Widget> treasuryTabs = [
+  Tab(
+    icon: Icon(
+      Icons.person_outline,
+    ),
+  ),
+  Tab(
+    icon: Icon(Icons.attach_money),
+  ),
+  Tab(
+    icon: Icon(Icons.list),
+  ),
+  Tab(
+    icon: Icon(
+      MyCustomIcons.account_cash__1_,
+    ),
+  ),
+];
+
+List<Widget> employeeTabs = [
+  Tab(
+    icon: Icon(
+      Icons.person_outline,
+    ),
+  ),
+  Tab(
+    icon: Icon(Icons.attach_money),
+  ),
+  Tab(
+    icon: Icon(Icons.list),
+  ),
+];
+
+List<Widget> employeeScreens = [
+  ProfileScreen(),
+  RequestApprovalScreen(),
+  CompletedTripsScreen(),
+];
+
+List<Widget> adminScreens = [
+  ProfileScreen(),
+  RequestApprovalScreen(),
+  CompletedTripsScreen(),
+  ApproveTripScreen()
+];
+
+List<Widget> treasuryScreens = [
+  ProfileScreen(),
+  RequestApprovalScreen(),
+  CompletedTripsScreen(),
+  ApproveTripScreen()
+];

@@ -5,17 +5,17 @@ import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/widgets.dart';
 
-class ReimbursementScreen extends StatefulWidget {
+class ReimburseScreen extends StatefulWidget {
   final String tripApprovalTitle;
   final TripApproval tripApproval;
 
-  ReimbursementScreen({this.tripApprovalTitle, this.tripApproval});
+  ReimburseScreen({this.tripApprovalTitle, this.tripApproval});
 
   @override
-  _ReimbursementScreenState createState() => _ReimbursementScreenState();
+  _ReimburseScreenState createState() => _ReimburseScreenState();
 }
 
-class _ReimbursementScreenState extends State<ReimbursementScreen> {
+class _ReimburseScreenState extends State<ReimburseScreen> {
   TextEditingController descriptionController = TextEditingController();
 
   TextEditingController startDateController = TextEditingController();

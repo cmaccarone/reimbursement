@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
-import 'package:reimbursement/screens/reimbursementsScreen.dart';
+import 'package:reimbursement/screens/reimburseScreen.dart';
 import 'package:reimbursement/widgets.dart';
 
 class RequestApprovalScreen extends StatefulWidget {
@@ -115,7 +115,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ReimbursementScreen(
+                                                    ReimburseScreen(
                                                         tripApprovalTitle:
                                                             snapshot.data[index]
                                                                 .tripName,
