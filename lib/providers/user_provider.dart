@@ -7,6 +7,8 @@ class UserProvider {
   final Firestore _firestore = Firestore.instance;
 
   FirebaseUser currentUser;
+  String firstName;
+  String lastName;
   String email;
   String payMeBy;
   String address;
@@ -37,10 +39,14 @@ class UserProvider {
     state = data.data[UserFields.state];
     zipCode = data.data[UserFields.zipCode];
     userType = data.data[UserFields.userType];
+    firstName = data.data[UserFields.firstName];
+    lastName = data.data[UserFields.lastName];
   }
 
   void registerUser(
-      {String payMeBy,
+      {String firstName,
+      String lastName,
+      String payMeBy,
       String address,
       String zipCode,
       String state,
@@ -48,6 +54,8 @@ class UserProvider {
       String userType,
       String email}) async {
     //load property values
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.address = address;
     this.zipCode = zipCode;
     this.state = state;
@@ -67,7 +75,9 @@ class UserProvider {
         UserFields.zipCode: zipCode,
         UserFields.payMeBy: payMeBy,
         UserFields.userType: Users.employee,
-        UserFields.email: email
+        UserFields.email: email,
+        UserFields.firstName: firstName,
+        UserFields.lastName: lastName
       }, merge: true);
     } catch (e) {
       print(e);

@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kAppBarColor,
+        backgroundColor: kAppbarColor,
       ),
       body: Container(
         padding: EdgeInsets.all(30),

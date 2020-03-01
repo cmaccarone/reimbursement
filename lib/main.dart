@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
               splashColor: Colors.transparent,
               textSelectionColor: kTabBarIconActive,
               primaryColor: kTabBarColor,
-              accentColor: kAppBarColor,
+              accentColor: kAppbarColor,
               backgroundColor: kBackGroundColor,
               appBarTheme: AppBarTheme(
                 color: kTripCellColor,

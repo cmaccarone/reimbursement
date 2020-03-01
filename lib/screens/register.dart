@@ -29,7 +29,7 @@ class RegisterScreen extends StatelessWidget {
       builder: (context, userData, child) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: kAppBarColor,
+            backgroundColor: kAppbarColor,
           ),
           body: SingleChildScrollView(
             child: Container(

@@ -15,6 +15,8 @@ class UserFields {
   static final String userType = 'userType';
   static final String payMeBy = 'PayMeBy';
   static final String email = 'email';
+  static final String firstName = 'firstName';
+  static final String lastName = 'lastName';
 }
 
 class ReceiptFields {

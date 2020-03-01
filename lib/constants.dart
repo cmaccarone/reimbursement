@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-final kTitleStyle = TextStyle(color: Colors.white, fontSize: 40);
-final kFlatButtonTextStlye = TextStyle(color: Colors.white, fontSize: 20);
-final kAppBarColor = Colors.indigo;
-final kSubHeadingText = TextStyle(color: Colors.white, fontSize: 16);
-final kSubTitleText = TextStyle(color: Colors.white, fontSize: 20);
-final kRegularText = TextStyle(color: Colors.white, fontSize: 14);
+final kTitleStyle = TextStyle(color: kProfilePageTextColor, fontSize: 40);
+final kFlatButtonTextStlye =
+    TextStyle(color: kProfilePageTextColor, fontSize: 20);
+final kSubHeadingText = TextStyle(color: kProfilePageTextColor, fontSize: 16);
+final kSubTitleText = TextStyle(color: kProfilePageTextColor, fontSize: 20);
+final kRegularText = TextStyle(color: kProfilePageTextColor, fontSize: 14);
 
 //TripCell
 final kTripCellColor = Color.fromRGBO(246, 249, 253, 1);
@@ -31,3 +31,18 @@ final kTealColor = Color.fromRGBO(28, 173, 186, 1);
 
 //padding values
 final kPadding = 24.5;
+
+//textColors
+final kProfilePageTextColor = Color.fromRGBO(4, 11, 22, 1);
+
+//profile elements
+final kAdminPillColor = Color.fromRGBO(181, 218, 16, 1);
+final kTreasuryPillColor = Color.fromRGBO(86, 219, 229, 1);
+final kEmployeePillColor = Color.fromRGBO(214, 38, 140, 1);
+final kSoftWhiteTextColor = Color.fromRGBO(196, 196, 196, 1);
+final kProfileTitleTextStyle = TextStyle(
+  fontSize: 24,
+);
+final kPillTextStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
+final kSoftSubtitleTextStyle = TextStyle(
+    color: kSoftWhiteTextColor, fontSize: 12, fontWeight: FontWeight.bold);

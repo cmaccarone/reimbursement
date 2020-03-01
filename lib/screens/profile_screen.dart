@@ -30,108 +30,145 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Consumer<UserProvider>(
       builder: (context, userData, child) {
-        return Scaffold(
-          backgroundColor: Colors.lightBlueAccent,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: Container(
-                    padding: EdgeInsets.all(60),
-                    child: Text(
-                      'Profile & Settings',
-                      style: kTitleStyle,
-                    )),
-              ),
-              FlatButton(
-                child: CircleAvatar(
-                  radius: 85,
-                  child: Icon(
-                    Icons.photo_camera,
-                    size: 50,
-                  ),
-                ),
-                onPressed: () async {
-                  _getCameras();
-                  Navigator.push(
-                    (context),
-                    MaterialPageRoute(
-                      builder: (context) => CameraPreviewScreen(
-                        cameras: cameras,
-                        camera: firstCamera,
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: kAppbarColor,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () async {
+                    _getCameras();
+                    Navigator.push(
+                      (context),
+                      MaterialPageRoute(
+                        builder: (context) => CameraPreviewScreen(
+                          cameras: cameras,
+                          camera: firstCamera,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  'Sign Out',
-                  style: kRegularText.copyWith(color: Colors.black54),
+                    );
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                          child: Image(
+                              image: AssetImage("assets/profilePic.jpg"))),
+                    ],
+                  ),
                 ),
-                onPressed: () async {
-                  await _auth.signOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.welcomeScreen, (_) => false);
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                '${userData.email}',
-                style: kSubHeadingText,
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Column(
-                children: <Widget>[
-                  Text(
-                    'Address:',
-                    style: kSubTitleText,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(60, 40, 60, 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        "${userData.firstName} ${userData.lastName}",
+                        style: kProfileTitleTextStyle,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //insert ListView Builder Here
+                      Row(
+                        children: <Widget>[
+                          UserTypePill(userType: userData.userType)
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+
+                      Text(
+                        "EMAIL",
+                        style: kSoftSubtitleTextStyle,
+                      ),
+                      Text(
+                        userData.email,
+                        style: kProfileTitleTextStyle,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "ADDRESS",
+                        style: kSoftSubtitleTextStyle,
+                      ),
+                      Text(
+                        '${userData.address}\n${userData.city} ${userData.state}, ${userData.zipCode}',
+                        style: kProfileTitleTextStyle,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "ACH",
+                        style: kSoftSubtitleTextStyle,
+                      ),
+                      Text(
+                        userData.payMeBy,
+                        style: kProfileTitleTextStyle,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 2,
+                        color: kSoftWhiteTextColor,
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    height: 10,
+                ),
+                FlatButton(
+                  child: Text(
+                    'SIGN OUT',
+                    style: kRegularText.copyWith(color: Colors.black54),
                   ),
-                  Text(
-                    ' ${userData.address}\n   ${userData.city} ${userData.state}, ${userData.zipCode}',
-                    style: kRegularText,
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Routes.welcomeScreen, (_) => false);
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    'REPORT A BUG',
+                    style: kRegularText.copyWith(color: kEmployeePillColor),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Text(
-                    'Payment Method:',
-                    style: kSubTitleText,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    '   ${userData.payMeBy ?? "0"}',
-                    style: kRegularText,
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Text(
-                    'User Type:',
-                    style: kSubTitleText,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    '   ${userData.userType ?? "0"}',
-                    style: kRegularText,
-                  )
-                ],
-              )
-            ],
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Routes.welcomeScreen, (_) => false);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class UserTypePill extends StatelessWidget {
+  UserTypePill({this.userType});
+  final String userType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: userType == Users.employee
+            ? kEmployeePillColor
+            : userType == Users.admin ? kAdminPillColor : kTreasuryPillColor,
+      ),
+      child: Text(
+        userType.toUpperCase(),
+        style: kPillTextStyle,
+      ),
     );
   }
 }

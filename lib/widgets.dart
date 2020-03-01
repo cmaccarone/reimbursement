@@ -314,7 +314,7 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: RaisedButton(
-        color: kAppBarColor,
+        color: kAppbarColor,
         child: Text(
           label,
           style: kFlatButtonTextStlye,

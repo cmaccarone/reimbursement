@@ -11,7 +11,7 @@ class ResetPasswordScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
-        backgroundColor: kAppBarColor,
+        backgroundColor: kAppbarColor,
         title: Text('Reset Password'),
       ),
       body: Container(
