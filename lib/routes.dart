@@ -12,4 +12,5 @@ class Routes {
   static final String requestApprovalScreen = '/requestApprovalScreen';
   static final String reimburseScreen = '/reimburseScreen';
   static final String completedTrips = '/completedTrips';
+  static final String submitBug = '/submitBug';
 }

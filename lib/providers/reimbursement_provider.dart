@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:reimbursement/model/bug.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
@@ -276,5 +277,11 @@ class ReimbursementProvider {
     });
   }
 
+  void reportBug({Bug bug}) async {
+    await _firestore
+        .collection(Collections.bugs)
+        .document(bug.id)
+        .setData(bug.toMap(bug));
+  }
   //todo: add function to deal with when someone completes a trip and finishes submitting all their reimbursements.
 }

@@ -12,8 +12,7 @@ class MainTabBar extends StatefulWidget {
   _MainTabBarState createState() => _MainTabBarState();
 }
 
-class _MainTabBarState extends State<MainTabBar>
-    with SingleTickerProviderStateMixin {
+class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
   FirebaseUser currentUser;
   TabController controller;
   String userType;

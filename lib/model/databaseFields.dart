@@ -5,6 +5,7 @@ class Collections {
   static final String pendingReimbursement = 'pendingReimbursement';
   static final String reimbursements = 'reimbursements';
   static final String completedTrips = 'completedTrips';
+  static final String bugs = 'bugs';
 }
 
 class UserFields {
@@ -17,6 +18,15 @@ class UserFields {
   static final String email = 'email';
   static final String firstName = 'firstName';
   static final String lastName = 'lastName';
+}
+
+class BugFields {
+  static final String timeReported = 'timeReported';
+  static final String reporterEmail = 'reporterEmail';
+  static final String reporterName = 'reporterName';
+  static final String reporterUserType = 'reporterUserType';
+  static final String reportText = 'reportText';
+  static final String id = 'id';
 }
 
 class ReceiptFields {

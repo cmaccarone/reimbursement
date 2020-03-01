@@ -46,3 +46,7 @@ final kProfileTitleTextStyle = TextStyle(
 final kPillTextStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
 final kSoftSubtitleTextStyle = TextStyle(
     color: kSoftWhiteTextColor, fontSize: 12, fontWeight: FontWeight.bold);
+
+//submitBugReport Button Style
+final kSubmitBugReportStlye =
+    TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold);

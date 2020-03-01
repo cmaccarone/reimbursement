@@ -51,27 +51,27 @@ class TripApproval extends Equatable {
 
   //Constructor - Create object coming from firebase
   TripApproval.fromSnapshot({DocumentSnapshot snapshotData}) {
-    var snapshot = snapshotData.data;
     dateRequested =
-        (snapshot[ApprovalFields.dateRequested] as Timestamp)?.toDate() ??
+        (snapshotData[ApprovalFields.dateRequested] as Timestamp)?.toDate() ??
             DateTime.now();
     dateApproved =
-        (snapshot[ApprovalFields.dateApproved] as Timestamp)?.toDate() ??
+        (snapshotData[ApprovalFields.dateApproved] as Timestamp)?.toDate() ??
             DateTime.now();
     tripStartDate =
-        (snapshot[ApprovalFields.tripStartDate] as Timestamp)?.toDate() ??
+        (snapshotData[ApprovalFields.tripStartDate] as Timestamp)?.toDate() ??
             DateTime.now();
     tripEndDate =
-        (snapshot[ApprovalFields.tripEndDate] as Timestamp)?.toDate() ??
+        (snapshotData[ApprovalFields.tripEndDate] as Timestamp)?.toDate() ??
             DateTime.now();
-    approvedBy = snapshot[ApprovalFields.approvedBy];
-    requestedBy = snapshot[ApprovalFields.requestedBy];
-    tripName = snapshot[ApprovalFields.tripName];
-    id = snapshot[ApprovalFields.id];
-    requestedCost = snapshot[ApprovalFields.requestedCost] ?? 'unknown for now';
-    approvedCost = snapshot[ApprovalFields.approvedCost];
-    approved = snapshot[ApprovalFields.approved];
-    submittedByID = snapshot[ApprovalFields.submittedByID];
+    approvedBy = snapshotData[ApprovalFields.approvedBy];
+    requestedBy = snapshotData[ApprovalFields.requestedBy];
+    tripName = snapshotData[ApprovalFields.tripName];
+    id = snapshotData[ApprovalFields.id];
+    requestedCost =
+        snapshotData[ApprovalFields.requestedCost] ?? 'unknown for now';
+    approvedCost = snapshotData[ApprovalFields.approvedCost];
+    approved = snapshotData[ApprovalFields.approved];
+    submittedByID = snapshotData[ApprovalFields.submittedByID];
   }
   //Convert Object into Map for firebase
   Map<String, dynamic> toMap(TripApproval approval) {

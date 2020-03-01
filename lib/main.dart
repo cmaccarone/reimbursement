@@ -12,6 +12,7 @@ import 'package:reimbursement/screens/requestApprovalScreen.dart';
 import 'package:reimbursement/screens/tabBar.dart';
 
 import 'routes.dart';
+import 'screens/SubmitBug.dart';
 import 'screens/completedTripsScreen.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
             Routes.cameraPreviewScreen: (context) => CameraPreviewScreen(),
             Routes.requestApprovalScreen: (context) => RequestApprovalScreen(),
             Routes.reimburseScreen: (context) => ReimburseScreen(),
-            Routes.completedTrips: (context) => CompletedTripsScreen()
+            Routes.completedTrips: (context) => CompletedTripsScreen(),
+            Routes.submitBug: (context) => SubmitBug()
           },
           home: WelcomeScreen(),
           theme: ThemeData(

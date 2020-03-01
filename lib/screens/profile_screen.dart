@@ -137,9 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: kRegularText.copyWith(color: kEmployeePillColor),
                   ),
                   onPressed: () async {
-                    await _auth.signOut();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.welcomeScreen, (_) => false);
+                    Navigator.pushNamed(context, Routes.submitBug);
                   },
                 ),
               ],
