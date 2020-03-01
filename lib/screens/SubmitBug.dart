@@ -74,7 +74,6 @@ class _SubmitBugState extends State<SubmitBug> {
                                         onChanged: (value) {
                                           setState(() {
                                             reportText = value;
-                                            print(value);
                                           });
                                         },
                                         controller: controller,
@@ -98,21 +97,27 @@ class _SubmitBugState extends State<SubmitBug> {
                                     color: kTealColor),
                                 child: FlatButton(
                                   onPressed: () async {
-                                    setState(() {
-                                      _paddings = 360;
-                                      _height = 100;
-                                      _thankYou = "Thanks!";
-                                      _isTextFieldAndButtonVisible = false;
-                                    });
-                                    Bug bug = Bug(
-                                        reporterEmail: userData.email,
-                                        reporterName:
-                                            "${userData.firstName} ${userData.lastName}",
-                                        reportText: reportText,
-                                        reporterUserType: userData.userType);
-                                    Provider.of<ReimbursementProvider>(context,
-                                            listen: false)
-                                        .reportBug(bug: bug);
+                                    if (reportText == null) {
+                                      Navigator.pop(context);
+                                    }
+                                    if (reportText != null) {
+                                      setState(() {
+                                        _paddings = 360;
+                                        _height = 100;
+                                        _thankYou = "Thanks!";
+                                        _isTextFieldAndButtonVisible = false;
+                                      });
+                                      Bug bug = Bug(
+                                          reporterEmail: userData.email,
+                                          reporterName:
+                                              "${userData.firstName} ${userData.lastName}",
+                                          reportText: reportText,
+                                          reporterUserType: userData.userType);
+                                      Provider.of<ReimbursementProvider>(
+                                              context,
+                                              listen: false)
+                                          .reportBug(bug: bug);
+                                    }
                                   },
                                   child: Text(
                                     'Submit Report',

@@ -53,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: <Widget>[
                       Container(
                           child: Image(
+                              //todo add in user profile Image
                               image: AssetImage("assets/profilePic.jpg"))),
                     ],
                   ),
@@ -107,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: kSoftSubtitleTextStyle,
                       ),
                       Text(
-                        userData.payMeBy,
+                        userData.payMeBy.toUpperCase(),
                         style: kProfileTitleTextStyle,
                       ),
                       SizedBox(

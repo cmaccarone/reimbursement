@@ -20,6 +20,10 @@ class UserProvider {
   /// ex. User.admin = "admin";
   String userType;
 
+  String get fullName {
+    return "$firstName $lastName";
+  }
+
   Future<FirebaseUser> getUser() async {
     currentUser = await _auth.currentUser();
     return currentUser;
@@ -62,6 +66,7 @@ class UserProvider {
     this.city = city;
     this.userType = userType;
     this.email = email;
+    this.payMeBy = payMeBy;
 
     try {
       await getUser();

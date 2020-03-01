@@ -102,14 +102,9 @@ class LoginScreen extends StatelessWidget {
   Future<void> getUserData(BuildContext context) async {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDataOnLogin();
-    currentUser = await _auth.currentUser();
 
-    //TODO FIND A BETTER WAY TO INITIALIZE THE USERTYPE. SPLASH SCREEN?
-    Provider.of<ReimbursementProvider>(context, listen: false).userType =
-        Provider.of<UserProvider>(context, listen: false).userType;
-    print(
-        'userType: ${Provider.of<UserProvider>(context, listen: false).userType}');
-    Provider.of<ReimbursementProvider>(context, listen: false).initStreams();
+    Provider.of<ReimbursementProvider>(context, listen: false)
+        .initStreams(context: context);
 
     Navigator.pushNamedAndRemoveUntil(context, Routes.mainTabBar, (_) => false);
   }

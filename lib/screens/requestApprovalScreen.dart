@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
+import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/reimburseScreen.dart';
 import 'package:reimbursement/widgets.dart';
 
@@ -57,182 +58,185 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackGroundColor,
-        appBar: AppBar(
-          title: Text(
-            "Submit Travel Request",
-            style: TextStyle(color: kMainTextColor),
-          ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                children: [
-                  Flexible(
-                    child: StreamBuilder<List<TripApproval>>(
-                      stream: _stream,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<TripApproval>> snapshot) {
-                        print(snapshot.data);
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                            return Text('no connection');
-                          case ConnectionState.waiting:
-                            return Text('Awaiting bids...');
-                          case ConnectionState.active:
-                            return ListView.builder(
-                                itemCount: snapshot.data.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  //todo figure out why this is printing twice?
-                                  print(snapshot.data);
-                                  return TripCell(
-                                    onDismissed: (direction) {
-                                      if (snapshot.data[index].approved ==
-                                          "approved") {
-                                        Provider.of<ReimbursementProvider>(
-                                                context,
-                                                listen: false)
-                                            .completeApprovedTrip(
-                                                trip: snapshot.data[index]);
-                                      } else {
-                                        print("completed");
-                                        Provider.of<ReimbursementProvider>(
-                                                context,
-                                                listen: false)
-                                            .cancelPendingTrip(
-                                                trip: snapshot.data[index]);
-                                      }
-                                    },
-                                    onPressed: () {
-                                      if (snapshot.data[index].approved ==
-                                          ApprovalState.approved) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReimburseScreen(
-                                                        tripApprovalTitle:
-                                                            snapshot.data[index]
-                                                                .tripName,
-                                                        tripApproval: snapshot
-                                                            .data[index])));
-                                      }
-                                    },
-                                    title: snapshot.data[index].tripName,
-                                    reimbursementTotal:
-                                        snapshot.data[index].requestedCost,
-                                    approvalStatus:
-                                        snapshot.data[index].approved,
-                                  );
-                                });
-                          case ConnectionState.done:
-                            return ListView.builder(
-                                itemCount: snapshot.data.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return TripCell(
-                                    title: snapshot.data[index].tripName,
-                                    reimbursementTotal:
-                                        snapshot.data[index].requestedCost,
-                                    approvalStatus:
-                                        snapshot.data[index].approved,
-                                  );
-                                });
-                        }
-                        return null; // unreachable
-                      },
-                    ),
-                  ),
-                ],
-              ),
+    return Consumer<UserProvider>(builder: (context, userData, child) {
+      return SafeArea(
+        child: Scaffold(
+          backgroundColor: kBackGroundColor,
+          appBar: AppBar(
+            title: Text(
+              "Submit Travel Request",
+              style: TextStyle(color: kMainTextColor),
             ),
-            ExpandedSection(
-              expand: _isExpanded,
-              child: Container(
-                width: double.infinity,
-                color: Colors.white,
-                padding: EdgeInsets.all(25.0),
+          ),
+          body: Column(
+            children: <Widget>[
+              Expanded(
                 child: Column(
-                  children: <Widget>[
-                    SignInTextFields(
-                      hideText: false,
-                      controller: descriptionController,
-                      inputLabel: "Trip Name",
-                      onChanged: (text) {
-                        description = text;
-                      },
+                  children: [
+                    Flexible(
+                      child: StreamBuilder<List<TripApproval>>(
+                        stream: _stream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<TripApproval>> snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Error: ${snapshot.error}');
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              return Text('no connection');
+                            case ConnectionState.waiting:
+                              return Text('Awaiting bids...');
+                            case ConnectionState.active:
+                              return ListView.builder(
+                                  itemCount: snapshot.data.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    //todo figure out why this is printing twice?
+
+                                    return TripCell(
+                                      onDismissed: (direction) {
+                                        if (snapshot.data[index].approved ==
+                                            "approved") {
+                                          Provider.of<ReimbursementProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .completeApprovedTrip(
+                                                  trip: snapshot.data[index]);
+                                        } else {
+                                          print("completed");
+                                          Provider.of<ReimbursementProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelPendingTrip(
+                                                  trip: snapshot.data[index]);
+                                        }
+                                      },
+                                      onPressed: () {
+                                        if (snapshot.data[index].approved ==
+                                            ApprovalState.approved) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReimburseScreen(
+                                                          tripApprovalTitle:
+                                                              snapshot
+                                                                  .data[index]
+                                                                  .tripName,
+                                                          tripApproval: snapshot
+                                                              .data[index])));
+                                        }
+                                      },
+                                      title: snapshot.data[index].tripName,
+                                      reimbursementTotal:
+                                          snapshot.data[index].requestedCost,
+                                      approvalStatus:
+                                          snapshot.data[index].approved,
+                                    );
+                                  });
+                            case ConnectionState.done:
+                              return ListView.builder(
+                                  itemCount: snapshot.data.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return TripCell(
+                                      title: snapshot.data[index].tripName,
+                                      reimbursementTotal:
+                                          snapshot.data[index].requestedCost,
+                                      approvalStatus:
+                                          snapshot.data[index].approved,
+                                    );
+                                  });
+                          }
+                          return null; // unreachable
+                        },
+                      ),
                     ),
-                    SignInTextFields(
-                      hideText: false,
-                      controller: startDateController,
-                      inputLabel: "Start Date",
-                      onChanged: (text) {
-                        startDate = text;
-                      },
-                    ),
-                    SignInTextFields(
-                      hideText: false,
-                      controller: endDateController,
-                      inputLabel: "End Date",
-                      onChanged: (text) {
-                        endDate = text;
-                      },
-                    ),
-                    SignInTextFields(
-                      hideText: false,
-                      controller: costController,
-                      inputLabel: "Total Trip Cost",
-                      onChanged: (text) {
-                        cost = text;
-                      },
-                    )
                   ],
                 ),
               ),
-            ),
-            FlatButton(
-              onPressed: () {
-                FirebaseUser currentUser =
-                    Provider.of<ReimbursementProvider>(context, listen: false)
-                        .currentUser;
-                TripApproval trip = TripApproval(
-                    approved: ApprovalState.pending,
-                    tripName: description,
-                    requestedCost: cost,
-                    submittedByID: currentUser.uid,
-                    dateRequested: DateTime.now());
-                setState(() {
-                  if ((_isExpanded) &&
-                      (description != null) &&
-                      (startDate != null) &&
-                      (endDate != null)) {
-                    Provider.of<ReimbursementProvider>(context, listen: false)
-                        .requestApprovalForTrip(tripApproval: trip);
-                    _clearTextBoxes();
-                  }
-                  _toogleExpand();
-                });
-              },
-              child: CircleAvatar(
-                backgroundColor: kTealColor,
-                child: Icon(Icons.add),
+              ExpandedSection(
+                expand: _isExpanded,
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  padding: EdgeInsets.all(25.0),
+                  child: Column(
+                    children: <Widget>[
+                      SignInTextFields(
+                        hideText: false,
+                        controller: descriptionController,
+                        inputLabel: "Trip Name",
+                        onChanged: (text) {
+                          description = text;
+                        },
+                      ),
+                      SignInTextFields(
+                        hideText: false,
+                        controller: startDateController,
+                        inputLabel: "Start Date",
+                        onChanged: (text) {
+                          startDate = text;
+                        },
+                      ),
+                      SignInTextFields(
+                        hideText: false,
+                        controller: endDateController,
+                        inputLabel: "End Date",
+                        onChanged: (text) {
+                          endDate = text;
+                        },
+                      ),
+                      SignInTextFields(
+                        hideText: false,
+                        controller: costController,
+                        inputLabel: "Total Trip Cost",
+                        onChanged: (text) {
+                          cost = text;
+                        },
+                      )
+                    ],
+                  ),
+                ),
               ),
-            ),
-            Center(
-                child: Text(
-              'Add Trip',
-              style: GoogleFonts.roboto(color: Colors.white),
-            )),
-            SizedBox(
-              height: kPadding,
-            ),
-          ],
+              FlatButton(
+                onPressed: () async {
+                  FirebaseUser currentUser =
+                      await FirebaseAuth.instance.currentUser();
+                  print(currentUser.uid);
+                  TripApproval trip = TripApproval(
+                      requestedBy: userData.fullName,
+                      approved: ApprovalState.pending,
+                      tripName: description,
+                      requestedCost: cost,
+                      submittedByID: currentUser.uid,
+                      dateRequested: DateTime.now());
+                  setState(() {
+                    if ((_isExpanded) &&
+                        (description != null) &&
+                        (startDate != null) &&
+                        (endDate != null)) {
+                      Provider.of<ReimbursementProvider>(context, listen: false)
+                          .requestApprovalForTrip(tripApproval: trip);
+                      _clearTextBoxes();
+                    }
+                    _toogleExpand();
+                  });
+                },
+                child: CircleAvatar(
+                  backgroundColor: kTealColor,
+                  child: Icon(Icons.add),
+                ),
+              ),
+              Center(
+                  child: Text(
+                'Add Trip',
+                style: GoogleFonts.roboto(color: Colors.white),
+              )),
+              SizedBox(
+                height: kPadding,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

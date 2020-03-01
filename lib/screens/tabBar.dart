@@ -41,6 +41,7 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(Provider.of<UserProvider>(context).payMeBy);
     return Scaffold(
       bottomNavigationBar: Material(
         color: kTabBarColor,

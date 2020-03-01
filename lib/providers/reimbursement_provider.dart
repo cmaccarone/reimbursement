@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:reimbursement/model/bug.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/model/receipt.dart';
@@ -31,6 +32,7 @@ class ReimbursementProvider {
 
   void dispose() {}
 
+  BuildContext context;
   Stream<List<TripApproval>> _tripsStream;
   Stream<List<Receipt>> _receiptStream;
   double amount;
@@ -49,7 +51,9 @@ class ReimbursementProvider {
   Stream<List<Receipt>> get pendingReimbursementStream =>
       _pendingReceiptsStream;
 
-  void initStreams() async {
+  void initStreams({@required BuildContext context}) async {
+    userType = Provider.of<UserProvider>(context, listen: false).userType;
+    print(userType);
     currentUser = await _auth.currentUser();
     if (userType == Users.admin) {
       await _startTripStream();
