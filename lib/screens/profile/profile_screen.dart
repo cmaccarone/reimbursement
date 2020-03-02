@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
+import 'package:reimbursement/screens/SignIn/welcome.dart';
 import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
-import 'package:reimbursement/screens/misc_reusable/routes.dart';
 import 'package:reimbursement/screens/profile/SubmitBug.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -129,8 +129,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   onPressed: () async {
                     await _auth.signOut();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.welcomeScreen, (_) => false);
+                    Navigator.of(context, rootNavigator: true)
+                        .pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => WelcomeScreen()),
+                            (_) => false);
                   },
                 ),
                 FlatButton(

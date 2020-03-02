@@ -106,6 +106,6 @@ class LoginScreen extends StatelessWidget {
     Provider.of<ReimbursementProvider>(context, listen: false)
         .initStreams(context: context);
 
-    Navigator.pushNamedAndRemoveUntil(context, Routes.mainTabBar, (_) => false);
+    Navigator.pushNamed(context, Routes.mainTabBar);
   }
 }
