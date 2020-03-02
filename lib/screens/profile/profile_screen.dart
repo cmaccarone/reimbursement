@@ -7,6 +7,7 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/routes.dart';
+import 'package:reimbursement/screens/profile/SubmitBug.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -138,7 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: kRegularText.copyWith(color: kEmployeePillColor),
                   ),
                   onPressed: () async {
-                    Navigator.pushNamed(context, Routes.submitBug);
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SubmitBug()));
                   },
                 ),
               ],

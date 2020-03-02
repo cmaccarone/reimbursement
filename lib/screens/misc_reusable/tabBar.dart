@@ -11,16 +11,22 @@ import 'package:reimbursement/screens/approve/approve_screen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/profile/profile_screen.dart';
 
+final _profile = GlobalKey<NavigatorState>();
+final _submit = GlobalKey<NavigatorState>();
+final _completed = GlobalKey<NavigatorState>();
+final _approve = GlobalKey<NavigatorState>();
+final _reimburse = GlobalKey<NavigatorState>();
+
 class MainTabBar extends StatefulWidget {
   @override
   _MainTabBarState createState() => _MainTabBarState();
 }
 
 class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
-  Key key = UniqueKey();
   FirebaseUser currentUser;
   TabController controller;
   String userType;
+  int currentTabIndex = 1;
 
   @override
   void didChangeDependencies() {
@@ -33,11 +39,6 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -47,117 +48,181 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Material(
-        color: kTabBarColor,
-        child: TabBar(
-          unselectedLabelStyle: TextStyle(color: kTabBarIconInactive),
-          labelStyle: TextStyle(color: kTabBarIconActive),
-          isScrollable: false,
-          unselectedLabelColor: kTabBarIconInactive,
-          indicatorWeight: 30,
-          indicator: UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: Color.fromRGBO(255, 255, 255, 0),
-              width: 66,
-            ),
-          ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          controller: controller,
-          tabs: userType == "employee"
-              ? employeeTabs
-              : userType == "admin" ? adminTabs : treasuryTabs,
-        ),
-      ),
-      body: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: userType == "employee"
+      body: IndexedStack(
+        index: currentTabIndex,
+        children: userType == Users.employee
             ? employeeScreens
-            : userType == "admin" ? adminScreens : treasuryScreens,
+            : userType == Users.treasury ? treasuryScreens : adminScreens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: kTabBarIconInactive,
+        selectedItemColor: kTabBarIconActive,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: currentTabIndex,
+        onTap: (val) => _onTap(val, context),
+        backgroundColor: kTabBarColor,
+        items: userType == Users.employee
+            ? employeeTabs
+            : userType == Users.treasury ? treasuryTabs : adminTabs,
       ),
     );
   }
+
+  void _onTap(int val, BuildContext context) {
+    if (currentTabIndex == val) {
+      switch (val) {
+        case 0:
+          _profile.currentState.popUntil((route) => route.isFirst);
+          break;
+        case 1:
+          _submit.currentState.popUntil((route) => route.isFirst);
+          break;
+        case 2:
+          _completed.currentState.popUntil((route) => route.isFirst);
+          break;
+        case 3:
+          _approve.currentState.popUntil((route) => route.isFirst);
+          break;
+        case 4:
+          _reimburse.currentState.popUntil((route) => route.isFirst);
+          break;
+        default:
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          currentTabIndex = val;
+        });
+      }
+    }
+  }
 }
 
-List<Widget> adminTabs = [
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.list),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(
-      Icons.check,
-    ),
-  ),
+List<BottomNavigationBarItem> adminTabs = [
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.person_outline,
+      ),
+      title: Text("Profile")),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money), title: Text("Request")),
+  BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("Completed")),
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.check,
+      ),
+      title: Text("Approve")),
 ];
 
-List<Widget> treasuryTabs = [
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.list),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(
-      MyCustomIcons.account_cash__1_,
-    ),
-  ),
+List<BottomNavigationBarItem> treasuryTabs = [
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.person_outline,
+      ),
+      title: Text("Profile")),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money), title: Text("Request")),
+  BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("Completed")),
+  BottomNavigationBarItem(
+      icon: Icon(
+        MyCustomIcons.account_cash__1_,
+      ),
+      title: Text("Reimburse")),
 ];
 
-List<Widget> employeeTabs = [
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    key: UniqueKey(),
-    icon: Icon(Icons.list),
-  ),
+List<BottomNavigationBarItem> employeeTabs = [
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.person_outline,
+      ),
+      title: Text("Profile")),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money), title: Text("Request")),
+  BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("Completed")),
 ];
 
 List<Widget> employeeScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
+  Navigator(
+    key: _profile,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ProfileScreen(),
+    ),
+  ),
+  Navigator(
+    key: _submit,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => RequestApprovalScreen(),
+    ),
+  ),
+  Navigator(
+    key: _completed,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => CompletedTripsScreen(),
+    ),
+  ),
 ];
 
 List<Widget> adminScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
-  ApproveTripScreen()
+  Navigator(
+    key: _profile,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ProfileScreen(),
+    ),
+  ),
+  Navigator(
+    key: _submit,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => RequestApprovalScreen(),
+    ),
+  ),
+  Navigator(
+    key: _completed,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => CompletedTripsScreen(),
+    ),
+  ),
+  Navigator(
+    key: _approve,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ApproveTripScreen(),
+    ),
+  ),
 ];
 
 List<Widget> treasuryScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
-  ApproveTripScreen()
+  Navigator(
+    key: _profile,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ProfileScreen(),
+    ),
+  ),
+  Navigator(
+    key: _submit,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => RequestApprovalScreen(),
+    ),
+  ),
+  Navigator(
+    key: _completed,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => CompletedTripsScreen(),
+    ),
+  ),
+  Navigator(
+    key: _reimburse,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ProfileScreen(),
+    ),
+  ),
 ];

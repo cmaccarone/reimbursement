@@ -43,7 +43,7 @@ class _SubmitBugState extends State<SubmitBug> {
                 child: AnimatedContainer(
                   duration: Duration(seconds: 1),
                   onEnd: () {
-                    Navigator.pop(context);
+                    Navigator.of(context).pop();
                   },
                   width: _width,
                   height: _height,
@@ -102,7 +102,7 @@ class _SubmitBugState extends State<SubmitBug> {
                                     }
                                     if (reportText != null) {
                                       setState(() {
-                                        _paddings = 360;
+                                        _paddings = 300;
                                         _height = 100;
                                         _thankYou = "Thanks!";
                                         _isTextFieldAndButtonVisible = false;
