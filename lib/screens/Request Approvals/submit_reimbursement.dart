@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
-import 'cameraPreviewScreen.dart';
+import '../misc_reusable/cameraPreviewScreen.dart';
 
 class SubmitReimbursementScreen extends StatefulWidget {
   @override

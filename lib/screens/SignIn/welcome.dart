@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/routes.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/routes.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override

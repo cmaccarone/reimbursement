@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:reimbursement/constants.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final _auth = FirebaseAuth.instance;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/bug.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
 
 class SubmitBug extends StatefulWidget {
   @override

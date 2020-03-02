@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
-class ReimburseScreen extends StatefulWidget {
+class ReceiptScreen extends StatefulWidget {
   final String tripApprovalTitle;
   final TripApproval tripApproval;
+  final bool completedOnly;
 
-  ReimburseScreen({this.tripApprovalTitle, this.tripApproval});
+  ReceiptScreen(
+      {this.tripApprovalTitle, this.tripApproval, this.completedOnly});
 
   @override
-  _ReimburseScreenState createState() => _ReimburseScreenState();
+  _ReceiptScreenState createState() => _ReceiptScreenState();
 }
 
-class _ReimburseScreenState extends State<ReimburseScreen> {
+class _ReceiptScreenState extends State<ReceiptScreen> {
   TextEditingController descriptionController = TextEditingController();
 
   TextEditingController startDateController = TextEditingController();
@@ -26,6 +28,7 @@ class _ReimburseScreenState extends State<ReimburseScreen> {
 
   TextEditingController notesController = TextEditingController();
 
+  bool completedOnly;
   bool _isExpanded = false;
   String description;
   String startDate;
@@ -110,36 +113,41 @@ class _ReimburseScreenState extends State<ReimburseScreen> {
               ),
             ),
           ),
-          FlatButton(
-            onPressed: () async {
-              FirebaseAuth _auth = FirebaseAuth.instance;
-              FirebaseUser currentUser = await _auth.currentUser();
-              TripApproval trip = TripApproval(
-                  tripName: description,
-                  requestedCost: cost,
-                  submittedByID: currentUser.uid,
-                  dateRequested: DateTime.now());
-              setState(() {
-                if ((_isExpanded) &&
-                    (description != null) &&
-                    (startDate != null) &&
-                    (endDate != null)) {
-                  Provider.of<ReimbursementProvider>(context, listen: false)
-                      .requestApprovalForTrip(tripApproval: trip);
-                  _clearTextBoxes();
-                }
-                _toogleExpand();
-              });
-            },
-            child: CircleAvatar(
-              child: Icon(Icons.add),
-            ),
-          ),
-          Center(
-              child: Text(
-            'Add Reciept',
-            style: TextStyle(color: Colors.blueAccent),
-          ))
+          widget.completedOnly
+              ? SizedBox()
+              : FlatButton(
+                  onPressed: () async {
+                    FirebaseAuth _auth = FirebaseAuth.instance;
+                    FirebaseUser currentUser = await _auth.currentUser();
+                    TripApproval trip = TripApproval(
+                        tripName: description,
+                        requestedCost: cost,
+                        submittedByID: currentUser.uid,
+                        dateRequested: DateTime.now());
+                    setState(() {
+                      if ((_isExpanded) &&
+                          (description != null) &&
+                          (startDate != null) &&
+                          (endDate != null)) {
+                        Provider.of<ReimbursementProvider>(context,
+                                listen: false)
+                            .requestApprovalForTrip(tripApproval: trip);
+                        _clearTextBoxes();
+                      }
+                      _toogleExpand();
+                    });
+                  },
+                  child: CircleAvatar(
+                    child: Icon(Icons.add),
+                  ),
+                ),
+          widget.completedOnly
+              ? SizedBox()
+              : Center(
+                  child: Text(
+                  'Add Reciept',
+                  style: TextStyle(color: Colors.blueAccent),
+                ))
         ],
       ),
     );

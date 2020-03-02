@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/screens/reimburseScreen.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/Request%20Approvals/receiptScreen.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 class RequestApprovalScreen extends StatefulWidget {
   @override
@@ -116,7 +116,8 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ReimburseScreen(
+                                                      ReceiptScreen(
+                                                          completedOnly: false,
                                                           tripApprovalTitle:
                                                               snapshot
                                                                   .data[index]
@@ -136,7 +137,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                               return ListView.builder(
                                   itemCount: snapshot.data.length ?? 0,
                                   itemBuilder: (context, index) {
-                                    return TripCell(
+                                    return CompletedTripCell(
                                       title: snapshot.data[index].tripName,
                                       reimbursementTotal:
                                           snapshot.data[index].requestedCost,

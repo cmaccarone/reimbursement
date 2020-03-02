@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/screens/approve_screen.dart';
-import 'package:reimbursement/screens/cameraPreviewScreen.dart';
-import 'package:reimbursement/screens/profile_screen.dart';
-import 'package:reimbursement/screens/reimburseScreen.dart';
-import 'package:reimbursement/screens/requestApprovalScreen.dart';
-import 'package:reimbursement/screens/tabBar.dart';
+import 'package:reimbursement/screens/Request%20Approvals/receiptScreen.dart';
+import 'package:reimbursement/screens/Request%20Approvals/requestApprovalScreen.dart';
+import 'package:reimbursement/screens/approve/approve_screen.dart';
+import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/routes.dart';
+import 'package:reimbursement/screens/profile/profile_screen.dart';
 
-import 'routes.dart';
-import 'screens/SubmitBug.dart';
-import 'screens/completedTripsScreen.dart';
-import 'screens/login.dart';
-import 'screens/register.dart';
-import 'screens/reset_password.dart';
-import 'screens/submit_reimbursement.dart';
-import 'screens/submitted_reimbursements.dart';
-import 'screens/welcome.dart';
+import '../Completed/completedTripsScreen.dart';
+import '../Request Approvals/submit_reimbursement.dart';
+import '../SignIn/login.dart';
+import '../SignIn/register.dart';
+import '../SignIn/reset_password.dart';
+import '../SignIn/welcome.dart';
+import '../approve/tripDetailScreen.dart';
+import '../profile/SubmitBug.dart';
+import 'tabBar.dart';
+
+final GlobalKey<NavigatorState> key = GlobalKey();
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
               create: (context) => ReimbursementProvider())
         ],
         child: MaterialApp(
+          navigatorKey: key,
           routes: {
             Routes.welcomeScreen: (context) => WelcomeScreen(),
             Routes.loginScreen: (context) => LoginScreen(),
@@ -46,16 +49,15 @@ class MyApp extends StatelessWidget {
             Routes.resetPasswordScreen: (context) => ResetPasswordScreen(),
             Routes.submitReimbursement: (context) =>
                 SubmitReimbursementScreen(),
-            Routes.submittedReimbursements: (context) =>
-                SubmittedReimbursementScreen(),
             Routes.mainTabBar: (context) => MainTabBar(),
             Routes.approveTripScreen: (context) => ApproveTripScreen(),
             Routes.profileScreen: (context) => ProfileScreen(),
             Routes.cameraPreviewScreen: (context) => CameraPreviewScreen(),
             Routes.requestApprovalScreen: (context) => RequestApprovalScreen(),
-            Routes.reimburseScreen: (context) => ReimburseScreen(),
+            Routes.reimburseScreen: (context) => ReceiptScreen(),
             Routes.completedTrips: (context) => CompletedTripsScreen(),
-            Routes.submitBug: (context) => SubmitBug()
+            Routes.submitBug: (context) => SubmitBug(),
+            Routes.tripDetailScreen: (context) => TripDetailScreen()
           },
           home: WelcomeScreen(),
           theme: ThemeData(

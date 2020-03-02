@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/routes.dart';
-import 'package:reimbursement/widgets.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/routes.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   final Firestore _firestore = Firestore.instance;

@@ -38,6 +38,7 @@ class ReimbursementProvider {
   double amount;
   Stream<List<TripApproval>> _pendingTripStream;
   Stream<List<Receipt>> _pendingReceiptsStream;
+  Stream<List<TripApproval>> _completedTripsStream;
 
   //firebase streams
   ReimbursementProvider() {
@@ -46,6 +47,7 @@ class ReimbursementProvider {
   }
 
   Stream<List<TripApproval>> get tripStream => _tripsStream;
+  Stream<List<TripApproval>> get completedTripStream => _completedTripsStream;
   Stream<List<TripApproval>> get pendingTripStream => _pendingTripStream;
   Stream<List<Receipt>> get reimbursementStream => _receiptStream;
   Stream<List<Receipt>> get pendingReimbursementStream =>
@@ -56,16 +58,19 @@ class ReimbursementProvider {
     print(userType);
     currentUser = await _auth.currentUser();
     if (userType == Users.admin) {
-      await _startTripStream();
-      await _startReimbursementStream();
+      _startTripStream();
+      _startReimbursementStream();
+      _startCompletedTripStream();
       _startPendingTripStream();
     } else if (userType == Users.treasury) {
       _startTripStream();
       _startReimbursementStream();
       _startPendingReimbursementStream();
+      _startCompletedTripStream();
     } else {
       _startTripStream();
       _startReimbursementStream();
+      _startCompletedTripStream();
     }
   }
 
@@ -148,8 +153,51 @@ class ReimbursementProvider {
     });
   }
 
+  void _startCompletedTripStream() {
+    _completedTripsStream = _firestore
+        .collection(Collections.users)
+        .document(currentUser.uid)
+        .collection(Collections.completedTrips)
+        .snapshots()
+        .map((data) {
+      return data.documents
+          .map((doc) {
+            if (doc.data.isNotEmpty) {
+              return TripApproval.fromSnapshot(snapshotData: doc);
+            } else {
+              return null;
+            }
+          })
+          .where((item) => item != null)
+          .toList();
+    });
+  }
+
   //FOR ADMIN ONLY
-  void approveTrip({TripApproval tripApproval}) async {
+  void approveTrips({List<TripApproval> tripApprovalList}) async {
+    tripApprovalList.map((trip) {
+      if (trip.approved == ApprovalState.approved) {
+        return trip;
+      }
+    }).forEach((tripApproval) {
+      _firestore.runTransaction((transaction) async {
+        //Updates users trip status to approved (this happens in the UI) the new mutated trip is passed in as the new data to be updated.
+        await transaction.update(
+            _firestore
+                .collection(Collections.users)
+                .document(tripApproval.submittedByID)
+                .collection(Collections.trips)
+                .document(tripApproval.id),
+            tripApproval.toMap(tripApproval));
+        //removes reimbursement from the admin pendingApproval list
+        await transaction.delete(_firestore
+            .collection(Collections.unapprovedTrips)
+            .document(tripApproval.id));
+      });
+    });
+  }
+
+  void approveOrDenyTrip({TripApproval tripApproval}) async {
     _firestore.runTransaction((transaction) async {
       //Updates users trip status to approved (this happens in the UI) the new mutated trip is passed in as the new data to be updated.
       await transaction.update(

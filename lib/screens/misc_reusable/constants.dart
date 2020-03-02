@@ -50,3 +50,6 @@ final kSoftSubtitleTextStyle = TextStyle(
 //submitBugReport Button Style
 final kSubmitBugReportStlye =
     TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold);
+
+//approvalPagecolors
+final kApprovalGreen = Color.fromRGBO(139, 168, 13, 1);

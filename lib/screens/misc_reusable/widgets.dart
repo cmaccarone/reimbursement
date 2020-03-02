@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 
 import 'constants.dart';
-import 'model/my_custom_icons_icons.dart';
-import 'screens/approve_screen.dart';
-import 'screens/completedTripsScreen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/requestApprovalScreen.dart';
 
 class ReimbursementCell extends StatelessWidget {
   Function onPressed;
@@ -247,6 +242,192 @@ class TripCell extends StatelessWidget {
   }
 }
 
+class CompletedTripCell extends StatelessWidget {
+  final Function onPressed;
+  final String title;
+  final String approvalStatus;
+  final String reimbursementTotal;
+  final Function(DismissDirection) onDismissed;
+
+  CompletedTripCell(
+      {this.onDismissed,
+      this.onPressed,
+      this.title,
+      this.reimbursementTotal,
+      this.approvalStatus});
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      color: kTripCellColor,
+      onPressed: onPressed,
+      child: Container(
+        color: kTripCellColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Icon(
+                      Icons.airplanemode_active,
+                      color: Colors.blueAccent,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(title),
+                        Text(approvalStatus,
+                            style: approvalStatus == ApprovalState.approved
+                                ? TextStyle(color: Colors.green)
+                                : approvalStatus == ApprovalState.denied
+                                    ? TextStyle(color: Colors.red)
+                                    : TextStyle(color: Colors.orange)
+
+//                    approvalStatus == ApprovalState.approved
+//                        ?
+//                        : ,
+                            ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      reimbursementTotal,
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              color: kTripCellShaddow,
+              height: 4,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ApproveTripCell extends StatelessWidget {
+  final Function onCellPressed;
+  final Function onCheckboxPressed;
+  final String titles;
+  final String approvalStatus;
+  final String reimbursementTotal;
+  final Function(DismissDirection) onDismissed;
+
+  ApproveTripCell(
+      {this.onCellPressed,
+      this.onDismissed,
+      this.onCheckboxPressed,
+      this.titles,
+      this.reimbursementTotal,
+      this.approvalStatus});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: kTripCellColor,
+      child: FlatButton(
+        onPressed: onCellPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    approvalStatus == ApprovalState.pending
+                        ? FlatButton(
+                            color: kTripCellColor,
+                            onPressed: onCheckboxPressed,
+                            child: Icon(
+                              Icons.radio_button_unchecked,
+                              color: kBackGroundColor,
+                              size: 30,
+                            ),
+                          )
+                        : FlatButton(
+                            color: kTripCellColor,
+                            onPressed: onCheckboxPressed,
+                            child: Icon(
+                              Icons.check_circle,
+                              color: kApprovalGreen,
+                            ),
+                          ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(titles),
+                        Text(approvalStatus,
+                            style: approvalStatus == ApprovalState.approved
+                                ? TextStyle(color: Colors.green)
+                                : approvalStatus == ApprovalState.denied
+                                    ? TextStyle(color: Colors.red)
+                                    : TextStyle(color: Colors.orange)
+
+//                    approvalStatus == ApprovalState.approved
+//                        ?
+//                        : ,
+                            ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      reimbursementTotal,
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              color: kTripCellShaddow,
+              height: 4,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ExpandedSection extends StatefulWidget {
   final Widget child;
   final bool expand;
@@ -380,75 +561,3 @@ class SignInTextFields extends StatelessWidget {
     );
   }
 }
-
-List<Widget> adminTabs = [
-  Tab(
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    icon: Icon(Icons.list),
-  ),
-  Tab(
-    icon: Icon(
-      Icons.check,
-    ),
-  ),
-];
-
-List<Widget> treasuryTabs = [
-  Tab(
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    icon: Icon(Icons.list),
-  ),
-  Tab(
-    icon: Icon(
-      MyCustomIcons.account_cash__1_,
-    ),
-  ),
-];
-
-List<Widget> employeeTabs = [
-  Tab(
-    icon: Icon(
-      Icons.person_outline,
-    ),
-  ),
-  Tab(
-    icon: Icon(Icons.attach_money),
-  ),
-  Tab(
-    icon: Icon(Icons.list),
-  ),
-];
-
-List<Widget> employeeScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
-];
-
-List<Widget> adminScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
-  ApproveTripScreen()
-];
-
-List<Widget> treasuryScreens = [
-  ProfileScreen(),
-  RequestApprovalScreen(),
-  CompletedTripsScreen(),
-  ApproveTripScreen()
-];

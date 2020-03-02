@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/constants.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/routes.dart';
-import 'package:reimbursement/screens/cameraPreviewScreen.dart';
+import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
+import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/routes.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
