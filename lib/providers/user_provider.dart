@@ -107,4 +107,5 @@ class Users {
   static final String admin = "admin";
   static final String treasury = "treasury";
   static final String employee = "employee";
+  static final String superUser = "super";
 }

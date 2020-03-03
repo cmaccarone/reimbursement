@@ -514,8 +514,10 @@ class SignInTextFields extends StatelessWidget {
       this.hideText = false,
       @required this.onChanged,
       this.inputType,
-      this.controller});
+      this.controller,
+      this.autoFocusEnabled = false});
 
+  final autoFocusEnabled;
   final TextEditingController controller;
   final String inputLabel;
   final bool hideText;
@@ -535,7 +537,7 @@ class SignInTextFields extends StatelessWidget {
           obscureText: hideText,
           style: TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
-          autofocus: true,
+          autofocus: autoFocusEnabled,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.blue,

@@ -175,10 +175,12 @@ class _ApproveTripScreenState extends State<ApproveTripScreen> {
                     ),
                     FlatButton(
                       onPressed: () async {
-                        Provider.of<ReimbursementProvider>(context,
-                                listen: false)
-                            .approveTrips(
-                                tripApprovalList: pendingApprovalsFromStream);
+                        if (pendingApprovalsFromStream.length > 0) {
+                          Provider.of<ReimbursementProvider>(context,
+                                  listen: false)
+                              .approveTrips(
+                                  tripApprovalList: pendingApprovalsFromStream);
+                        }
                       },
                       child: CircleAvatar(
                         backgroundColor: kTealColor,

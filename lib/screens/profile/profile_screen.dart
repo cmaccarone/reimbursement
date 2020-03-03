@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/SignIn/welcome.dart';
-import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
+import 'package:reimbursement/screens/camera/takePictureScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/profile/SubmitBug.dart';
 
@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.push(
                       (context),
                       MaterialPageRoute(
-                        builder: (context) => CameraPreviewScreen(
+                        builder: (context) => TakePictureScreen(
                           cameras: cameras,
                           camera: firstCamera,
                         ),

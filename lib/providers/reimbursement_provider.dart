@@ -67,6 +67,12 @@ class ReimbursementProvider {
       _startReimbursementStream();
       _startPendingReimbursementStream();
       _startCompletedTripStream();
+    } else if (userType == Users.superUser) {
+      _startTripStream();
+      _startCompletedTripStream();
+      _startReimbursementStream();
+      _startPendingTripStream();
+      _startPendingReimbursementStream();
     } else {
       _startTripStream();
       _startReimbursementStream();
@@ -175,9 +181,12 @@ class ReimbursementProvider {
 
   //FOR ADMIN ONLY
   void approveTrips({List<TripApproval> tripApprovalList}) async {
+    assert(tripApprovalList.length != 0);
     tripApprovalList.map((trip) {
       if (trip.approved == ApprovalState.approved) {
         return trip;
+      } else {
+        return null;
       }
     }).forEach((tripApproval) {
       _firestore.runTransaction((transaction) async {

@@ -9,7 +9,7 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
-import '../misc_reusable/cameraPreviewScreen.dart';
+import '../camera/takePictureScreen.dart';
 
 class SubmitReimbursementScreen extends StatefulWidget {
   @override
@@ -57,8 +57,6 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
   String notes;
 
   String amountField;
-
-  String picturePath;
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController notesController = TextEditingController();
@@ -177,7 +175,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                     Navigator.push(
                       (context),
                       MaterialPageRoute(
-                        builder: (context) => CameraPreviewScreen(
+                        builder: (context) => TakePictureScreen(
                           cameras: cameras,
                           camera: firstCamera,
                         ),

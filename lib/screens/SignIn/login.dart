@@ -53,6 +53,7 @@ class LoginScreen extends StatelessWidget {
               height: 10,
             ),
             SignInTextFields(
+              autoFocusEnabled: true,
               inputLabel: 'Email',
               hideText: false,
               onChanged: (newValue) {
@@ -63,6 +64,7 @@ class LoginScreen extends StatelessWidget {
               height: 10,
             ),
             SignInTextFields(
+              autoFocusEnabled: true,
               inputLabel: 'Password',
               hideText: true,
               onChanged: (newValue) {

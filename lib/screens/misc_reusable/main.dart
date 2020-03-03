@@ -6,10 +6,11 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/Request%20Approvals/receiptScreen.dart';
 import 'package:reimbursement/screens/Request%20Approvals/requestApprovalScreen.dart';
 import 'package:reimbursement/screens/approve/approve_screen.dart';
-import 'package:reimbursement/screens/misc_reusable/cameraPreviewScreen.dart';
+import 'package:reimbursement/screens/camera/takePictureScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/routes.dart';
 import 'package:reimbursement/screens/profile/profile_screen.dart';
+import 'package:reimbursement/screens/reimburse/reimburseScreen.dart';
 
 import '../Completed/completedTripsScreen.dart';
 import '../Request Approvals/submit_reimbursement.dart';
@@ -52,12 +53,13 @@ class MyApp extends StatelessWidget {
             Routes.mainTabBar: (context) => MainTabBar(),
             Routes.approveTripScreen: (context) => ApproveTripScreen(),
             Routes.profileScreen: (context) => ProfileScreen(),
-            Routes.cameraPreviewScreen: (context) => CameraPreviewScreen(),
+            Routes.cameraPreviewScreen: (context) => TakePictureScreen(),
             Routes.requestApprovalScreen: (context) => RequestApprovalScreen(),
             Routes.reimburseScreen: (context) => ReceiptScreen(),
             Routes.completedTrips: (context) => CompletedTripsScreen(),
             Routes.submitBug: (context) => SubmitBug(),
-            Routes.tripDetailScreen: (context) => TripDetailScreen()
+            Routes.tripDetailScreen: (context) => TripDetailScreen(),
+            Routes.reimburseScreen: (context) => ReimburseScreen()
           },
           home: WelcomeScreen(),
           theme: ThemeData(

@@ -162,6 +162,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                   child: Column(
                     children: <Widget>[
                       SignInTextFields(
+                        autoFocusEnabled: true,
                         hideText: false,
                         controller: descriptionController,
                         inputLabel: "Trip Name",
@@ -170,6 +171,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                         },
                       ),
                       SignInTextFields(
+                        autoFocusEnabled: false,
                         hideText: false,
                         controller: startDateController,
                         inputLabel: "Start Date",
@@ -178,6 +180,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                         },
                       ),
                       SignInTextFields(
+                        autoFocusEnabled: false,
                         hideText: false,
                         controller: endDateController,
                         inputLabel: "End Date",
@@ -186,6 +189,7 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                         },
                       ),
                       SignInTextFields(
+                        autoFocusEnabled: false,
                         hideText: false,
                         controller: costController,
                         inputLabel: "Total Trip Cost",

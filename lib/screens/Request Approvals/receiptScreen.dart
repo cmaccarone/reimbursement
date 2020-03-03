@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,14 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
 
   TextEditingController notesController = TextEditingController();
 
+  void _getCameras() async {
+    cameras = await availableCameras();
+    firstCamera = cameras.first;
+    // Get a specific camera from the list of available cameras.
+  }
+
+  List<CameraDescription> cameras;
+  CameraDescription firstCamera;
   bool completedOnly;
   bool _isExpanded = false;
   String description;
@@ -36,6 +45,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   String cost;
   String notes;
   double totalReceiptVale;
+  String picturePath;
 
   void _toogleExpand() {
     setState(() {

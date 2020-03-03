@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'picturePreviewScreen.dart';
 
 // #1 Add the required dependencies.
 // #2 Get a list of the available cameras.
@@ -14,16 +14,16 @@ import 'package:path_provider/path_provider.dart';
 // #5 Take a picture with the CameraController.
 // #6 Display the picture with an Image widget.
 
-class CameraPreviewScreen extends StatefulWidget {
-  CameraPreviewScreen({this.camera, this.cameras});
+class TakePictureScreen extends StatefulWidget {
+  TakePictureScreen({this.camera, this.cameras});
 
   final CameraDescription camera;
   final List<CameraDescription> cameras;
   @override
-  _CameraPreviewScreenState createState() => _CameraPreviewScreenState();
+  _TakePictureScreenState createState() => _TakePictureScreenState();
 }
 
-class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
+class _TakePictureScreenState extends State<TakePictureScreen> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   CameraDescription chosenCamera;
@@ -171,44 +171,6 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class DisplayPictureScreen extends StatefulWidget {
-  DisplayPictureScreen({this.imagePath});
-
-  final String imagePath;
-
-  @override
-  _DisplayPictureScreenState createState() => _DisplayPictureScreenState();
-}
-
-class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Picture Preview",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blueAccent,
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              "Save",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onPressed: () {
-              print("photo saved");
-            },
-          ),
-        ],
-      ),
-      body: Image.file(
-        File(widget.imagePath),
       ),
     );
   }

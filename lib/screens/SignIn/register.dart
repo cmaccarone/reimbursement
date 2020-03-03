@@ -93,6 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   inputLabel: 'First Name',
                   hideText: false,
                   onChanged: (newValue) {
@@ -103,6 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   inputLabel: 'Last Name',
                   hideText: false,
                   onChanged: (newValue) {
@@ -113,6 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   inputLabel: 'Email',
                   hideText: false,
                   onChanged: (newValue) {
@@ -123,6 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   inputLabel: 'Password',
                   hideText: true,
                   onChanged: (newValue) {
@@ -133,6 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   inputLabel: 'Confirm Password',
                   hideText: true,
                   onChanged: (newValue) {
@@ -143,6 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   hideText: false,
                   inputLabel: 'Address',
                   onChanged: (newValue) {
@@ -153,6 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   hideText: false,
                   inputLabel: 'City',
                   onChanged: (newValue) {
@@ -163,6 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   hideText: false,
                   inputLabel: 'State',
                   onChanged: (newValue) {
@@ -173,6 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 10,
                 ),
                 SignInTextFields(
+                  autoFocusEnabled: true,
                   hideText: false,
                   inputLabel: 'Zip Code',
                   onChanged: (newValue) {

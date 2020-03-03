@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/model/my_custom_icons_icons.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
@@ -10,6 +11,7 @@ import 'package:reimbursement/screens/Request Approvals/requestApprovalScreen.da
 import 'package:reimbursement/screens/approve/approve_screen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/profile/profile_screen.dart';
+import 'package:reimbursement/screens/reimburse/reimburseScreen.dart';
 
 final _profile = GlobalKey<NavigatorState>();
 final _submit = GlobalKey<NavigatorState>();
@@ -47,23 +49,39 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: currentTabIndex,
-        children: userType == Users.employee
-            ? employeeScreens
-            : userType == Users.treasury ? treasuryScreens : adminScreens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: kTabBarIconInactive,
-        selectedItemColor: kTabBarIconActive,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentTabIndex,
-        onTap: (val) => _onTap(val, context),
-        backgroundColor: kTabBarColor,
-        items: userType == Users.employee
-            ? employeeTabs
-            : userType == Users.treasury ? treasuryTabs : adminTabs,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: currentTabIndex,
+            children: userType == Users.employee
+                ? employeeScreens
+                : userType == Users.treasury
+                    ? treasuryScreens
+                    : userType == Users.admin ? adminScreens : superScreens,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            unselectedItemColor: kTabBarIconInactive,
+            selectedItemColor: kTabBarIconActive,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: currentTabIndex,
+            onTap: (val) => _onTap(val, context),
+            backgroundColor: kTabBarColor,
+            items: userType == Users.employee
+                ? employeeTabs
+                : userType == Users.treasury
+                    ? treasuryTabs
+                    : userType == Users.admin ? adminTabs : superTabs,
+          ),
+        ),
       ),
     );
   }
@@ -123,6 +141,27 @@ List<BottomNavigationBarItem> treasuryTabs = [
   BottomNavigationBarItem(
       icon: Icon(Icons.attach_money), title: Text("Request")),
   BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("Completed")),
+  BottomNavigationBarItem(
+      icon: Icon(
+        MyCustomIcons.account_cash__1_,
+      ),
+      title: Text("Reimburse")),
+];
+
+List<BottomNavigationBarItem> superTabs = [
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.person_outline,
+      ),
+      title: Text("Profile")),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.attach_money), title: Text("Request")),
+  BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("Completed")),
+  BottomNavigationBarItem(
+      icon: Icon(
+        Icons.check,
+      ),
+      title: Text("Approve")),
   BottomNavigationBarItem(
       icon: Icon(
         MyCustomIcons.account_cash__1_,
@@ -222,7 +261,45 @@ List<Widget> treasuryScreens = [
     key: _reimburse,
     onGenerateRoute: (route) => MaterialPageRoute(
       settings: route,
+      builder: (context) => ReimburseScreen(),
+    ),
+  ),
+];
+
+List<Widget> superScreens = [
+  Navigator(
+    key: _profile,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
       builder: (context) => ProfileScreen(),
+    ),
+  ),
+  Navigator(
+    key: _submit,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => RequestApprovalScreen(),
+    ),
+  ),
+  Navigator(
+    key: _completed,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => CompletedTripsScreen(),
+    ),
+  ),
+  Navigator(
+    key: _approve,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ApproveTripScreen(),
+    ),
+  ),
+  Navigator(
+    key: _reimburse,
+    onGenerateRoute: (route) => MaterialPageRoute(
+      settings: route,
+      builder: (context) => ReimburseScreen(),
     ),
   ),
 ];
