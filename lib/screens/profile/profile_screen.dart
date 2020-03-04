@@ -7,6 +7,7 @@ import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/SignIn/welcome.dart';
 import 'package:reimbursement/screens/camera/takePictureScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 import 'package:reimbursement/screens/profile/SubmitBug.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,8 +35,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return SafeArea(
           child: Scaffold(
             backgroundColor: kAppbarColor,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            body: ConstrainedScrollView(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 GestureDetector(
                   onTap: () async {

@@ -156,7 +156,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                       SignInTextFields(
                         hideText: false,
                         inputLabel: "amount",
-                        inputType: TextInputType.numberWithOptions(
+                        KeyboardType: TextInputType.numberWithOptions(
                             signed: false, decimal: true),
                         controller: amountController,
                         onChanged: (value) {

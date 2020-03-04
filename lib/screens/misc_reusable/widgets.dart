@@ -509,11 +509,10 @@ class SubmitButton extends StatelessWidget {
 
 class SignInTextFields extends StatelessWidget {
   SignInTextFields(
-      {this.inputAction = TextInputAction.continueAction,
-      @required this.inputLabel,
+      {@required this.inputLabel,
       this.hideText = false,
       @required this.onChanged,
-      this.inputType,
+      this.KeyboardType,
       this.controller,
       this.autoFocusEnabled = false});
 
@@ -522,17 +521,15 @@ class SignInTextFields extends StatelessWidget {
   final String inputLabel;
   final bool hideText;
   final Function onChanged;
-  final TextInputAction inputAction;
-  final TextInputType inputType;
+  final TextInputType KeyboardType;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
-          keyboardType: inputType,
+          keyboardType: KeyboardType,
           controller: controller,
-          textInputAction: inputAction,
           onChanged: onChanged,
           obscureText: hideText,
           style: TextStyle(color: Colors.white),
@@ -560,6 +557,35 @@ class SignInTextFields extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: Colors.white)),
           )),
+    );
+  }
+}
+
+class ConstrainedScrollView extends StatelessWidget {
+  ConstrainedScrollView(
+      {@required this.children,
+      this.crossAxisAlignment,
+      this.mainAxisAlignment,
+      this.padding,
+      this.color});
+  EdgeInsetsGeometry padding;
+  Color color;
+  MainAxisAlignment mainAxisAlignment;
+  CrossAxisAlignment crossAxisAlignment;
+  List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: padding,
+        color: color,
+        child: Column(
+          mainAxisAlignment: mainAxisAlignment,
+          crossAxisAlignment: crossAxisAlignment,
+          children: children,
+        ),
+      ),
     );
   }
 }

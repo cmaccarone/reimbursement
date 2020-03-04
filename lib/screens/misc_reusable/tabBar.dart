@@ -60,6 +60,7 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomPadding: true,
           body: IndexedStack(
             index: currentTabIndex,
             children: userType == Users.employee

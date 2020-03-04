@@ -61,9 +61,11 @@ class _CompletedTripsScreenState extends State<CompletedTripsScreen> {
         child: Scaffold(
           backgroundColor: kBackGroundColor,
           appBar: AppBar(
-            title: Text(
-              "Completed Trips",
-              style: TextStyle(color: kMainTextColor),
+            title: Center(
+              child: Text(
+                "Completed Trips",
+                style: TextStyle(color: kMainTextColor),
+              ),
             ),
           ),
           body: Column(

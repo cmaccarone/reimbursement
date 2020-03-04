@@ -63,17 +63,17 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
         child: Scaffold(
           backgroundColor: kBackGroundColor,
           appBar: AppBar(
-            title: Text(
-              "Submit Travel Request",
-              style: TextStyle(color: kMainTextColor),
+            title: Center(
+              child: Text(
+                "Submit Travel Request",
+                style: TextStyle(color: kMainTextColor),
+              ),
             ),
           ),
           body: Column(
             children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: [
-                    Flexible(
+              !_isExpanded
+                  ? Flexible(
                       child: StreamBuilder<List<TripApproval>>(
                         stream: _stream,
                         builder: (BuildContext context,
@@ -90,7 +90,6 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                   itemCount: snapshot.data.length ?? 0,
                                   itemBuilder: (context, index) {
                                     //todo figure out why this is printing twice?
-
                                     return TripCell(
                                       onDismissed: (direction) {
                                         if (snapshot.data[index].approved ==
@@ -149,99 +148,185 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                           return null; // unreachable
                         },
                       ),
+                    )
+                  : Container(),
+              _isExpanded
+                  ? Expanded(
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              SignInTextFields(
+                                autoFocusEnabled: true,
+                                hideText: false,
+                                controller: descriptionController,
+                                inputLabel: "Trip Name",
+                                onChanged: (text) {
+                                  description = text;
+                                },
+                              ),
+                              SignInTextFields(
+                                autoFocusEnabled: false,
+                                hideText: false,
+                                controller: startDateController,
+                                inputLabel: "Start Date",
+                                onChanged: (text) {
+                                  startDate = text;
+                                },
+                              ),
+                              SignInTextFields(
+                                autoFocusEnabled: false,
+                                hideText: false,
+                                controller: endDateController,
+                                inputLabel: "End Date",
+                                onChanged: (text) {
+                                  endDate = text;
+                                },
+                              ),
+                              SignInTextFields(
+                                autoFocusEnabled: false,
+                                hideText: false,
+                                controller: costController,
+                                inputLabel: "Total Trip Cost",
+                                onChanged: (text) {
+                                  cost = text;
+                                },
+                              )
+                            ],
+                          ),
+                          Container(
+                            height: 70,
+                            child: Column(
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: () async {
+                                    FocusScopeNode currentFocus =
+                                        FocusScope.of(context);
+
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
+                                    FirebaseUser currentUser =
+                                        await FirebaseAuth.instance
+                                            .currentUser();
+                                    print(currentUser.uid);
+                                    TripApproval trip = TripApproval(
+                                        requestedBy: userData.fullName,
+                                        approved: ApprovalState.pending,
+                                        tripName: description,
+                                        requestedCost: cost,
+                                        submittedByID: currentUser.uid,
+                                        dateRequested: DateTime.now());
+                                    setState(() {
+                                      if ((_isExpanded) &&
+                                          (description != null) &&
+                                          (startDate != null) &&
+                                          (endDate != null)) {
+                                        Provider.of<ReimbursementProvider>(
+                                                context,
+                                                listen: false)
+                                            .requestApprovalForTrip(
+                                                tripApproval: trip);
+                                        _clearTextBoxes();
+                                      }
+                                      _toogleExpand();
+                                    });
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: kTealColor,
+                                    child: Icon(Icons.add),
+                                  ),
+                                ),
+                                Center(
+                                    child: Text(
+                                  'Add Trip',
+                                  style:
+                                      GoogleFonts.roboto(color: Colors.white),
+                                )),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      height: 70,
+                      child: Column(
+                        children: <Widget>[
+                          FlatButton(
+                            onPressed: () async {
+                              FocusScopeNode currentFocus =
+                                  FocusScope.of(context);
+
+                              if (!currentFocus.hasPrimaryFocus) {
+                                currentFocus.unfocus();
+                              }
+                              FirebaseUser currentUser =
+                                  await FirebaseAuth.instance.currentUser();
+                              print(currentUser.uid);
+                              TripApproval trip = TripApproval(
+                                  requestedBy: userData.fullName,
+                                  approved: ApprovalState.pending,
+                                  tripName: description,
+                                  requestedCost: cost,
+                                  submittedByID: currentUser.uid,
+                                  dateRequested: DateTime.now());
+                              setState(() {
+                                if ((_isExpanded) &&
+                                    (description != null) &&
+                                    (startDate != null) &&
+                                    (endDate != null)) {
+                                  Provider.of<ReimbursementProvider>(context,
+                                          listen: false)
+                                      .requestApprovalForTrip(
+                                          tripApproval: trip);
+                                  _clearTextBoxes();
+                                }
+                                _toogleExpand();
+                              });
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: kTealColor,
+                              child: Icon(Icons.add),
+                            ),
+                          ),
+                          Center(
+                              child: Text(
+                            'Add Trip',
+                            style: GoogleFonts.roboto(color: Colors.white),
+                          )),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              ExpandedSection(
-                expand: _isExpanded,
-                child: Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  padding: EdgeInsets.all(25.0),
-                  child: Column(
-                    children: <Widget>[
-                      SignInTextFields(
-                        autoFocusEnabled: true,
-                        hideText: false,
-                        controller: descriptionController,
-                        inputLabel: "Trip Name",
-                        onChanged: (text) {
-                          description = text;
-                        },
-                      ),
-                      SignInTextFields(
-                        autoFocusEnabled: false,
-                        hideText: false,
-                        controller: startDateController,
-                        inputLabel: "Start Date",
-                        onChanged: (text) {
-                          startDate = text;
-                        },
-                      ),
-                      SignInTextFields(
-                        autoFocusEnabled: false,
-                        hideText: false,
-                        controller: endDateController,
-                        inputLabel: "End Date",
-                        onChanged: (text) {
-                          endDate = text;
-                        },
-                      ),
-                      SignInTextFields(
-                        autoFocusEnabled: false,
-                        hideText: false,
-                        controller: costController,
-                        inputLabel: "Total Trip Cost",
-                        onChanged: (text) {
-                          cost = text;
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              FlatButton(
-                onPressed: () async {
-                  FirebaseUser currentUser =
-                      await FirebaseAuth.instance.currentUser();
-                  print(currentUser.uid);
-                  TripApproval trip = TripApproval(
-                      requestedBy: userData.fullName,
-                      approved: ApprovalState.pending,
-                      tripName: description,
-                      requestedCost: cost,
-                      submittedByID: currentUser.uid,
-                      dateRequested: DateTime.now());
-                  setState(() {
-                    if ((_isExpanded) &&
-                        (description != null) &&
-                        (startDate != null) &&
-                        (endDate != null)) {
-                      Provider.of<ReimbursementProvider>(context, listen: false)
-                          .requestApprovalForTrip(tripApproval: trip);
-                      _clearTextBoxes();
-                    }
-                    _toogleExpand();
-                  });
-                },
-                child: CircleAvatar(
-                  backgroundColor: kTealColor,
-                  child: Icon(Icons.add),
-                ),
-              ),
-              Center(
-                  child: Text(
-                'Add Trip',
-                style: GoogleFonts.roboto(color: Colors.white),
-              )),
-              SizedBox(
-                height: kPadding,
-              ),
             ],
           ),
         ),
       );
     });
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+          child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minWidth: constraints.maxWidth,
+                  minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(mainAxisSize: MainAxisSize.max, children: [
+                  Text('header'),
+                  Expanded(
+                    child: Container(
+                      color: Colors.green,
+                      child: Text('body'),
+                    ),
+                  ),
+                  Text('footer'),
+                ]),
+              )));
+    }));
   }
 }

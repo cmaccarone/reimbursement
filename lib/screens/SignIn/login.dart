@@ -12,7 +12,8 @@ import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 class LoginScreen extends StatelessWidget {
   final Firestore _firestore = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final controller = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   String emailField;
   String passwordfield;
   FirebaseUser currentUser;
@@ -20,13 +21,16 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         backgroundColor: kAppbarColor,
       ),
       body: Container(
+        height: double.infinity,
         padding: EdgeInsets.all(30),
         color: Colors.lightBlueAccent,
-        child: Column(
+        child: ConstrainedScrollView(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -53,6 +57,8 @@ class LoginScreen extends StatelessWidget {
               height: 10,
             ),
             SignInTextFields(
+              KeyboardType: TextInputType.emailAddress,
+              controller: emailController,
               autoFocusEnabled: true,
               inputLabel: 'Email',
               hideText: false,
@@ -64,6 +70,7 @@ class LoginScreen extends StatelessWidget {
               height: 10,
             ),
             SignInTextFields(
+              controller: passwordController,
               autoFocusEnabled: true,
               inputLabel: 'Password',
               hideText: true,

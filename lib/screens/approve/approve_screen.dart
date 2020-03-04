@@ -74,9 +74,11 @@ class _ApproveTripScreenState extends State<ApproveTripScreen> {
         child: Scaffold(
           backgroundColor: kBackGroundColor,
           appBar: AppBar(
-            title: Text(
-              "Pending Approval",
-              style: TextStyle(color: kMainTextColor),
+            title: Center(
+              child: Text(
+                "Pending Approval",
+                style: TextStyle(color: kMainTextColor),
+              ),
             ),
           ),
           body: Column(
