@@ -72,84 +72,92 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
           ),
           body: Column(
             children: <Widget>[
-              !_isExpanded
-                  ? Flexible(
-                      child: StreamBuilder<List<TripApproval>>(
-                        stream: _stream,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<TripApproval>> snapshot) {
-                          if (snapshot.hasError)
-                            return Text('Error: ${snapshot.error}');
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return Text('no connection');
-                            case ConnectionState.waiting:
-                              return Text('Awaiting bids...');
-                            case ConnectionState.active:
-                              return ListView.builder(
-                                  itemCount: snapshot.data.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    //todo figure out why this is printing twice?
-                                    return TripCell(
-                                      onDismissed: (direction) {
-                                        if (snapshot.data[index].approved ==
-                                            "approved") {
-                                          Provider.of<ReimbursementProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .completeApprovedTrip(
-                                                  trip: snapshot.data[index]);
-                                        } else {
-                                          print("completed");
-                                          Provider.of<ReimbursementProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .cancelPendingTrip(
-                                                  trip: snapshot.data[index]);
-                                        }
-                                      },
-                                      onPressed: () {
-                                        if (snapshot.data[index].approved ==
-                                            ApprovalState.approved) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReceiptScreen(
-                                                          completedOnly: false,
-                                                          tripApprovalTitle:
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .tripName,
-                                                          tripApproval: snapshot
-                                                              .data[index])));
-                                        }
-                                      },
-                                      title: snapshot.data[index].tripName,
-                                      reimbursementTotal:
-                                          snapshot.data[index].requestedCost,
-                                      approvalStatus:
-                                          snapshot.data[index].approved,
-                                    );
-                                  });
-                            case ConnectionState.done:
-                              return ListView.builder(
-                                  itemCount: snapshot.data.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    return CompletedTripCell(
-                                      title: snapshot.data[index].tripName,
-                                      reimbursementTotal:
-                                          snapshot.data[index].requestedCost,
-                                      approvalStatus:
-                                          snapshot.data[index].approved,
-                                    );
-                                  });
-                          }
-                          return null; // unreachable
-                        },
-                      ),
-                    )
-                  : Container(),
+              Flexible(
+                flex: !_isExpanded ? 3 : 0,
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  switchInCurve: Curves.bounceIn,
+                  switchOutCurve: Curves.linear,
+                  child: !_isExpanded
+                      ? StreamBuilder<List<TripApproval>>(
+                          stream: _stream,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<TripApproval>> snapshot) {
+                            if (snapshot.hasError)
+                              return Text('Error: ${snapshot.error}');
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.none:
+                                return Text('no connection');
+                              case ConnectionState.waiting:
+                                return Text('Awaiting bids...');
+                              case ConnectionState.active:
+                                return ListView.builder(
+                                    itemCount: snapshot.data.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      //todo figure out why this is printing twice?
+                                      return TripCell(
+                                        onDismissed: (direction) {
+                                          if (snapshot.data[index].approved ==
+                                              "approved") {
+                                            Provider.of<ReimbursementProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .completeApprovedTrip(
+                                                    trip: snapshot.data[index]);
+                                          } else {
+                                            print("completed");
+                                            Provider.of<ReimbursementProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .cancelPendingTrip(
+                                                    trip: snapshot.data[index]);
+                                          }
+                                        },
+                                        onPressed: () {
+                                          if (snapshot.data[index].approved ==
+                                              ApprovalState.approved) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReceiptScreen(
+                                                            completedOnly:
+                                                                false,
+                                                            tripApprovalTitle:
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .tripName,
+                                                            tripApproval:
+                                                                snapshot.data[
+                                                                    index])));
+                                          }
+                                        },
+                                        title: snapshot.data[index].tripName,
+                                        reimbursementTotal:
+                                            snapshot.data[index].requestedCost,
+                                        approvalStatus:
+                                            snapshot.data[index].approved,
+                                      );
+                                    });
+                              case ConnectionState.done:
+                                return ListView.builder(
+                                    itemCount: snapshot.data.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return CompletedTripCell(
+                                        title: snapshot.data[index].tripName,
+                                        reimbursementTotal:
+                                            snapshot.data[index].requestedCost,
+                                        approvalStatus:
+                                            snapshot.data[index].approved,
+                                      );
+                                    });
+                            }
+                            return null; // unreachable
+                          },
+                        )
+                      : Container(),
+                ),
+              ),
               _isExpanded
                   ? Expanded(
                       child: ListView(

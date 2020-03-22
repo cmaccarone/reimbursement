@@ -6,6 +6,8 @@ class Collections {
   static final String reimbursements = 'reimbursements';
   static final String completedTrips = 'completedTrips';
   static final String bugs = 'bugs';
+  static final String reimbursementCache = 'reimbursementCache';
+  static final String specialTravel = 'specialTravel';
 }
 
 class UserFields {
