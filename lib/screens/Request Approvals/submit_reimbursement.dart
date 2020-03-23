@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +7,6 @@ import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
-
-import '../camera/takePictureScreen.dart';
 
 class SubmitReimbursementScreen extends StatefulWidget {
   @override
@@ -39,17 +36,6 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
         );
       },
     );
-  }
-
-  List<CameraDescription> cameras;
-
-  CameraDescription firstCamera;
-
-  void _getCameras() async {
-    cameras = await availableCameras();
-    firstCamera = cameras.first;
-
-    // Get a specific camera from the list of available cameras.
   }
 
   String description;
@@ -169,19 +155,7 @@ class _SubmitReimbursementScreenState extends State<SubmitReimbursementScreen> {
                 ),
                 FlatButton(
                   child: CircleAvatar(child: Icon(Icons.photo_camera)),
-                  onPressed: () async {
-                    _getCameras();
-                    print("cameras $cameras");
-                    Navigator.push(
-                      (context),
-                      MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(
-                          cameras: cameras,
-                          camera: firstCamera,
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: () async {},
                 ),
                 SubmitButton(
                   label: "Submit Reimbursement",

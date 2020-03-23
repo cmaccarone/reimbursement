@@ -1,11 +1,12 @@
-import 'package:camera/camera.dart';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/SignIn/welcome.dart';
-import 'package:reimbursement/screens/camera/takePictureScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 import 'package:reimbursement/screens/profile/SubmitBug.dart';
@@ -16,18 +17,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  File _image;
+
+  Future getImage() async {
+    var image;
+
+    //todo add dialog to choose between gallery and camera.
+    image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<CameraDescription> cameras;
-    CameraDescription firstCamera;
-
-    void _getCameras() async {
-      cameras = await availableCameras();
-      firstCamera = cameras.first;
-
-      // Get a specific camera from the list of available cameras.
-    }
-
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     return Consumer<UserProvider>(
@@ -41,23 +44,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () async {
-                    _getCameras();
-                    Navigator.push(
-                      (context),
-                      MaterialPageRoute(
-                        builder: (context) => TakePictureScreen(
-                          cameras: cameras,
-                          camera: firstCamera,
-                        ),
-                      ),
-                    );
+                    getImage();
                   },
                   child: Stack(
                     children: <Widget>[
                       Container(
                           child: Image(
                               //todo add in user profile Image
-                              image: AssetImage("assets/profilePic.jpg"))),
+                              image: _image == null
+                                  ? AssetImage("assets/profilePic.jpg")
+                                  : FileImage(_image))),
                     ],
                   ),
                 ),
