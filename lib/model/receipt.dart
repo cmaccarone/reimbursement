@@ -114,7 +114,7 @@ class Receipt {
 //class SpecialTravel extends Reimbursement {
 //  @override
 //  void set approved(bool _approved) {
-//    // TODO: implement approved
+
 //    super.approved = _approved;
 //  }
 //}
