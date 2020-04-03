@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/model/bug.dart';
@@ -302,6 +304,23 @@ class ReimbursementProvider {
       await transaction.delete(
           _firestore.collection(Collections.unapprovedTrips).document(trip.id));
     });
+  }
+
+  void uploadProfilePicture({File file, Function fileUploaded(bool)}) async {
+    StorageTaskSnapshot storageReference = await FirebaseStorage.instance
+        .ref()
+        .child(currentUser.uid)
+        .putFile(file)
+        .onComplete;
+    fileUploaded(true);
+  }
+
+  Future<dynamic> getProfilePicture() async {
+    var ref = await FirebaseStorage.instance
+        .ref()
+        .child(currentUser.uid)
+        .getDownloadURL();
+    return ref;
   }
 
   //reimburse pending reimbursement (TREASURY USERS ONLY)

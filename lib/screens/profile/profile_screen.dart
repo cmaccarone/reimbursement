@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:option_picker/option_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/SignIn/welcome.dart';
@@ -19,34 +20,33 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File _image;
 
-  Future getImage() async {
+  Future getImage(BuildContext context) async {
     var image;
 
     //todo add dialog to choose between gallery and camera.
 
-    Popup popup = Popup(
+    OptionPicker.show(
+      context: context,
       title: "Choose a Photo",
       subtitle: "Pick a Source",
       firstButtonText: "Gallery",
       secondButtonText: "Take Picture",
       cancelText: "Cancel",
       onPressedFirst: () async {
-        Navigator.of(context, rootNavigator: true).pop();
+        print("first Option Selected");
         image = await ImagePicker.pickImage(source: ImageSource.gallery);
         setState(() {
           _image = image;
         });
       },
       onPressedSecond: () async {
-        Navigator.of(context, rootNavigator: true).pop();
+        print("second Option Selected");
         image = await ImagePicker.pickImage(source: ImageSource.camera);
         setState(() {
           _image = image;
         });
       },
     );
-    popup.show(context);
-    print(image);
   }
 
   @override
@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () async {
-                    getImage();
+                    getImage(context);
                   },
                   child: Stack(
                     children: <Widget>[
@@ -196,88 +196,5 @@ class UserTypePill extends StatelessWidget {
         style: kPillTextStyle,
       ),
     );
-  }
-}
-
-class Popup {
-  Popup(
-      {@required this.title,
-      this.subtitle,
-      this.firstButtonText,
-      this.secondButtonText,
-      this.cancelText,
-      @required this.onPressedFirst,
-      @required this.onPressedSecond});
-
-  String title;
-  String subtitle;
-  String cancelText;
-  String firstButtonText;
-  String secondButtonText;
-  Function onPressedFirst;
-  Function onPressedSecond;
-  bool topIsDefault;
-
-  AlertDialog _showAlertDialog(BuildContext context) {
-    // set up the buttons
-    Widget firstButton = FlatButton(
-      child: Text(firstButtonText),
-      onPressed: onPressedFirst,
-    );
-    Widget secondButton = FlatButton(
-      child: Text(secondButtonText),
-      onPressed: onPressedSecond,
-    );
-    Widget cancelButton = FlatButton(
-      child: Text(cancelText),
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop();
-      },
-    );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(subtitle),
-      actions: [firstButton, secondButton, cancelButton],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  Future<Widget> show(BuildContext context) async {
-    return Platform.isIOS
-        ? showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) => CupertinoActionSheet(
-                  message: Text(subtitle),
-                  title: Text(title),
-                  cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.pop(context, 'cancel');
-                    },
-                    isDefaultAction: false,
-                    isDestructiveAction: false,
-                    child: Text(cancelText),
-                  ),
-                  actions: <Widget>[
-                    CupertinoActionSheetAction(
-                      onPressed: onPressedFirst,
-                      isDestructiveAction: false,
-                      child: Text(firstButtonText),
-                    ),
-                    CupertinoActionSheetAction(
-                      onPressed: onPressedSecond,
-                      isDestructiveAction: false,
-                      child: Text(secondButtonText),
-                    )
-                  ],
-                ))
-        : _showAlertDialog(context);
   }
 }
