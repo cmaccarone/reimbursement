@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:option_picker/option_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/SignIn/welcome.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
@@ -19,6 +21,30 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   File _image;
+  FirebaseUser user;
+  bool isVisible = false;
+  double currentProgress;
+  Color color = Colors.white;
+
+  void uploadImage({ImageSource source, BuildContext context}) async {
+    var image = await ImagePicker.pickImage(source: source, imageQuality: 50);
+    Provider.of<ReimbursementProvider>(context, listen: false)
+        .uploadProfilePicture(
+            file: image,
+            fileUploading: (progress) {
+              currentProgress = progress;
+              if (progress < 1) {
+                setState(() {
+                  isVisible = true;
+                });
+              } else {
+                setState(() {
+                  isVisible = false;
+                  _image = image;
+                });
+              }
+            });
+  }
 
   Future getImage(BuildContext context) async {
     var image;
@@ -33,20 +59,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
       secondButtonText: "Take Picture",
       cancelText: "Cancel",
       onPressedFirst: () async {
-        print("first Option Selected");
-        image = await ImagePicker.pickImage(source: ImageSource.gallery);
-        setState(() {
-          _image = image;
-        });
+        uploadImage(source: ImageSource.gallery, context: context);
       },
       onPressedSecond: () async {
-        print("second Option Selected");
-        image = await ImagePicker.pickImage(source: ImageSource.camera);
-        setState(() {
-          _image = image;
-        });
+        uploadImage(source: ImageSource.camera, context: context);
       },
     );
+  }
+
+  void getUser() async {
+    user = await FirebaseAuth.instance.currentUser();
+  }
+
+  bool toggle({bool bool}) {
+    if (bool == null) {
+      return bool = true;
+    } else if (bool == true) {
+      return bool = false;
+    } else {
+      return bool = true;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
   }
 
   @override
@@ -70,14 +109,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                          child: Image(
-                              fit: BoxFit.cover,
-                              height: queryData.size.height / 3,
-                              width: double.infinity,
-                              //todo add in user profile Image
-                              image: _image == null
-                                  ? AssetImage("assets/profilePic.jpg")
-                                  : FileImage(_image))),
+                        child: isVisible
+                            ? Padding(
+                                padding: EdgeInsets.all(40),
+                                child: Center(
+                                  child: Container(
+                                    color: Colors.white.withOpacity(.3),
+                                    width: double.infinity,
+                                    height: 50,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 24.0),
+                                    child: LiquidLinearProgressIndicator(
+                                      direction: Axis.horizontal,
+                                      valueColor:
+                                          AlwaysStoppedAnimation(Colors.blue),
+                                      center: Text(
+                                        "Uploading Image ${(currentProgress * 100).round()}%",
+                                        style: TextStyle(
+                                            color: Colors.lightBlueAccent),
+                                      ),
+                                      value: currentProgress,
+                                      backgroundColor:
+                                          Colors.black12.withOpacity(.2),
+                                      borderColor: Colors.white,
+                                      borderRadius: 22,
+                                      borderWidth: 0,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Image(
+                                fit: BoxFit.cover,
+                                height: queryData.size.height / 3,
+                                width: double.infinity,
+                                //todo add in user profile Image
+                                image: _image != null
+                                    ? FileImage(_image)
+                                    : NetworkImage(userData.profilePicURL)),
+                      )
                     ],
                   ),
                 ),

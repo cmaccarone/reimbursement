@@ -24,6 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   option_picker:
   cupertino_icons: 0.1.3
+  liquid_progress_indicator: ^0.3.2
   cloud_firestore: ^0.12.9+6
   firebase_storage:
   firebase_auth: ^0.14.0+5

@@ -62,3 +62,8 @@ class ApprovalFields {
   static final String approved = "approved";
   static final String submittedByID = "submittedByID";
 }
+
+class FirebaseStorageFields {
+  static final String receipts = 'receipts/';
+  static final String profilePictures = 'profilePictures/';
+}

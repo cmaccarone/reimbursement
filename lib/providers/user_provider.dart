@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:reimbursement/model/databaseFields.dart';
 
 class UserProvider {
@@ -15,6 +16,7 @@ class UserProvider {
   String zipCode;
   String state;
   String city;
+  String profilePicURL;
 
   /// use the User class and its properties to define the UserType in a structured way.
   /// ex. User.admin = "admin";
@@ -29,8 +31,20 @@ class UserProvider {
     return currentUser;
   }
 
+  Future<String> getProfilePictureURL() async {
+    print("User: ${currentUser.uid}");
+    var url = await FirebaseStorage.instance
+        .ref()
+        .child(
+            "${FirebaseStorageFields.profilePictures}${currentUser.uid}.jpeg")
+        .getDownloadURL();
+    print("URL: $url");
+    return url;
+  }
+
   void getUserDataOnLogin() async {
     await getUser();
+    profilePicURL = await getProfilePictureURL();
     final data = await _firestore
         .collection(Collections.users)
         .document(currentUser.uid)

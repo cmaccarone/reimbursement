@@ -306,21 +306,27 @@ class ReimbursementProvider {
     });
   }
 
-  void uploadProfilePicture({File file, Function fileUploaded(bool)}) async {
-    StorageTaskSnapshot storageReference = await FirebaseStorage.instance
+  void uploadProfilePicture({File file, fileUploading(double)}) async {
+    print("called");
+    currentUser = await _auth.currentUser();
+    print(currentUser.uid);
+    double currentProgress;
+    FirebaseStorage _storage = FirebaseStorage(
+        storageBucket: "gs://reimbursements-b84cd.appspot.com/");
+    Stream<StorageTaskEvent> _uploadTask;
+    _uploadTask = _storage
         .ref()
-        .child(currentUser.uid)
+        .child(
+            "${FirebaseStorageFields.profilePictures}/${currentUser.uid}.jpeg")
         .putFile(file)
-        .onComplete;
-    fileUploaded(true);
-  }
+        .events;
 
-  Future<dynamic> getProfilePicture() async {
-    var ref = await FirebaseStorage.instance
-        .ref()
-        .child(currentUser.uid)
-        .getDownloadURL();
-    return ref;
+    _uploadTask.forEach((event) {
+      currentProgress =
+          event.snapshot.bytesTransferred / event.snapshot.totalByteCount;
+
+      return fileUploading(currentProgress);
+    });
   }
 
   //reimburse pending reimbursement (TREASURY USERS ONLY)
