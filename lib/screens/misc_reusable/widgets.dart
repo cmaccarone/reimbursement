@@ -775,3 +775,55 @@ class ReceiptCell extends StatelessWidget {
           );
   }
 }
+
+class ReceiptTextField extends StatelessWidget {
+  ReceiptTextField(
+      {@required this.inputLabel,
+      this.hideText = false,
+      @required this.onChanged,
+      this.KeyboardType,
+      this.controller,
+      this.autoFocusEnabled = false});
+
+  final autoFocusEnabled;
+  final TextEditingController controller;
+  final String inputLabel;
+  final bool hideText;
+  final Function onChanged;
+  final TextInputType KeyboardType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: TextField(
+          cursorColor: Colors.white,
+          keyboardType: KeyboardType,
+          controller: controller,
+          onChanged: onChanged,
+          obscureText: hideText,
+          style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
+          autofocus: autoFocusEnabled,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: Colors.grey,
+            labelText: inputLabel,
+            labelStyle: TextStyle(color: Colors.white54),
+            hintStyle:
+                TextStyle(color: Colors.white30, fontStyle: FontStyle.italic),
+            enabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.redAccent, style: BorderStyle.solid)),
+            disabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            focusedBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          )),
+    );
+  }
+}
