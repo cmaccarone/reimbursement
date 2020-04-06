@@ -20,7 +20,7 @@ import 'user_provider.dart';
 // push the new data into a stream.
 // need separate streams for trip approval list, trips, and pending reimbursements,
 //also need to figure out how to get reimbursements since they will be nested in each trip.
-//reimbursements for each trip will be mapped out and then displayed in the UI
+//reimbursements for each trip will be mapped out and then displayed in the UI.
 
 class ReimbursementProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -55,6 +55,9 @@ class ReimbursementProvider {
   Stream<List<Receipt>> get pendingReimbursementStream =>
       _pendingReceiptsStream;
 
+  ///Initializes all streams
+  ///should be run when the app is first opened.
+  ///this loads up the app with all the necessary data.
   void initStreams({@required BuildContext context}) async {
     userType = Provider.of<UserProvider>(context, listen: false).userType;
     print(userType);
@@ -82,48 +85,11 @@ class ReimbursementProvider {
     }
   }
 
-  void _startTripStream() {
-    _tripsStream = _firestore
-        .collection(Collections.users)
-        .document(currentUser.uid)
-        .collection(Collections.trips)
-        .snapshots()
-        .map((data) {
-      return data.documents
-          .map((doc) {
-            if (doc.data.isNotEmpty) {
-              return TripApproval.fromSnapshot(snapshotData: doc);
-            } else {
-              return null;
-            }
-          })
-          .where((item) => item != null)
-          .toList();
-    });
-  }
+  //Trips Approvals
 
-  void _startReimbursementStream() {
-    _receiptStream = _firestore
-        .collection(Collections.users)
-        .document(currentUser.uid)
-        .collection(Collections.reimbursements)
-        .snapshots()
-        .map((data) {
-      return data.documents
-          .map((doc) {
-            if (doc.data.isNotEmpty) {
-              Receipt reimbursement = Receipt.fromSnapshot(snapshot: doc);
-              receipts.add(reimbursement);
-              return reimbursement;
-            } else {
-              return null;
-            }
-          })
-          .where((item) => item != null)
-          .toList();
-    });
-  }
-
+  ///starts a Pending trip Stream.
+  ///This is to be used by the Admin so they can see what
+  ///Trips haven't been approved yet, and approve them.
   void _startPendingTripStream() {
     _pendingTripStream = _firestore
         .collection(Collections.unapprovedTrips)
@@ -143,24 +109,8 @@ class ReimbursementProvider {
     });
   }
 
-  void _startPendingReimbursementStream() {
-    _pendingReceiptsStream = _firestore
-        .collection(Collections.reimbursements)
-        .snapshots()
-        .map((data) {
-      return data.documents
-          .map((doc) {
-            if (doc.data.isNotEmpty) {
-              return Receipt.fromSnapshot(snapshot: doc);
-            } else {
-              return null;
-            }
-          })
-          .where((item) => item != null)
-          .toList();
-    });
-  }
-
+  ///Starts a completed Trip Stream.
+  ///this shows what trips have already been completed for the current user.
   void _startCompletedTripStream() {
     _completedTripsStream = _firestore
         .collection(Collections.users)
@@ -181,8 +131,32 @@ class ReimbursementProvider {
     });
   }
 
-  //FOR ADMIN ONLY
-  void approveTrips({List<TripApproval> tripApprovalList}) async {
+  ///Starts Trip Stream for the User.
+
+  void _startTripStream() {
+    _tripsStream = _firestore
+        .collection(Collections.users)
+        .document(currentUser.uid)
+        .collection(Collections.trips)
+        .snapshots()
+        .map((data) {
+      return data.documents
+          .map((doc) {
+            if (doc.data.isNotEmpty) {
+              return TripApproval.fromSnapshot(snapshotData: doc);
+            } else {
+              return null;
+            }
+          })
+          .where((item) => item != null)
+          .toList();
+    });
+  }
+
+  ///Approves the given list of Trips
+  ///@param tripApprovalList - holds a list of approved trips to approved.
+  ///This function gives the admin a way to approve multiple trips at once.
+  void approveOrDenyTrips({List<TripApproval> tripApprovalList}) async {
     assert(tripApprovalList.length != 0);
     tripApprovalList.map((trip) {
       if (trip.approved == ApprovalState.approved) {
@@ -208,7 +182,8 @@ class ReimbursementProvider {
     });
   }
 
-  void approveOrDenyTrip({TripApproval tripApproval}) async {
+  ///Approves single Trip
+  void approveOrDenySingleTrip({TripApproval tripApproval}) async {
     _firestore.runTransaction((transaction) async {
       //Updates users trip status to approved (this happens in the UI) the new mutated trip is passed in as the new data to be updated.
       await transaction.update(
@@ -225,7 +200,7 @@ class ReimbursementProvider {
     });
   }
 
-  //Requests approval for trip
+  ///Requests approval for a trip
   void requestApprovalForTrip({TripApproval tripApproval}) async {
     print("approval requested");
     //function adds data to users pending approval list and the Admin pending approval list atomicly.
@@ -251,29 +226,7 @@ class ReimbursementProvider {
     }
   }
 
-  //Requests Reimbursement for a specific trip. (USERS)
-  void requestReimbursement(
-      {@required Receipt reimbursement, @required TripApproval approvedTrip}) {
-    print("reimbursement requested");
-    _firestore.runTransaction((transaction) async {
-      //add reimbursement to the reimbursed list for the user.
-      await transaction.set(
-          _firestore
-              .collection(Collections.users)
-              .document(reimbursement.submittedByUUID)
-              .collection(Collections.reimbursements)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
-      //add to the treasury pendingReimbursement list
-      await transaction.set(
-          _firestore
-              .collection(Collections.pendingReimbursement)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
-    });
-  }
-
-  //this moves the trip to the user's completed trips list.
+  ///this moves the trip to the user's completed trips list.
   void completeApprovedTrip({TripApproval trip}) {
     _firestore.runTransaction((transaction) async {
       await transaction.delete(_firestore
@@ -292,7 +245,8 @@ class ReimbursementProvider {
     });
   }
 
-//called if the user swipes to delete the trip while its still pending.
+  ///Cancels a Pending Trip.
+  ///Called if the user swipes a trip to cancel it while its still pending.
   void cancelPendingTrip({TripApproval trip}) {
     _firestore.runTransaction((transaction) async {
       await transaction.delete(_firestore
@@ -306,6 +260,128 @@ class ReimbursementProvider {
     });
   }
 
+  /// returns the total amount spent on the specified trip.
+  /// @Return double - returns the amount that has been spent so far on this trip.
+  double getTotalSpent({TripApproval onTrip}) {
+    //todo finish writing getTotalSpent
+    double total;
+    receipts.map((reimbursement) {
+      // reimbursement.
+    });
+  }
+
+  //Receipts
+
+  ///Creates a Reimbursement Stream.
+  ///This is for the user.
+  void _startReimbursementStream() {
+    _receiptStream = _firestore
+        .collection(Collections.users)
+        .document(currentUser.uid)
+        .collection(Collections.reimbursements)
+        .snapshots()
+        .map((data) {
+      return data.documents
+          .map((doc) {
+            if (doc.data.isNotEmpty) {
+              Receipt reimbursement = Receipt.fromSnapshot(snapshot: doc);
+              receipts.add(reimbursement);
+              return reimbursement;
+            } else {
+              return null;
+            }
+          })
+          .where((item) => item != null)
+          .toList();
+    });
+  }
+
+  /// Pending Reimbursement Stream,
+  /// This is for the Treasury Users to be able to see the
+  /// pending reimbursements.
+  void _startPendingReimbursementStream() {
+    _pendingReceiptsStream = _firestore
+        .collection(Collections.reimbursements)
+        .snapshots()
+        .map((data) {
+      return data.documents
+          .map((doc) {
+            if (doc.data.isNotEmpty) {
+              return Receipt.fromSnapshot(snapshot: doc);
+            } else {
+              return null;
+            }
+          })
+          .where((item) => item != null)
+          .toList();
+    });
+  }
+
+  ///Requests Reimbursement for a receipt.
+  ///Adds the Receipt to the Treasury Receipt List to be reimbursed
+  void requestReimbursement(
+      {@required Receipt reimbursement, @required TripApproval approvedTrip}) {
+    _firestore.runTransaction((transaction) async {
+      //add reimbursement to the reimbursed list for the user.
+      await transaction.set(
+          _firestore
+              .collection(Collections.users)
+              .document(reimbursement.submittedByUUID)
+              .collection(Collections.reimbursements)
+              .document(reimbursement.reimbursementID),
+          reimbursement.toMap(reimbursement));
+      //add to the treasury pendingReimbursement list
+      await transaction.set(
+          _firestore
+              .collection(Collections.pendingReimbursement)
+              .document(reimbursement.reimbursementID),
+          reimbursement.toMap(reimbursement));
+    });
+  }
+
+  ///Reimburses the given Receipt
+  ///Removes it from the treasury's Receipt list and updates
+  ///the status of the reimbursement in the users receipt list.
+  void reimburse(Receipt reimbursement) {
+    _firestore.runTransaction((transaction) async {
+      //add reimbursement to the reimbursed list for the user.
+      await transaction.update(
+          _firestore
+              .collection(Collections.users)
+              .document(reimbursement.submittedByUUID)
+              .collection(Collections.reimbursements)
+              .document(reimbursement.reimbursementID),
+          reimbursement.toMap(reimbursement));
+      //remove the reimbursement object from the treasury pendingReimbursement list
+      await transaction.delete(_firestore
+          .collection(Collections.pendingReimbursement)
+          .document(reimbursement.reimbursementID));
+    });
+  }
+
+  ///Use this method to return all the reimbursements for a specific trip.
+  ///When a user clicks on that trip.
+  ///@return List<Receipt>
+  List<Receipt> getReimbursements({TripApproval forTrip}) {
+    if (receipts.length != null) {
+      return receipts
+          .where((receipts) => receipts.tripApproval.id == forTrip.id);
+    }
+    return [];
+  }
+
+  //Bug Reporting
+
+  ///Reports a Bug/Suggestion
+  void reportBug({Bug bug}) async {
+    await _firestore
+        .collection(Collections.bugs)
+        .document(bug.id)
+        .setData(bug.toMap(bug));
+  }
+
+  // Pictures
+  ///Uploads Profile Picture to Firebase.
   void uploadProfilePicture({File file, fileUploading(double)}) async {
     print("called");
     currentUser = await _auth.currentUser();
@@ -324,50 +400,13 @@ class ReimbursementProvider {
     _uploadTask.forEach((event) {
       currentProgress =
           event.snapshot.bytesTransferred / event.snapshot.totalByteCount;
-
       return fileUploading(currentProgress);
     });
-  }
-
-  //reimburse pending reimbursement (TREASURY USERS ONLY)
-  void reimburse(Receipt reimbursement) {
-    _firestore.runTransaction((transaction) async {
-      //add reimbursement to the reimbursed list for the user.
-      await transaction.update(
-          _firestore
-              .collection(Collections.users)
-              .document(reimbursement.submittedByUUID)
-              .collection(Collections.reimbursements)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
-      //remove the reimbursement object from the treasury pendingReimbursement list
-      await transaction.delete(_firestore
-          .collection(Collections.pendingReimbursement)
-          .document(reimbursement.reimbursementID));
-    });
-  }
-
-  ///Use this method to return all the reimbursements for a specific trip. When a user clicks on that trip.
-  List<Receipt> getReimbursements({TripApproval forTrip}) {
-    return receipts.where(
-        (reimbursements) => reimbursements.tripApproval.id == forTrip.id);
   }
 
   //todo: Create function to check all reimbursement to see if the receipt has already been reimbursed.
   //todo: add a single ARRAY to the user database for quickly checking if the receipt was already reimbursed.
   //todo finish getTotalSpentForTrip (totaling all the receipts so far and returning value)
-  double getTotalSpent({TripApproval onTrip}) {
-    double total;
-    receipts.map((reimbursement) {
-      // reimbursement.
-    });
-  }
 
-  void reportBug({Bug bug}) async {
-    await _firestore
-        .collection(Collections.bugs)
-        .document(bug.id)
-        .setData(bug.toMap(bug));
-  }
   //todo: add function to deal with when someone completes a trip and finishes submitting all their reimbursements.
 }

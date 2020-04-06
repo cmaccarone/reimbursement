@@ -64,7 +64,7 @@ class _CompletedTripsScreenState extends State<CompletedTripsScreen> {
             title: Center(
               child: Text(
                 "Completed Trips",
-                style: TextStyle(color: kMainTextColor),
+                style: TextStyle(color: kAppbarTextColor),
               ),
             ),
           ),
@@ -101,10 +101,6 @@ class _CompletedTripsScreenState extends State<CompletedTripsScreen> {
                                                   builder: (context) =>
                                                       ReceiptScreen(
                                                           completedOnly: true,
-                                                          tripApprovalTitle:
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .tripName,
                                                           tripApproval: snapshot
                                                               .data[index])));
                                         }

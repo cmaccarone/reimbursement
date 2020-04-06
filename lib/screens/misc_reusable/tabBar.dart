@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/model/my_custom_icons_icons.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
@@ -49,19 +50,20 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+    FlutterStatusbarcolor.setStatusBarColor(kTabBarColor);
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Scaffold(
-          resizeToAvoidBottomPadding: true,
-          body: IndexedStack(
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomPadding: true,
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
+          child: IndexedStack(
             index: currentTabIndex,
             children: userType == Users.employee
                 ? employeeScreens
@@ -69,19 +71,19 @@ class _MainTabBarState extends State<MainTabBar> with TickerProviderStateMixin {
                     ? treasuryScreens
                     : userType == Users.admin ? adminScreens : superScreens,
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            unselectedItemColor: kTabBarIconInactive,
-            selectedItemColor: kTabBarIconActive,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: currentTabIndex,
-            onTap: (val) => _onTap(val, context),
-            backgroundColor: kTabBarColor,
-            items: userType == Users.employee
-                ? employeeTabs
-                : userType == Users.treasury
-                    ? treasuryTabs
-                    : userType == Users.admin ? adminTabs : superTabs,
-          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: kTabBarIconInactive,
+          selectedItemColor: kTabBarIconActive,
+          type: BottomNavigationBarType.fixed,
+          currentIndex: currentTabIndex,
+          onTap: (val) => _onTap(val, context),
+          backgroundColor: kTabBarColor,
+          items: userType == Users.employee
+              ? employeeTabs
+              : userType == Users.treasury
+                  ? treasuryTabs
+                  : userType == Users.admin ? adminTabs : superTabs,
         ),
       ),
     );

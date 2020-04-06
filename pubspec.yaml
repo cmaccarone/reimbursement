@@ -27,6 +27,7 @@ dependencies:
   liquid_progress_indicator: ^0.3.2
   cloud_firestore: ^0.12.9+6
   firebase_storage:
+  flutter_statusbarcolor: ^0.2.3
   firebase_auth: ^0.14.0+5
   provider:
   flutter_share: ^1.0.2+1

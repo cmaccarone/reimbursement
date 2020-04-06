@@ -77,7 +77,7 @@ class _ApproveTripScreenState extends State<ApproveTripScreen> {
             title: Center(
               child: Text(
                 "Pending Approval",
-                style: TextStyle(color: kMainTextColor),
+                style: TextStyle(color: kAppbarTextColor),
               ),
             ),
           ),
@@ -180,7 +180,7 @@ class _ApproveTripScreenState extends State<ApproveTripScreen> {
                         if (pendingApprovalsFromStream.length > 0) {
                           Provider.of<ReimbursementProvider>(context,
                                   listen: false)
-                              .approveTrips(
+                              .approveOrDenyTrips(
                                   tripApprovalList: pendingApprovalsFromStream);
                         }
                       },

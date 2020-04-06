@@ -15,7 +15,6 @@ class TripDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kBackGroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(trip.tripName),
       ),
       body: Padding(
@@ -107,7 +106,7 @@ class TripDetailScreen extends StatelessWidget {
                         trip.approved = ApprovalState.denied;
                         Provider.of<ReimbursementProvider>(context,
                                 listen: false)
-                            .approveOrDenyTrip(tripApproval: trip);
+                            .approveOrDenySingleTrip(tripApproval: trip);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -128,7 +127,7 @@ class TripDetailScreen extends StatelessWidget {
                         trip.approved = ApprovalState.approved;
                         Provider.of<ReimbursementProvider>(context,
                                 listen: false)
-                            .approveOrDenyTrip(tripApproval: trip);
+                            .approveOrDenySingleTrip(tripApproval: trip);
                         Navigator.of(context).pop();
                       },
                     ),

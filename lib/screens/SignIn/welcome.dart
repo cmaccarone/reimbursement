@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
@@ -8,6 +9,7 @@ import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(kTabBarColor);
     return Consumer<UserProvider>(
       builder: (context, userData, child) {
         return Scaffold(

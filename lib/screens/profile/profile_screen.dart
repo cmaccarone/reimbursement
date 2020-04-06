@@ -229,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 FlatButton(
                   child: Text(
-                    'REPORT A BUG',
+                    'REPORT A BUG / SUGGEST IMPROVEMENT',
                     style: kRegularText.copyWith(color: kEmployeePillColor),
                   ),
                   onPressed: () async {

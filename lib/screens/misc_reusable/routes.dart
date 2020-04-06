@@ -14,4 +14,5 @@ class Routes {
   static final String completedTrips = '/completedTrips';
   static final String submitBug = '/submitBug';
   static final String tripDetailScreen = '/tripDetailScreen';
+  static final String reviewReceiptScreen = '/reviewReceiptScreen';
 }

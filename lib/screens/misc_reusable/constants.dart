@@ -14,6 +14,7 @@ final kTripCellColor = Color.fromRGBO(246, 249, 253, 1);
 final kBackGroundColor = Color.fromRGBO(10, 35, 67, 1);
 //app bar
 final kAppbarColor = Color.fromRGBO(246, 249, 253, 1);
+final kAppbarTextColor = Colors.white;
 //text styles/colors
 final kMainTextColor = Color.fromRGBO(23, 68, 130, 1);
 

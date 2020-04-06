@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
@@ -22,9 +23,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: kAppbarColor,
-      ),
+      appBar: AppBar(),
       body: Container(
         height: double.infinity,
         padding: EdgeInsets.all(30),
