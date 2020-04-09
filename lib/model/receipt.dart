@@ -9,62 +9,81 @@ class Receipt {
   double amount;
   String vendor;
   DateTime receiptDate;
-  String pictureURL;
   bool mightHaveAlreadyBeenSubmitted;
-  final String reimbursementID;
+  final String Id;
   DateTime timeSubmitted = DateTime.now();
   DateTime timeReimbursed;
-  List<Receipt> receipts;
   bool reimbursed = false;
-  String reimburseTo;
-  String approvedBy;
+  String submittedByName;
+  String reimbursedBy;
   String submittedByUUID;
   List<String> photoURLS;
-  String description;
   String notes;
-  TripApproval tripApproval;
+  TripApproval parentTrip;
+
+  /// Creates a new receipt Object.
+  ///
+  /// [amount] - The amount of the reimbursement
+  /// [vendor] - Where the money was spent
+  /// [receiptDate] - The date the money was spent
+  /// [mightHaveAlreadyBeenSubmitted] - a property that indicates if there is a possibility that the receipt
+  /// was already reimbursed
+  /// [Id] - a unique identifier.
+  /// [timeSubmitted] - time that the receipt was submitted.
+  /// [timeReimbursed] - time the receipt was reimbursed
+  /// [reimbursed] - bool
+  /// [submittedByName] - the name of the user who submitted the reimbursement.
+  /// [photoURLS] - a list of URLs for each of the photo's of this receipt (singular). this is a list incase,
+  /// the receipt needs to be represented by multiple pictures.
+  /// [notes] - any additional information the user thinks needs to be noted regarding this receipt
+  /// [parentTrip] - the trip that this receipt is a child of.
 
   Receipt(
       {@required this.submittedByUUID,
       this.reimbursed = false,
       this.amount,
+      this.timeSubmitted,
+      this.vendor,
+      this.receiptDate,
+      this.mightHaveAlreadyBeenSubmitted,
       this.photoURLS,
-      this.approvedBy,
-      this.receipts,
+      this.reimbursedBy,
       this.timeReimbursed,
-      this.description,
       this.notes,
-      this.reimburseTo,
-      this.tripApproval})
-      : this.reimbursementID = Uuid().v1();
+      this.parentTrip})
+      : this.Id = Uuid().v1();
 
+  //todo makesure I have included all variables in both the input and output functions.
   Receipt.fromSnapshot({DocumentSnapshot snapshot})
-      : amount = double.parse(snapshot[ReceiptFields.amount]),
+      : mightHaveAlreadyBeenSubmitted =
+            snapshot[ReceiptFields.mightHaveAlreadyBeenSubmitted],
+        receiptDate = snapshot[ReceiptFields.receiptDate],
+        amount = double.parse(snapshot[ReceiptFields.amount]),
+        submittedByName = snapshot[ReceiptFields.submittedByName],
         vendor = snapshot[ReceiptFields.vendor],
         timeSubmitted = snapshot[ReceiptFields.timeSubmitted],
-        reimburseTo = snapshot[ReceiptFields.submittedBy],
         timeReimbursed = snapshot[ReceiptFields.timeReimbursed],
         submittedByUUID = snapshot[ReceiptFields.submittedByID],
-        reimbursementID = snapshot[ReceiptFields.reimbursementID],
+        Id = snapshot[ReceiptFields.Id],
         notes = snapshot[ReceiptFields.notes],
-        description = snapshot[ReceiptFields.description],
-        tripApproval = TripApproval.fromSnapshot(
+        parentTrip = TripApproval.fromSnapshot(
             snapshotData: snapshot[ReceiptFields.tripApproval]);
 
-  Map<String, dynamic> toMap(Receipt reimbursement) {
+  Map<String, dynamic> toMap(Receipt receipt) {
     return {
       ReceiptFields.receiptDate: receiptDate,
-      ReceiptFields.vendor: reimbursement.vendor,
-      ReceiptFields.reimbursementID: reimbursement.reimbursementID,
-      ReceiptFields.amount: reimbursement.amount.toString(),
-      ReceiptFields.timeReimbursed: reimbursement.timeReimbursed,
-      ReceiptFields.submittedBy: reimbursement.reimburseTo,
-      ReceiptFields.pictureURLs: reimbursement.photoURLS,
-      ReceiptFields.reimbursed: reimbursement.reimbursed,
-      ReceiptFields.timeSubmitted: reimbursement.timeSubmitted,
-      ReceiptFields.notes: reimbursement.notes,
-      ReceiptFields.description: reimbursement.description,
-      ReceiptFields.tripApproval: tripApproval.toMap(tripApproval)
+      ReceiptFields.vendor: receipt.vendor,
+      ReceiptFields.Id: receipt.Id,
+      ReceiptFields.amount: receipt.amount.toString(),
+      ReceiptFields.timeReimbursed: receipt.timeReimbursed,
+      ReceiptFields.submittedByName: receipt.submittedByName,
+      ReceiptFields.mightHaveAlreadyBeenSubmitted:
+          receipt.mightHaveAlreadyBeenSubmitted,
+      ReceiptFields.pictureURLs: receipt.photoURLS,
+      ReceiptFields.reimbursed: receipt.reimbursed,
+      ReceiptFields.timeSubmitted: receipt.timeSubmitted,
+      ReceiptFields.notes: receipt.notes,
+      ReceiptFields.tripApproval: parentTrip.toMap(parentTrip)
     };
   }
 }

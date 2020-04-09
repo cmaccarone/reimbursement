@@ -145,6 +145,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             MaterialPageRoute(
                                 builder: (context) => ReviewReceiptScreen(
                                       receiptImage: image,
+                                      forTrip: widget.tripApproval,
                                     )));
                       },
                       onPressedSecond: () async {
@@ -155,6 +156,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             MaterialPageRoute(
                                 builder: (context) => ReviewReceiptScreen(
                                       receiptImage: image,
+                                      forTrip: widget.tripApproval,
                                     )));
                       },
                     );

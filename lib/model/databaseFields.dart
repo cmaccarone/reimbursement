@@ -3,7 +3,7 @@ class Collections {
   static final String trips = 'trips';
   static final String unapprovedTrips = 'unapprovedTrips';
   static final String pendingReimbursement = 'pendingReimbursement';
-  static final String reimbursements = 'reimbursements';
+  static final String receipts = 'receipts';
   static final String completedTrips = 'completedTrips';
   static final String bugs = 'bugs';
   static final String reimbursementCache = 'reimbursementCache';
@@ -41,11 +41,14 @@ class ReceiptFields {
   static final String timeSubmitted = 'timeSubmitted';
   static final String timeReimbursed = 'timeReimbursed';
   static final String amount = "amount";
-  static final String reimbursementID = "Id";
+  static final String Id = "Id";
   static final String submittedByID = "submittedByID";
   static final String description = "description";
   static final String notes = 'notes';
   static final String tripApproval = 'tripApproval';
+  static final String mightHaveAlreadyBeenSubmitted =
+      "mightHaveAlreadyBeenSubmitted";
+  static final String submittedByName = 'submittedByName';
 }
 
 class ApprovalFields {

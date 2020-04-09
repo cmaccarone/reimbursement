@@ -1,16 +1,26 @@
 import 'dart:io';
 
+import 'package:carousel_pro/carousel_pro.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:option_picker/option_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:reimbursement/model/receipt.dart';
+import 'package:reimbursement/model/tripApproval.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
-import 'package:zoom_widget/zoom_widget.dart';
+
+//todo write test to make sure only doubles can be typed into the value box..
 
 class ReviewReceiptScreen extends StatefulWidget {
   final File receiptImage;
+  final TripApproval forTrip;
 
-  ReviewReceiptScreen({this.receiptImage});
+  ReviewReceiptScreen({this.receiptImage, @required this.forTrip});
 
   @override
   _ReviewReceiptScreenState createState() => _ReviewReceiptScreenState();
@@ -20,7 +30,39 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
   TextEditingController vendorController;
   TextEditingController amountController;
   TextEditingController dateController;
+  FirebaseUser _currentUser;
   MediaQueryData queryData;
+  String vendor = "Receipt";
+  double amount;
+  DateTime receiptDate;
+  Color onPressedColor = Colors.blueGrey;
+  List<File> receiptImages = [];
+  List<dynamic> carouselImages = [];
+
+  void addImage(File image, bool empty) {
+    List<File> receiptImages1 = [];
+    List<dynamic> carouselImages1 = [];
+    if (empty == true) {
+      receiptImages1.add(image);
+      carouselImages1.add(Image(image: FileImage(image), fit: BoxFit.contain));
+      receiptImages = receiptImages1;
+      carouselImages = carouselImages1;
+    } else {
+      receiptImages.add(image);
+      carouselImages.add(Image(image: FileImage(image), fit: BoxFit.contain));
+    }
+  }
+
+  void _getCurrentUser() async {
+    _currentUser = await FirebaseAuth.instance.currentUser();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    addImage(widget.receiptImage, false);
+    _getCurrentUser();
+  }
 
   @override
   void dispose() {
@@ -31,34 +73,68 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
     dateController.dispose();
   }
 
+  void pickPhoto(bool reset) {
+    OptionPicker.show(
+      context: context,
+      title: "Pick a Photo",
+      subtitle: "",
+      firstButtonText: "Gallery",
+      secondButtonText: "Take Picture",
+      cancelText: "Cancel",
+      onPressedFirst: () async {
+        var image = await ImagePicker.pickImage(
+            source: ImageSource.gallery, imageQuality: 50);
+        setState(() {
+          addImage(image, reset);
+        });
+      },
+      onPressedSecond: () async {
+        var image = await ImagePicker.pickImage(
+            source: ImageSource.camera, imageQuality: 50);
+        setState(() {
+          addImage(image, reset);
+        });
+      },
+    );
+  }
+
+  void clearTextBoxes() {
+    vendorController.clear();
+    amountController.clear();
+    dateController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     queryData = MediaQuery.of(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(vendor),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              pickPhoto(false);
+            },
+            icon: Icon(
+              Icons.add_a_photo,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: Container(
-              child: Zoom(
-                scrollWeight: 0,
-                backgroundColor: kBackGroundColor,
-                key: UniqueKey(),
-                initZoom: .001,
-                doubleTapZoom: true,
-                width: 3800,
-                height: 3800,
-                child: Image(
-                  image: widget.receiptImage == null
-                      ? Image.asset(
-                          'assets/profilePic.jpg',
-                          fit: BoxFit.fitHeight,
-                        )
-                      : FileImage(widget.receiptImage),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
+              child: Carousel(
+                  dotPosition: DotPosition.topCenter,
+                  dotColor: kTealColor,
+                  showIndicator: true,
+                  indicatorBgPadding: 0,
+                  boxFit: BoxFit.contain,
+                  autoplay: false,
+                  images: carouselImages),
               color: Colors.black12,
               width: queryData.size.width,
             ),
@@ -73,32 +149,48 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                 children: <Widget>[
                   ReceiptTextField(
                     controller: vendorController,
+                    onChanged: (value) {
+                      setState(() {
+                        vendor = value;
+                      });
+                    },
                     inputLabel: "VENDOR",
                   ),
                   ReceiptTextField(
                     controller: amountController,
                     inputLabel: "AMOUNT",
-                    KeyboardType: TextInputType.numberWithOptions(
-                        decimal: true, signed: true),
+                    onChanged: (value) {
+                      amount = double.parse(value);
+                    },
+                    KeyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                   ),
                   ReceiptTextField(
                     controller: dateController,
                     inputLabel: "DATE",
                     onTap: () {
-                      DatePicker.showDatePicker(context,
-                          pickerTheme: DateTimePickerTheme(),
-                          pickerMode: DateTimePickerMode.date,
-                          dateFormat: "MMMM-dd-yyyy", onConfirm: (date, list) {
-                        setState(() {
-                          dateController = TextEditingController(
-                              text: DateFormat('MMMM-dd-yyyy')
-                                  .format(date)
-                                  .toString());
-                        });
-
-                        print(date);
-                        print(list);
-                      }, initialDateTime: DateTime.now());
+                      DatePicker.showDatePicker(
+                        context,
+                        pickerTheme: DateTimePickerTheme(
+                            itemTextStyle:
+                                TextStyle(fontSize: 24, color: Colors.white),
+                            cancelTextStyle:
+                                TextStyle(color: Colors.white30, fontSize: 18),
+                            confirmTextStyle:
+                                TextStyle(color: kTealColor, fontSize: 18),
+                            backgroundColor: Colors.blueGrey),
+                        pickerMode: DateTimePickerMode.date,
+                        dateFormat: "MMMM-dd-yyyy",
+                        onConfirm: (date, list) {
+                          setState(() {
+                            dateController = TextEditingController(
+                                text: DateFormat('MMMM-dd-yyyy')
+                                    .format(date)
+                                    .toString());
+                            receiptDate = date;
+                          });
+                        },
+                      );
                     },
                     KeyboardType: TextInputType.datetime,
                   ),
@@ -126,23 +218,45 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                       //add another receipt
                       Expanded(
                         child: FlatButton(
-                          onPressed: () {},
+                          color: kTealColor,
+                          highlightColor: Colors.grey,
+                          onPressed: () async {
+                            print("pressed");
+                            Receipt receipt = Receipt(
+                                receiptDate: receiptDate,
+                                reimbursed: false,
+                                amount: amount,
+                                submittedByUUID: _currentUser.uid,
+                                timeSubmitted: DateTime.now(),
+                                vendor: vendor);
+                            await Provider.of<ReimbursementProvider>(context,
+                                    listen: false)
+                                .uploadReceiptWithPictures(
+                                    forTrip: widget.forTrip,
+                                    receipt: receipt,
+                                    receiptImages: receiptImages);
+                            setState(() {
+                              pickPhoto(true);
+                              //  clearTextBoxes();
+                            });
+                          },
                           padding: EdgeInsets.all(0),
                           child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: kTealColor),
-                            height: 40,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            height: 50,
                             child: Center(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    const EdgeInsets.fromLTRB(10, 3, 10, 3),
                                 child: Text(
-                                  "Add More",
+                                  "Add Another Receipt",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                       fontSize: 18),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

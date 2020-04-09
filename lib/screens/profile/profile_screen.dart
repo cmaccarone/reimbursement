@@ -143,9 +143,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: queryData.size.height / 3,
                                 width: double.infinity,
                                 //todo add in user profile Image
-                                image: _image != null
-                                    ? FileImage(_image)
-                                    : NetworkImage(userData.profilePicURL)),
+                                image: userData.profilePicURL != null
+                                    ? NetworkImage(userData.profilePicURL)
+                                    : FileImage(_image)),
                       )
                     ],
                   ),

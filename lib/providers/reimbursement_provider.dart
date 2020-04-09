@@ -23,6 +23,7 @@ import 'user_provider.dart';
 //reimbursements for each trip will be mapped out and then displayed in the UI.
 
 class ReimbursementProvider {
+  final String storageBucketURL = "gs://reimbursements-b84cd.appspot.com/";
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
 
@@ -278,7 +279,7 @@ class ReimbursementProvider {
     _receiptStream = _firestore
         .collection(Collections.users)
         .document(currentUser.uid)
-        .collection(Collections.reimbursements)
+        .collection(Collections.receipts)
         .snapshots()
         .map((data) {
       return data.documents
@@ -300,10 +301,8 @@ class ReimbursementProvider {
   /// This is for the Treasury Users to be able to see the
   /// pending reimbursements.
   void _startPendingReimbursementStream() {
-    _pendingReceiptsStream = _firestore
-        .collection(Collections.reimbursements)
-        .snapshots()
-        .map((data) {
+    _pendingReceiptsStream =
+        _firestore.collection(Collections.receipts).snapshots().map((data) {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
@@ -319,23 +318,23 @@ class ReimbursementProvider {
 
   ///Requests Reimbursement for a receipt.
   ///Adds the Receipt to the Treasury Receipt List to be reimbursed
-  void requestReimbursement(
-      {@required Receipt reimbursement, @required TripApproval approvedTrip}) {
+  void _requestReimbursement(
+      {@required Receipt receipt, @required TripApproval forTrip}) {
     _firestore.runTransaction((transaction) async {
-      //add reimbursement to the reimbursed list for the user.
+      //add receipt to user receipt list
       await transaction.set(
           _firestore
               .collection(Collections.users)
-              .document(reimbursement.submittedByUUID)
-              .collection(Collections.reimbursements)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
+              .document(receipt.submittedByUUID)
+              .collection(Collections.receipts)
+              .document(receipt.Id),
+          receipt.toMap(receipt));
       //add to the treasury pendingReimbursement list
       await transaction.set(
           _firestore
               .collection(Collections.pendingReimbursement)
-              .document(reimbursement.reimbursementID),
-          reimbursement.toMap(reimbursement));
+              .document(receipt.Id),
+          receipt.toMap(receipt));
     });
   }
 
@@ -349,13 +348,13 @@ class ReimbursementProvider {
           _firestore
               .collection(Collections.users)
               .document(reimbursement.submittedByUUID)
-              .collection(Collections.reimbursements)
-              .document(reimbursement.reimbursementID),
+              .collection(Collections.receipts)
+              .document(reimbursement.Id),
           reimbursement.toMap(reimbursement));
       //remove the reimbursement object from the treasury pendingReimbursement list
       await transaction.delete(_firestore
           .collection(Collections.pendingReimbursement)
-          .document(reimbursement.reimbursementID));
+          .document(reimbursement.Id));
     });
   }
 
@@ -364,8 +363,7 @@ class ReimbursementProvider {
   ///@return List<Receipt>
   List<Receipt> getReimbursements({TripApproval forTrip}) {
     if (receipts.length != null) {
-      return receipts
-          .where((receipts) => receipts.tripApproval.id == forTrip.id);
+      return receipts.where((receipts) => receipts.parentTrip.id == forTrip.id);
     }
     return [];
   }
@@ -381,14 +379,66 @@ class ReimbursementProvider {
   }
 
   // Pictures
-  ///Uploads Profile Picture to Firebase.
-  void uploadProfilePicture({File file, fileUploading(double)}) async {
+
+  ///Upload Receipts
+  void uploadReceiptWithPictures(
+      {List<File> receiptImages,
+      Receipt receipt,
+      TripApproval forTrip,
+      fileUploading(double),
+      VoidCallback success(bool)}) async {
+    FirebaseStorage _storage = FirebaseStorage(storageBucket: storageBucketURL);
+
+    void updateURLS() async {
+      for (var i = 0; i < receiptImages.length; i++) {
+        var url = await _storage
+            .ref()
+            .child(
+                "${FirebaseStorageFields.receipts}/${receiptImages.length < 2 ? receipt.Id : receipt.Id + i.toString()}.jpeg")
+            .getDownloadURL();
+        print(url);
+        receipt.photoURLS.add(url);
+      }
+    }
+
     print("called");
+    bool success;
+    double currentProgress;
     currentUser = await _auth.currentUser();
     print(currentUser.uid);
+
+    print(receiptImages.length);
+    for (var i = 0; i < receiptImages.length; i++) {
+      Stream<StorageTaskEvent> _uploadTask;
+      //name pictures and add them to the receipt
+      print(i);
+      _uploadTask = _storage
+          .ref()
+          .child(
+              "${FirebaseStorageFields.receipts}/${receiptImages.length < 2 ? receipt.Id : (receipt.Id + i.toString())}.jpeg")
+          .putFile(receiptImages[i])
+          .events;
+
+      _uploadTask.forEach((event) {
+        currentProgress =
+            event.snapshot.bytesTransferred / event.snapshot.totalByteCount;
+        print(currentProgress);
+        if (currentProgress >= 1) {
+          updateURLS();
+          print("done");
+        }
+      });
+    }
+
+    _requestReimbursement(receipt: receipt, forTrip: forTrip);
+  }
+
+  ///Uploads Profile Picture to Firebase.
+  void uploadProfilePicture(
+      {File file, VoidCallback fileUploading(double)}) async {
+    currentUser = await _auth.currentUser();
     double currentProgress;
-    FirebaseStorage _storage = FirebaseStorage(
-        storageBucket: "gs://reimbursements-b84cd.appspot.com/");
+    FirebaseStorage _storage = FirebaseStorage(storageBucket: storageBucketURL);
     Stream<StorageTaskEvent> _uploadTask;
     _uploadTask = _storage
         .ref()

@@ -93,6 +93,7 @@ class LoginScreen extends StatelessWidget {
                         print("auth: ${auth.user.email}");
                         if (auth != null) {
                           await getUserData(context);
+                          Navigator.pushNamed(context, Routes.mainTabBar);
                         }
                       });
                     } catch (e) {
@@ -110,9 +111,7 @@ class LoginScreen extends StatelessWidget {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDataOnLogin();
 
-    Provider.of<ReimbursementProvider>(context, listen: false)
+    await Provider.of<ReimbursementProvider>(context, listen: false)
         .initStreams(context: context);
-
-    Navigator.pushNamed(context, Routes.mainTabBar);
   }
 }

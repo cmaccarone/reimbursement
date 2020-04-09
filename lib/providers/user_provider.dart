@@ -31,14 +31,22 @@ class UserProvider {
     return currentUser;
   }
 
+//todo fix bug when profile picture doesnt exist.
   Future<String> getProfilePictureURL() async {
+    var url;
     print("User: ${currentUser.uid}");
-    var url = await FirebaseStorage.instance
-        .ref()
-        .child(
-            "${FirebaseStorageFields.profilePictures}${currentUser.uid}.jpeg")
-        .getDownloadURL();
-    print("URL: $url");
+    try {
+      url = await FirebaseStorage.instance
+          .ref()
+          .child(
+              "${FirebaseStorageFields.profilePictures}${currentUser.uid}.jpeg")
+          .getDownloadURL();
+      print("URL: $url");
+    } catch (error) {
+      print(error);
+      return null;
+    }
+
     return url;
   }
 

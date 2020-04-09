@@ -16,7 +16,6 @@ import 'package:reimbursement/screens/profile/profile_screen.dart';
 import 'package:reimbursement/screens/reimburse/reimburseScreen.dart';
 
 import 'screens/Completed/completedTripsScreen.dart';
-import 'screens/Request Approvals/submit_reimbursement.dart';
 import 'screens/SignIn/login.dart';
 import 'screens/SignIn/register.dart';
 import 'screens/SignIn/reset_password.dart';
@@ -57,8 +56,6 @@ class MyApp extends StatelessWidget {
             Routes.loginScreen: (context) => LoginScreen(),
             Routes.registerScreen: (context) => RegisterScreen(),
             Routes.resetPasswordScreen: (context) => ResetPasswordScreen(),
-            Routes.submitReimbursement: (context) =>
-                SubmitReimbursementScreen(),
             Routes.mainTabBar: (context) => MainTabBar(),
             Routes.approveTripScreen: (context) => ApproveTripScreen(),
             Routes.profileScreen: (context) => ProfileScreen(),
