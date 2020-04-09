@@ -144,7 +144,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ReviewReceiptScreen(
-                                      receiptImage: image,
+                                      receiptImage: [image],
                                       forTrip: widget.tripApproval,
                                     )));
                       },
@@ -155,7 +155,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ReviewReceiptScreen(
-                                      receiptImage: image,
+                                      receiptImage: [image],
                                       forTrip: widget.tripApproval,
                                     )));
                       },

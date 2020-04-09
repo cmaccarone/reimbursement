@@ -321,6 +321,7 @@ class ReimbursementProvider {
   void _requestReimbursement(
       {@required Receipt receipt, @required TripApproval forTrip}) {
     _firestore.runTransaction((transaction) async {
+      print("run");
       //add receipt to user receipt list
       await transaction.set(
           _firestore
@@ -384,53 +385,53 @@ class ReimbursementProvider {
   void uploadReceiptWithPictures(
       {List<File> receiptImages,
       Receipt receipt,
-      TripApproval forTrip,
       fileUploading(double),
       VoidCallback success(bool)}) async {
     FirebaseStorage _storage = FirebaseStorage(storageBucket: storageBucketURL);
+    bool success;
+    double currentProgress;
+    currentUser = await _auth.currentUser();
+    StorageUploadTask _uploadTask;
+    Stream<StorageTaskEvent> _uploadStreamEvent;
+    print(receipt.vendor);
+    Receipt receiptWithPhotoURLS = receipt;
 
     void updateURLS() async {
+      List<String> photoURLS = [];
       for (var i = 0; i < receiptImages.length; i++) {
         var url = await _storage
             .ref()
             .child(
                 "${FirebaseStorageFields.receipts}/${receiptImages.length < 2 ? receipt.Id : receipt.Id + i.toString()}.jpeg")
             .getDownloadURL();
-        print(url);
-        receipt.photoURLS.add(url);
+
+        photoURLS.add(url);
       }
+      receiptWithPhotoURLS.photoURLS = photoURLS;
     }
 
-    print("called");
-    bool success;
-    double currentProgress;
-    currentUser = await _auth.currentUser();
-    print(currentUser.uid);
-
-    print(receiptImages.length);
     for (var i = 0; i < receiptImages.length; i++) {
-      Stream<StorageTaskEvent> _uploadTask;
       //name pictures and add them to the receipt
-      print(i);
       _uploadTask = _storage
           .ref()
           .child(
               "${FirebaseStorageFields.receipts}/${receiptImages.length < 2 ? receipt.Id : (receipt.Id + i.toString())}.jpeg")
-          .putFile(receiptImages[i])
-          .events;
-
-      _uploadTask.forEach((event) {
-        currentProgress =
-            event.snapshot.bytesTransferred / event.snapshot.totalByteCount;
-        print(currentProgress);
-        if (currentProgress >= 1) {
-          updateURLS();
-          print("done");
-        }
-      });
+          .putFile(receiptImages[i]);
     }
 
-    _requestReimbursement(receipt: receipt, forTrip: forTrip);
+    _uploadStreamEvent = _uploadTask.events;
+    _uploadStreamEvent.forEach((event) {
+      currentProgress =
+          event.snapshot.bytesTransferred / event.snapshot.totalByteCount;
+      fileUploading(currentProgress);
+      print(currentProgress);
+    });
+
+    await _uploadTask.onComplete;
+    await updateURLS();
+
+    _requestReimbursement(
+        receipt: receiptWithPhotoURLS, forTrip: receipt.parentTrip);
   }
 
   ///Uploads Profile Picture to Firebase.

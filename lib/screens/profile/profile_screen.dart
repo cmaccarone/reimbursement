@@ -86,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO: implement initState
     super.initState();
     getUser();
+    _image = File("assets/profilePic.jpg");
   }
 
   @override

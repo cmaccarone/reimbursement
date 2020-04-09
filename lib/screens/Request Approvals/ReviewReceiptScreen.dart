@@ -11,13 +11,14 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
+import 'package:reimbursement/providers/user_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 //todo write test to make sure only doubles can be typed into the value box..
 
 class ReviewReceiptScreen extends StatefulWidget {
-  final File receiptImage;
+  final List<File> receiptImage;
   final TripApproval forTrip;
 
   ReviewReceiptScreen({this.receiptImage, @required this.forTrip});
@@ -39,6 +40,7 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
   List<File> receiptImages = [];
   List<dynamic> carouselImages = [];
 
+  ///use [empty] to clear out the carosel.
   void addImage(File image, bool empty) {
     List<File> receiptImages1 = [];
     List<dynamic> carouselImages1 = [];
@@ -60,7 +62,10 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
   @override
   void initState() {
     super.initState();
-    addImage(widget.receiptImage, false);
+    widget.receiptImage.forEach((image) {
+      addImage(image, false);
+    });
+
     _getCurrentUser();
   }
 
@@ -96,6 +101,23 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
         });
       },
     );
+  }
+
+  //todo implement a way to add notes.
+  void uploadReceipt() async {
+    Receipt receipt = Receipt(
+        submittedByName:
+            Provider.of<UserProvider>(context, listen: false).fullName,
+        receiptDate: receiptDate,
+        reimbursed: false,
+        parentTrip: widget.forTrip,
+        amount: amount,
+        submittedByUUID: _currentUser.uid,
+        timeSubmitted: DateTime.now(),
+        vendor: vendor);
+    Provider.of<ReimbursementProvider>(context, listen: false)
+        .uploadReceiptWithPictures(
+            receipt: receipt, receiptImages: receiptImages);
   }
 
   void clearTextBoxes() {
@@ -200,7 +222,10 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                       //finish adding receipts
                       Expanded(
                         child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            uploadReceipt();
+                            Navigator.of(context).pop();
+                          },
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -222,22 +247,10 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                           highlightColor: Colors.grey,
                           onPressed: () async {
                             print("pressed");
-                            Receipt receipt = Receipt(
-                                receiptDate: receiptDate,
-                                reimbursed: false,
-                                amount: amount,
-                                submittedByUUID: _currentUser.uid,
-                                timeSubmitted: DateTime.now(),
-                                vendor: vendor);
-                            await Provider.of<ReimbursementProvider>(context,
-                                    listen: false)
-                                .uploadReceiptWithPictures(
-                                    forTrip: widget.forTrip,
-                                    receipt: receipt,
-                                    receiptImages: receiptImages);
+                            uploadReceipt();
                             setState(() {
                               pickPhoto(true);
-                              //  clearTextBoxes();
+                              clearTextBoxes();
                             });
                           },
                           padding: EdgeInsets.all(0),

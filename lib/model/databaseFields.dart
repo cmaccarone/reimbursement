@@ -34,7 +34,7 @@ class BugFields {
 class ReceiptFields {
   static final String receiptDate = 'receiptDate';
   static final String vendor = 'vendor';
-  static final String pictureURLs = 'pictureURLs';
+  static final String photoURLs = 'photoURLs';
   static final String reimbursed = 'reimbursed';
   static final String reimbursement = 'reimbursement';
   static final String submittedBy = 'submittedBy';
@@ -49,6 +49,7 @@ class ReceiptFields {
   static final String mightHaveAlreadyBeenSubmitted =
       "mightHaveAlreadyBeenSubmitted";
   static final String submittedByName = 'submittedByName';
+  static final String reimbursedBy = 'reimbursedBy';
 }
 
 class ApprovalFields {

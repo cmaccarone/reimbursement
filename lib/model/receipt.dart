@@ -49,6 +49,7 @@ class Receipt {
       this.photoURLS,
       this.reimbursedBy,
       this.timeReimbursed,
+      this.submittedByName,
       this.notes,
       this.parentTrip})
       : this.Id = Uuid().v1();
@@ -64,6 +65,9 @@ class Receipt {
         timeSubmitted = snapshot[ReceiptFields.timeSubmitted],
         timeReimbursed = snapshot[ReceiptFields.timeReimbursed],
         submittedByUUID = snapshot[ReceiptFields.submittedByID],
+        reimbursed = snapshot[ReceiptFields.reimbursed],
+        reimbursedBy = snapshot[ReceiptFields.reimbursedBy],
+        photoURLS = snapshot[ReceiptFields.photoURLs],
         Id = snapshot[ReceiptFields.Id],
         notes = snapshot[ReceiptFields.notes],
         parentTrip = TripApproval.fromSnapshot(
@@ -71,7 +75,9 @@ class Receipt {
 
   Map<String, dynamic> toMap(Receipt receipt) {
     return {
-      ReceiptFields.receiptDate: receiptDate,
+      ReceiptFields.submittedByID: receipt.submittedByUUID,
+      ReceiptFields.reimbursedBy: receipt.reimbursedBy,
+      ReceiptFields.receiptDate: receipt.receiptDate,
       ReceiptFields.vendor: receipt.vendor,
       ReceiptFields.Id: receipt.Id,
       ReceiptFields.amount: receipt.amount.toString(),
@@ -79,11 +85,11 @@ class Receipt {
       ReceiptFields.submittedByName: receipt.submittedByName,
       ReceiptFields.mightHaveAlreadyBeenSubmitted:
           receipt.mightHaveAlreadyBeenSubmitted,
-      ReceiptFields.pictureURLs: receipt.photoURLS,
+      ReceiptFields.photoURLs: receipt.photoURLS,
       ReceiptFields.reimbursed: receipt.reimbursed,
       ReceiptFields.timeSubmitted: receipt.timeSubmitted,
       ReceiptFields.notes: receipt.notes,
-      ReceiptFields.tripApproval: parentTrip.toMap(parentTrip)
+      ReceiptFields.tripApproval: receipt.parentTrip.toMap(parentTrip)
     };
   }
 }
