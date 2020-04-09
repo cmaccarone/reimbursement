@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:option_picker/option_picker.dart';
 import 'package:reimbursement/model/tripApproval.dart';
-import 'package:reimbursement/screens/Request%20Approvals/ReviewReceiptScreen.dart';
+import 'package:reimbursement/screens/Request Approvals/ReviewReceiptScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
@@ -128,10 +130,34 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               ? SizedBox()
               : FlatButton(
                   onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReviewReceiptScreen()));
+                    OptionPicker.show(
+                      context: context,
+                      title: "Choose a Photo",
+                      subtitle: "Pick a Source",
+                      firstButtonText: "Gallery",
+                      secondButtonText: "Take Picture",
+                      cancelText: "Cancel",
+                      onPressedFirst: () async {
+                        var image = await ImagePicker.pickImage(
+                            source: ImageSource.gallery, imageQuality: 50);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReviewReceiptScreen(
+                                      receiptImage: image,
+                                    )));
+                      },
+                      onPressedSecond: () async {
+                        var image = await ImagePicker.pickImage(
+                            source: ImageSource.camera, imageQuality: 50);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReviewReceiptScreen(
+                                      receiptImage: image,
+                                    )));
+                      },
+                    );
                   },
                   child: CircleAvatar(
                     child: Icon(Icons.add),

@@ -783,8 +783,10 @@ class ReceiptTextField extends StatelessWidget {
       @required this.onChanged,
       this.KeyboardType,
       this.controller,
-      this.autoFocusEnabled = false});
+      this.autoFocusEnabled = false,
+      this.onTap});
 
+  final Function onTap;
   final autoFocusEnabled;
   final TextEditingController controller;
   final String inputLabel;
@@ -797,6 +799,7 @@ class ReceiptTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: TextField(
+          onTap: onTap,
           cursorColor: Colors.white,
           keyboardType: KeyboardType,
           controller: controller,
