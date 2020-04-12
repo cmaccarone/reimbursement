@@ -73,6 +73,30 @@ class TripApproval extends Equatable {
     approved = snapshotData[ApprovalFields.approved];
     submittedByID = snapshotData[ApprovalFields.submittedByID];
   }
+
+  TripApproval.fromMap({Map<String, dynamic> snapshotData}) {
+    dateRequested =
+        (snapshotData[ApprovalFields.dateRequested] as Timestamp)?.toDate() ??
+            DateTime.now();
+    dateApproved =
+        (snapshotData[ApprovalFields.dateApproved] as Timestamp)?.toDate() ??
+            DateTime.now();
+    tripStartDate =
+        (snapshotData[ApprovalFields.tripStartDate] as Timestamp)?.toDate() ??
+            DateTime.now();
+    tripEndDate =
+        (snapshotData[ApprovalFields.tripEndDate] as Timestamp)?.toDate() ??
+            DateTime.now();
+    approvedBy = snapshotData[ApprovalFields.approvedBy];
+    requestedBy = snapshotData[ApprovalFields.requestedBy];
+    tripName = snapshotData[ApprovalFields.tripName];
+    id = snapshotData[ApprovalFields.id];
+    requestedCost =
+        snapshotData[ApprovalFields.requestedCost] ?? 'unknown for now';
+    approvedCost = snapshotData[ApprovalFields.approvedCost];
+    approved = snapshotData[ApprovalFields.approved];
+    submittedByID = snapshotData[ApprovalFields.submittedByID];
+  }
   //Convert Object into Map for firebase
   Map<String, dynamic> toMap(TripApproval approval) {
     return {

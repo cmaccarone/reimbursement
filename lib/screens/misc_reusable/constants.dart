@@ -15,8 +15,10 @@ final kBackGroundColor = Color.fromRGBO(10, 35, 67, 1);
 //app bar
 final kAppbarColor = Color.fromRGBO(246, 249, 253, 1);
 final kAppbarTextColor = Colors.white;
-//text styles/colors
-final kMainTextColor = Color.fromRGBO(23, 68, 130, 1);
+
+//text styles
+///typography
+final kMainTextColor = Colors.white;
 
 //tab bar
 final kTabBarIconInactive = Color.fromRGBO(82, 141, 224, 1);
@@ -50,7 +52,13 @@ final kSoftSubtitleTextStyle = TextStyle(
 
 //submitBugReport Button Style
 final kSubmitBugReportStlye =
-    TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold);
+    TextStyle(color: kMainTextColor, fontSize: 21, fontWeight: FontWeight.bold);
 
 //approvalPagecolors
 final kApprovalGreen = Color.fromRGBO(139, 168, 13, 1);
+
+//Receipt cell
+final kReceiptCellTitleTextStyle =
+    TextStyle(fontSize: 20, color: kMainTextColor, fontWeight: FontWeight.bold);
+final kReceiptCellSubTitleTextStyle =
+    TextStyle(fontSize: 14, color: kMainTextColor);

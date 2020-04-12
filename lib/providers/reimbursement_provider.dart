@@ -31,7 +31,7 @@ class ReimbursementProvider {
   /// ex. User.admin = "admin";
   String userType;
   FirebaseUser currentUser;
-  List<Receipt> receipts;
+  List<Receipt> receipts = [];
 
   void dispose() {}
 
@@ -99,7 +99,6 @@ class ReimbursementProvider {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
-              print(doc.data);
               return TripApproval.fromSnapshot(snapshotData: doc);
             } else {
               return null;
@@ -203,7 +202,6 @@ class ReimbursementProvider {
 
   ///Requests approval for a trip
   void requestApprovalForTrip({TripApproval tripApproval}) async {
-    print("approval requested");
     //function adds data to users pending approval list and the Admin pending approval list atomicly.
     try {
       await _firestore.runTransaction((transaction) async {
@@ -321,7 +319,6 @@ class ReimbursementProvider {
   void _requestReimbursement(
       {@required Receipt receipt, @required TripApproval forTrip}) {
     _firestore.runTransaction((transaction) async {
-      print("run");
       //add receipt to user receipt list
       await transaction.set(
           _firestore
@@ -393,11 +390,10 @@ class ReimbursementProvider {
     currentUser = await _auth.currentUser();
     StorageUploadTask _uploadTask;
     Stream<StorageTaskEvent> _uploadStreamEvent;
-    print(receipt.vendor);
     Receipt receiptWithPhotoURLS = receipt;
 
     void updateURLS() async {
-      List<String> photoURLS = [];
+      List<dynamic> photoURLS = [];
       for (var i = 0; i < receiptImages.length; i++) {
         var url = await _storage
             .ref()
@@ -429,7 +425,6 @@ class ReimbursementProvider {
 
     await _uploadTask.onComplete;
     await updateURLS();
-
     _requestReimbursement(
         receipt: receiptWithPhotoURLS, forTrip: receipt.parentTrip);
   }

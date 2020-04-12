@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:option_picker/option_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
+import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/screens/Request Approvals/ReviewReceiptScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
-import 'package:reimbursement/screens/misc_reusable/widgets.dart';
 
 class ReceiptScreen extends StatefulWidget {
   final TripApproval tripApproval;
@@ -36,6 +39,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   String notes;
   double totalReceiptVale;
   String picturePath;
+  Stream _stream;
 
   void _toogleExpand() {
     setState(() {
@@ -52,6 +56,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    _stream = Provider.of<ReimbursementProvider>(context).reimbursementStream;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackGroundColor,
@@ -65,66 +75,96 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       )),
       body: Column(
         children: <Widget>[
-          Center(
-            child: Container(
-              height: 20,
-              width: 20,
-              color: Colors.red,
-            ),
-          ),
-//          ListView.builder(
-//              itemCount: 1,
-//              itemBuilder: (context, index) {
-//                return ReceiptCell(
-//                  onPressed: () {},
-//                  title: "Safeway",
-//                  reimbursementTotal: "\$40.00",
-//                  approvalStatus: ApprovalState.approved,
-//                );
-//              }),
-          ExpandedSection(
-            expand: _isExpanded,
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              padding: EdgeInsets.all(25.0),
-              child: Column(
-                children: <Widget>[
-                  SignInTextFields(
-                    hideText: false,
-                    controller: descriptionController,
-                    inputLabel: "Trip Name",
-                    onChanged: (text) {
-                      description = text;
-                    },
-                  ),
-                  SignInTextFields(
-                    hideText: false,
-                    controller: startDateController,
-                    inputLabel: "Start Date",
-                    onChanged: (text) {
-                      startDate = text;
-                    },
-                  ),
-                  SignInTextFields(
-                    hideText: false,
-                    controller: endDateController,
-                    inputLabel: "End Date",
-                    onChanged: (text) {
-                      endDate = text;
-                    },
-                  ),
-                  SignInTextFields(
-                    hideText: false,
-                    controller: costController,
-                    inputLabel: "Total Trip Cost",
-                    onChanged: (text) {
-                      cost = text;
-                    },
-                  )
-                ],
-              ),
-            ),
+          StreamBuilder<List<Receipt>>(
+            stream: _stream,
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Receipt>> snapshot) {
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}',
+                    style: TextStyle(color: Colors.white));
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text(
+                    'no connection',
+                    style: TextStyle(color: Colors.white),
+                  );
+                case ConnectionState.waiting:
+                  return Text('Awaiting bids...',
+                      style: TextStyle(color: Colors.white));
+                case ConnectionState.active:
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data.length ?? 0,
+                        itemBuilder: (context, index) {
+                          print(snapshot.data[index].vendor);
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            height: 120,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: 120,
+                                  child: Image(
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(snapshot
+                                            .data[index].photoURLS[index]) ??
+                                        NetworkImage(
+                                            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMonkey_selfie_copyright_dispute&psig=AOvVaw22FEgkUgxpWN4UcY3xhtBH&ust=1586753462153000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJDpsbaL4ugCFQAAAAAdAAAAABAD"),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    color: Colors.blueGrey,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              snapshot.data[index].vendor,
+                                              style: kReceiptCellTitleTextStyle,
+                                            ),
+                                            Text(
+                                              DateFormat('MMMM dd, yyyy')
+                                                  .format(snapshot
+                                                      .data[index].receiptDate)
+                                                  .toString(),
+                                              style:
+                                                  kReceiptCellSubTitleTextStyle,
+                                            ),
+                                            Text(
+                                              snapshot.data[index].reimbursed
+                                                  ? "Submitted"
+                                                  : "Pending".toString(),
+                                              style:
+                                                  kReceiptCellSubTitleTextStyle,
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          "\$${snapshot.data[index].amount.toStringAsFixed(2)}",
+                                          style: kReceiptCellSubTitleTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                  );
+                case ConnectionState.done:
+              }
+              return null; // unreachable
+            },
           ),
           widget.completedOnly
               ? SizedBox()

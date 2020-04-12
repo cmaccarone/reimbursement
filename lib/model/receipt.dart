@@ -17,7 +17,7 @@ class Receipt {
   String submittedByName;
   String reimbursedBy;
   String submittedByUUID;
-  List<String> photoURLS;
+  List<dynamic> photoURLS;
   String notes;
   TripApproval parentTrip;
 
@@ -58,19 +58,20 @@ class Receipt {
   Receipt.fromSnapshot({DocumentSnapshot snapshot})
       : mightHaveAlreadyBeenSubmitted =
             snapshot[ReceiptFields.mightHaveAlreadyBeenSubmitted],
-        receiptDate = snapshot[ReceiptFields.receiptDate],
+        receiptDate = snapshot[ReceiptFields.receiptDate]?.toDate() ?? null,
         amount = double.parse(snapshot[ReceiptFields.amount]),
         submittedByName = snapshot[ReceiptFields.submittedByName],
         vendor = snapshot[ReceiptFields.vendor],
-        timeSubmitted = snapshot[ReceiptFields.timeSubmitted],
-        timeReimbursed = snapshot[ReceiptFields.timeReimbursed],
+        timeSubmitted = snapshot[ReceiptFields.timeSubmitted]?.toDate() ?? null,
+        timeReimbursed =
+            snapshot[ReceiptFields.timeReimbursed]?.toDate() ?? null,
         submittedByUUID = snapshot[ReceiptFields.submittedByID],
         reimbursed = snapshot[ReceiptFields.reimbursed],
         reimbursedBy = snapshot[ReceiptFields.reimbursedBy],
         photoURLS = snapshot[ReceiptFields.photoURLs],
         Id = snapshot[ReceiptFields.Id],
         notes = snapshot[ReceiptFields.notes],
-        parentTrip = TripApproval.fromSnapshot(
+        parentTrip = TripApproval.fromMap(
             snapshotData: snapshot[ReceiptFields.tripApproval]);
 
   Map<String, dynamic> toMap(Receipt receipt) {

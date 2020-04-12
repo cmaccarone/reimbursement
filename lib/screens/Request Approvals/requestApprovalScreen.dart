@@ -105,7 +105,6 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                                 .completeApprovedTrip(
                                                     trip: snapshot.data[index]);
                                           } else {
-                                            print("completed");
                                             Provider.of<ReimbursementProvider>(
                                                     context,
                                                     listen: false)
@@ -213,7 +212,6 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                                     FirebaseUser currentUser =
                                         await FirebaseAuth.instance
                                             .currentUser();
-                                    print(currentUser.uid);
                                     TripApproval trip = TripApproval(
                                         requestedBy: userData.fullName,
                                         approved: ApprovalState.pending,
@@ -267,7 +265,6 @@ class _RequestApprovalScreenState extends State<RequestApprovalScreen> {
                               }
                               FirebaseUser currentUser =
                                   await FirebaseAuth.instance.currentUser();
-                              print(currentUser.uid);
                               TripApproval trip = TripApproval(
                                   requestedBy: userData.fullName,
                                   approved: ApprovalState.pending,
