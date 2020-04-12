@@ -109,7 +109,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                     height: 120,
                                     fit: BoxFit.cover,
                                     image: NetworkImage(snapshot
-                                            .data[index].photoURLS[index]) ??
+                                            .data[index].photoURLS[0]) ??
                                         NetworkImage(
                                             "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMonkey_selfie_copyright_dispute&psig=AOvVaw22FEgkUgxpWN4UcY3xhtBH&ust=1586753462153000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJDpsbaL4ugCFQAAAAAdAAAAABAD"),
                                   ),
