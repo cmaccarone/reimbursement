@@ -92,11 +92,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   return Text('Awaiting bids...',
                       style: TextStyle(color: Colors.white));
                 case ConnectionState.active:
+                  print(snapshot.data);
                   return Expanded(
                     child: ListView.builder(
                         itemCount: snapshot.data.length ?? 0,
                         itemBuilder: (context, index) {
-                          print(snapshot.data[index].vendor);
                           return Container(
                             padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             height: 120,
@@ -148,10 +148,10 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                             ),
                                           ],
                                         ),
-                                        Text(
-                                          "\$${snapshot.data[index].amount.toStringAsFixed(2)}",
-                                          style: kReceiptCellSubTitleTextStyle,
-                                        ),
+//                                        Text(
+//                                          "\$${snapshot.data[index].amount.toStringAsFixed(2)}",
+//                                          style: kReceiptCellSubTitleTextStyle,
+//                                        ),
                                       ],
                                     ),
                                   ),

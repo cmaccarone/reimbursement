@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -150,23 +151,24 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
           Expanded(
             child: Container(
               child: Carousel(
-                  dotPosition: DotPosition.topCenter,
-                  dotColor: kTealColor,
+                  dotIncreasedColor: HSLColor.fromAHSL(1, 0, 0, 1).toColor(),
+                  dotBgColor: Color(0),
+                  dotPosition: DotPosition.bottomCenter,
+                  dotColor: kRecieptInputImageCaroselDotColor,
                   showIndicator: true,
-                  indicatorBgPadding: 0,
+                  indicatorBgPadding: 10,
                   boxFit: BoxFit.contain,
                   autoplay: false,
                   images: carouselImages),
-              color: Colors.black12,
+              color: kReceiptInputScreenBgColor,
               width: queryData.size.width,
             ),
           ),
           Container(
-            height: 270,
-            color: Colors.blueGrey,
+            color: Colors.white,
             width: queryData.size.width,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(26, 0, 26, 0),
+              padding: const EdgeInsets.fromLTRB(26, 10, 26, 0),
               child: Column(
                 children: <Widget>[
                   ReceiptTextField(
@@ -216,19 +218,19 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                     },
                     KeyboardType: TextInputType.datetime,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      //finish adding receipts
-                      Expanded(
-                        child: FlatButton(
-                          onPressed: () {
-                            uploadReceipt();
-                            Navigator.of(context).pop();
-                          },
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        //finish adding receipts
+                        Expanded(
+                          child: FlatButton(
+                            onPressed: () {
+                              uploadReceipt();
+                              Navigator.of(context).pop();
+                            },
+                            child: Center(
                               child: Text(
                                 "Finish",
                                 style: TextStyle(
@@ -239,44 +241,43 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                             ),
                           ),
                         ),
-                      ),
-                      //add another receipt
-                      Expanded(
-                        child: FlatButton(
-                          color: kTealColor,
-                          highlightColor: Colors.grey,
-                          onPressed: () async {
-                            print("pressed");
-                            uploadReceipt();
-                            setState(() {
-                              pickPhoto(true);
-                              clearTextBoxes();
-                            });
-                          },
-                          padding: EdgeInsets.all(0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            height: 50,
-                            child: Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 3, 10, 3),
-                                child: Text(
-                                  "Add Another Receipt",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontSize: 18),
-                                  textAlign: TextAlign.center,
+                        //add another receipt
+                        Expanded(
+                          child: FlatButton(
+                            color: kTealColor,
+                            highlightColor: Colors.grey,
+                            onPressed: () async {
+                              print("pressed");
+                              uploadReceipt();
+                              setState(() {
+                                pickPhoto(true);
+                                clearTextBoxes();
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              height: 50,
+                              child: Center(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: Text(
+                                    "Add Another Receipt",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 18),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),

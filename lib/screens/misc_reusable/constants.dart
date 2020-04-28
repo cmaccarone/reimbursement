@@ -62,3 +62,16 @@ final kReceiptCellTitleTextStyle =
     TextStyle(fontSize: 20, color: kMainTextColor, fontWeight: FontWeight.bold);
 final kReceiptCellSubTitleTextStyle =
     TextStyle(fontSize: 14, color: kMainTextColor);
+
+//ReceiptInputFields
+
+final kReceiptInputFieldBgColor = HSLColor.fromAHSL(1, 0, 0, .95).toColor();
+final kReceiptInputFieldTextColor = HSLColor.fromAHSL(1, 0, 0, .10).toColor();
+final kReceiptInputFieldBorderColor = HSLColor.fromAHSL(1, 0, 0, 1).toColor();
+final kReceiptInputScreenBgColor = kReceiptInputFieldTextColor;
+final kRecieptInputImageCaroselDotColor =
+    HSLColor.fromAHSL(1, 0, 0, .5).toColor();
+
+//App Colors
+
+final ColorPrimary = HSLColor.fromAHSL(1, 0, 0, .8).toColor();

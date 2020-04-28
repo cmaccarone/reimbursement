@@ -812,20 +812,21 @@ class ReceiptTextField extends StatelessWidget {
             contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             border: InputBorder.none,
             filled: true,
-            fillColor: Colors.grey,
+            fillColor: kReceiptInputFieldBgColor,
             labelText: inputLabel,
-            labelStyle: TextStyle(color: Colors.white54),
-            hintStyle:
-                TextStyle(color: Colors.white30, fontStyle: FontStyle.italic),
-            enabledBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            labelStyle: TextStyle(color: kReceiptInputFieldTextColor),
+            hintStyle: TextStyle(
+                color: kReceiptInputFieldTextColor,
+                fontStyle: FontStyle.italic),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: kReceiptInputFieldBorderColor)),
             errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                     color: Colors.redAccent, style: BorderStyle.solid)),
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-            focusedBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: kReceiptInputFieldBorderColor)),
           )),
     );
   }
