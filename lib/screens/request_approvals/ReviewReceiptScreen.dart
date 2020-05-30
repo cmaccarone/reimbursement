@@ -80,6 +80,7 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
   }
 
   void pickPhoto(bool reset) {
+    ImagePicker imagePicker = ImagePicker();
     OptionPicker.show(
       context: context,
       title: "Pick a Photo",
@@ -88,15 +89,17 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
       secondButtonText: "Take Picture",
       cancelText: "Cancel",
       onPressedFirst: () async {
-        var image = await ImagePicker.pickImage(
+        var pickedFile = await imagePicker.getImage(
             source: ImageSource.gallery, imageQuality: 50);
+        File image = File(pickedFile.path);
         setState(() {
           addImage(image, reset);
         });
       },
       onPressedSecond: () async {
-        var image = await ImagePicker.pickImage(
+        var pickedFile = await imagePicker.getImage(
             source: ImageSource.camera, imageQuality: 50);
+        File image = File(pickedFile.path);
         setState(() {
           addImage(image, reset);
         });
@@ -186,8 +189,12 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                     controller: amountController,
                     inputLabel: "AMOUNT",
                     onChanged: (value) {
-                      print(value);
-                      amount = value.toDouble();
+                      assert(
+                        double.parse(amount.toString()) != null,
+                        "input value needs to be a number",
+                      );
+                      //todo add test to make sure only numbers are passed in here/make sure people cant pass anything else.
+                      amount = double.parse(value);
                     },
                     KeyboardType:
                         TextInputType.numberWithOptions(decimal: true),
@@ -229,8 +236,8 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                         //finish adding receipts
                         Expanded(
                           child: FlatButton(
-                            onPressed: () {
-                              uploadReceipt();
+                            onPressed: () async {
+                              await uploadReceipt();
                               Navigator.of(context).pop();
                             },
                             child: Center(
@@ -250,8 +257,7 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                             color: kTealColor,
                             highlightColor: Colors.grey,
                             onPressed: () async {
-                              print("pressed");
-                              uploadReceipt();
+                              await uploadReceipt();
                               setState(() {
                                 pickPhoto(true);
                                 clearTextBoxes();

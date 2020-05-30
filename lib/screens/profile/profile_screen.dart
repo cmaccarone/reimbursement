@@ -27,7 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Color color = Colors.white;
 
   void uploadImage({ImageSource source, BuildContext context}) async {
-    var image = await ImagePicker.pickImage(source: source, imageQuality: 50);
+    ImagePicker imagePicker = ImagePicker();
+    var pickedFile =
+        await imagePicker.getImage(source: source, imageQuality: 50);
+    File image = File(pickedFile.path);
     Provider.of<ReimbursementProvider>(context, listen: false)
         .uploadProfilePicture(
             file: image,
