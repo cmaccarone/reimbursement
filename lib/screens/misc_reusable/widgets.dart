@@ -800,12 +800,12 @@ class ReceiptTextField extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: TextField(
           onTap: onTap,
-          cursorColor: Colors.white,
+          cursorColor: Colors.grey,
           keyboardType: KeyboardType,
           controller: controller,
           onChanged: onChanged,
           obscureText: hideText,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
           textAlign: TextAlign.center,
           autofocus: autoFocusEnabled,
           decoration: InputDecoration(

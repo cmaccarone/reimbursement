@@ -76,17 +76,11 @@ class TripApproval extends Equatable {
 
   TripApproval.fromMap({Map<String, dynamic> snapshotData}) {
     dateRequested =
-        (snapshotData[ApprovalFields.dateRequested] as Timestamp)?.toDate() ??
-            DateTime.now();
-    dateApproved =
-        (snapshotData[ApprovalFields.dateApproved] as Timestamp)?.toDate() ??
-            DateTime.now();
+        snapshotData[ApprovalFields.dateRequested]?.toDate() ?? null;
+    dateApproved = snapshotData[ApprovalFields.dateApproved]?.toDate() ?? null;
     tripStartDate =
-        (snapshotData[ApprovalFields.tripStartDate] as Timestamp)?.toDate() ??
-            DateTime.now();
-    tripEndDate =
-        (snapshotData[ApprovalFields.tripEndDate] as Timestamp)?.toDate() ??
-            DateTime.now();
+        snapshotData[ApprovalFields.tripStartDate]?.toDate() ?? null;
+    tripEndDate = snapshotData[ApprovalFields.tripEndDate]?.toDate() ?? null;
     approvedBy = snapshotData[ApprovalFields.approvedBy];
     requestedBy = snapshotData[ApprovalFields.requestedBy];
     tripName = snapshotData[ApprovalFields.tripName];

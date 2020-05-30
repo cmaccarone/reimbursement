@@ -6,14 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/screens/Request%20Approvals/ReviewReceiptScreen.dart';
-import 'package:reimbursement/screens/Request%20Approvals/receiptScreen.dart';
-import 'package:reimbursement/screens/Request%20Approvals/requestApprovalScreen.dart';
 import 'package:reimbursement/screens/approve/approve_screen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/routes.dart';
 import 'package:reimbursement/screens/profile/profile_screen.dart';
 import 'package:reimbursement/screens/reimburse/reimburseScreen.dart';
+import 'package:reimbursement/screens/request_approvals/ReviewReceiptScreen.dart';
+import 'package:reimbursement/screens/request_approvals/receiptScreen.dart';
+import 'package:reimbursement/screens/request_approvals/requestApprovalScreen.dart';
 
 import 'screens/Completed/completedTripsScreen.dart';
 import 'screens/SignIn/login.dart';

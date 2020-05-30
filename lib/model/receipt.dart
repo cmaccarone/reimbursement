@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:uuid/uuid.dart';
@@ -55,11 +54,11 @@ class Receipt {
       : this.Id = Uuid().v1();
 
   //todo makesure I have included all variables in both the input and output functions.
-  Receipt.fromSnapshot({DocumentSnapshot snapshot})
+  Receipt.fromSnapshot({Map<String, dynamic> snapshot})
       : mightHaveAlreadyBeenSubmitted =
             snapshot[ReceiptFields.mightHaveAlreadyBeenSubmitted],
         receiptDate = snapshot[ReceiptFields.receiptDate]?.toDate() ?? null,
-        amount = double.parse(snapshot[ReceiptFields.amount]),
+        amount = snapshot[ReceiptFields.amount],
         submittedByName = snapshot[ReceiptFields.submittedByName],
         vendor = snapshot[ReceiptFields.vendor],
         timeSubmitted = snapshot[ReceiptFields.timeSubmitted]?.toDate() ?? null,
@@ -76,21 +75,21 @@ class Receipt {
 
   Map<String, dynamic> toMap(Receipt receipt) {
     return {
-      ReceiptFields.submittedByID: receipt.submittedByUUID,
-      ReceiptFields.reimbursedBy: receipt.reimbursedBy,
-      ReceiptFields.receiptDate: receipt.receiptDate,
-      ReceiptFields.vendor: receipt.vendor,
-      ReceiptFields.Id: receipt.Id,
-      ReceiptFields.amount: receipt.amount.toString(),
-      ReceiptFields.timeReimbursed: receipt.timeReimbursed,
-      ReceiptFields.submittedByName: receipt.submittedByName,
+      ReceiptFields.submittedByID: receipt?.submittedByUUID,
+      ReceiptFields.reimbursedBy: receipt?.reimbursedBy,
+      ReceiptFields.receiptDate: receipt?.receiptDate,
+      ReceiptFields.vendor: receipt?.vendor,
+      ReceiptFields.Id: receipt?.Id,
+      ReceiptFields.amount: receipt?.amount,
+      ReceiptFields.timeReimbursed: receipt?.timeReimbursed,
+      ReceiptFields.submittedByName: receipt?.submittedByName,
       ReceiptFields.mightHaveAlreadyBeenSubmitted:
-          receipt.mightHaveAlreadyBeenSubmitted,
-      ReceiptFields.photoURLs: receipt.photoURLS,
-      ReceiptFields.reimbursed: receipt.reimbursed,
-      ReceiptFields.timeSubmitted: receipt.timeSubmitted,
-      ReceiptFields.notes: receipt.notes,
-      ReceiptFields.tripApproval: receipt.parentTrip.toMap(parentTrip)
+          receipt?.mightHaveAlreadyBeenSubmitted,
+      ReceiptFields.photoURLs: receipt?.photoURLS,
+      ReceiptFields.reimbursed: receipt?.reimbursed,
+      ReceiptFields.timeSubmitted: receipt?.timeSubmitted,
+      ReceiptFields.notes: receipt?.notes,
+      ReceiptFields.tripApproval: receipt?.parentTrip?.toMap(parentTrip)
     };
   }
 }

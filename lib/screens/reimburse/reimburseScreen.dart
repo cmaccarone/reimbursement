@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 
@@ -40,8 +39,9 @@ class ReimburseScreen extends StatelessWidget {
             child: Text("Share"),
             onPressed: () async {
               String path = await _localPath;
-              FlutterShare.shareFile(
-                  title: "apsImport", filePath: '$path/counter.txt');
+              // add share plugin here
+//              FlutterShare.shareFile(
+//                  title: "apsImport", filePath: '$path/counter.txt');
               print('pressed');
             },
           ),

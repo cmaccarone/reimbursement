@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
 import 'package:reimbursement/providers/user_provider.dart';
-import 'package:reimbursement/screens/Request%20Approvals/receiptScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
+import 'package:reimbursement/screens/request_approvals/receiptScreen.dart';
 
 class CompletedTripsScreen extends StatefulWidget {
   @override

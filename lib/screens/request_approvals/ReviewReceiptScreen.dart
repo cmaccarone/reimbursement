@@ -116,6 +116,7 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
         submittedByUUID: _currentUser.uid,
         timeSubmitted: DateTime.now(),
         vendor: vendor);
+    print(receipt.amount);
     Provider.of<ReimbursementProvider>(context, listen: false)
         .uploadReceiptWithPictures(
             receipt: receipt, receiptImages: receiptImages);
@@ -175,6 +176,7 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                     controller: vendorController,
                     onChanged: (value) {
                       setState(() {
+                        print(value);
                         vendor = value;
                       });
                     },
@@ -184,7 +186,8 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                     controller: amountController,
                     inputLabel: "AMOUNT",
                     onChanged: (value) {
-                      amount = double.parse(value);
+                      print(value);
+                      amount = value.toDouble();
                     },
                     KeyboardType:
                         TextInputType.numberWithOptions(decimal: true),
@@ -197,12 +200,12 @@ class _ReviewReceiptScreenState extends State<ReviewReceiptScreen> {
                         context,
                         pickerTheme: DateTimePickerTheme(
                             itemTextStyle:
-                                TextStyle(fontSize: 24, color: Colors.white),
+                                TextStyle(fontSize: 24, color: Colors.black),
                             cancelTextStyle:
-                                TextStyle(color: Colors.white30, fontSize: 18),
+                                TextStyle(color: Colors.black, fontSize: 18),
                             confirmTextStyle:
                                 TextStyle(color: kTealColor, fontSize: 18),
-                            backgroundColor: Colors.blueGrey),
+                            backgroundColor: Colors.white),
                         pickerMode: DateTimePickerMode.date,
                         dateFormat: "MMMM-dd-yyyy",
                         onConfirm: (date, list) {

@@ -52,7 +52,7 @@ class ReimbursementProvider {
   Stream<List<TripApproval>> get tripStream => _tripsStream;
   Stream<List<TripApproval>> get completedTripStream => _completedTripsStream;
   Stream<List<TripApproval>> get pendingTripStream => _pendingTripStream;
-  Stream<List<Receipt>> get reimbursementStream => _receiptStream;
+  Stream<List<Receipt>> get receiptStream => _receiptStream;
   Stream<List<Receipt>> get pendingReimbursementStream =>
       _pendingReceiptsStream;
 
@@ -65,23 +65,23 @@ class ReimbursementProvider {
     currentUser = await _auth.currentUser();
     if (userType == Users.admin) {
       _startTripStream();
-      _startReimbursementStream();
+      _startReceiptStream();
       _startCompletedTripStream();
       _startPendingTripStream();
     } else if (userType == Users.treasury) {
       _startTripStream();
-      _startReimbursementStream();
+      _startReceiptStream();
       _startPendingReimbursementStream();
       _startCompletedTripStream();
     } else if (userType == Users.superUser) {
       _startTripStream();
       _startCompletedTripStream();
-      _startReimbursementStream();
+      _startReceiptStream();
       _startPendingTripStream();
       _startPendingReimbursementStream();
     } else {
       _startTripStream();
-      _startReimbursementStream();
+      _startReceiptStream();
       _startCompletedTripStream();
     }
   }
@@ -157,7 +157,7 @@ class ReimbursementProvider {
   ///@param tripApprovalList - holds a list of approved trips to approved.
   ///This function gives the admin a way to approve multiple trips at once.
   void approveOrDenyTrips({List<TripApproval> tripApprovalList}) async {
-    assert(tripApprovalList.length != 0);
+    assert(tripApprovalList.isNotEmpty);
     tripApprovalList.map((trip) {
       if (trip.approved == ApprovalState.approved) {
         return trip;
@@ -273,7 +273,12 @@ class ReimbursementProvider {
 
   ///Creates a Reimbursement Stream.
   ///This is for the user.
-  void _startReimbursementStream() {
+  void _startReceiptStream() {
+    void printWrapped(String text) {
+      final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+      pattern.allMatches(text).forEach((match) => print(match.group(0)));
+    }
+
     _receiptStream = _firestore
         .collection(Collections.users)
         .document(currentUser.uid)
@@ -283,9 +288,10 @@ class ReimbursementProvider {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
-              Receipt reimbursement = Receipt.fromSnapshot(snapshot: doc);
-              receipts.add(reimbursement);
-              return reimbursement;
+              Receipt receipt = Receipt.fromSnapshot(snapshot: doc.data);
+              printWrapped("raw receipt from firebase: ${doc.data}");
+              receipts.add(receipt);
+              return receipt;
             } else {
               return null;
             }
@@ -304,7 +310,7 @@ class ReimbursementProvider {
       return data.documents
           .map((doc) {
             if (doc.data.isNotEmpty) {
-              return Receipt.fromSnapshot(snapshot: doc);
+              return Receipt.fromSnapshot(snapshot: doc.data);
             } else {
               return null;
             }
@@ -359,8 +365,8 @@ class ReimbursementProvider {
   ///Use this method to return all the reimbursements for a specific trip.
   ///When a user clicks on that trip.
   ///@return List<Receipt>
-  List<Receipt> getReimbursements({TripApproval forTrip}) {
-    if (receipts.length != null) {
+  List<Receipt> getReimbursementsForTrip({TripApproval forTrip}) {
+    if (receipts.isNotEmpty) {
       return receipts.where((receipts) => receipts.parentTrip.id == forTrip.id);
     }
     return [];

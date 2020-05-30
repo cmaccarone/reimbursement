@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 import 'package:reimbursement/providers/reimbursement_provider.dart';
-import 'package:reimbursement/screens/Request Approvals/ReviewReceiptScreen.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
+import 'package:reimbursement/screens/request_approvals/ReviewReceiptScreen.dart';
 
 class ReceiptScreen extends StatefulWidget {
   final TripApproval tripApproval;
@@ -57,12 +57,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
 
   @override
   void didChangeDependencies() {
-    _stream = Provider.of<ReimbursementProvider>(context).reimbursementStream;
+    _stream = Provider.of<ReimbursementProvider>(context).receiptStream;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("trip approval: ${widget.tripApproval.tripName}");
     return Scaffold(
       backgroundColor: kBackGroundColor,
       appBar: AppBar(
@@ -92,11 +93,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   return Text('Awaiting bids...',
                       style: TextStyle(color: Colors.white));
                 case ConnectionState.active:
-                  print(snapshot.data);
                   return Expanded(
                     child: ListView.builder(
-                        itemCount: snapshot.data.length ?? 0,
+                        itemCount: snapshot?.data?.length ?? 0,
                         itemBuilder: (context, index) {
+                          print(snapshot.data);
                           return Container(
                             padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             height: 120,
