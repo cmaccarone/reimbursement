@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reimbursement/model/tripApproval.dart';
-import 'package:reimbursement/providers/reimbursement_provider.dart';
+import 'package:reimbursement/providers/firebase_reimbursement_provider.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 
 class TripDetailScreen extends StatelessWidget {

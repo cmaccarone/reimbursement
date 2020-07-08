@@ -11,7 +11,7 @@ import 'package:reimbursement/model/databaseFields.dart';
 import 'package:reimbursement/model/receipt.dart';
 import 'package:reimbursement/model/tripApproval.dart';
 
-import 'user_provider.dart';
+import 'firebase_userData.dart';
 
 //return 3 different streams.
 //stream recieve the data,

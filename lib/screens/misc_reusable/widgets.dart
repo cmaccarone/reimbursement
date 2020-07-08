@@ -528,6 +528,7 @@ class SignInTextFields extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
+          cursorColor: Colors.white,
           keyboardType: KeyboardType,
           controller: controller,
           onChanged: onChanged,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reimbursement/providers/user_provider.dart';
+import 'package:reimbursement/providers/firebase_userData.dart';
 import 'package:reimbursement/screens/misc_reusable/constants.dart';
 import 'package:reimbursement/screens/misc_reusable/routes.dart';
 import 'package:reimbursement/screens/misc_reusable/widgets.dart';
