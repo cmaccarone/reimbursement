@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -90,7 +91,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                     style: TextStyle(color: Colors.white),
                   );
                 case ConnectionState.waiting:
-                  return Text('Awaiting bids...',
+                  return Text('Awaiting Reciepts...',
                       style: TextStyle(color: Colors.white));
                 case ConnectionState.active:
                   return Expanded(
@@ -106,13 +107,10 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                               children: <Widget>[
                                 Container(
                                   width: 120,
-                                  child: Image(
-                                    height: 120,
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(snapshot
-                                            .data[index].photoURLS[0]) ??
-                                        NetworkImage(
-                                            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMonkey_selfie_copyright_dispute&psig=AOvVaw22FEgkUgxpWN4UcY3xhtBH&ust=1586753462153000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJDpsbaL4ugCFQAAAAAdAAAAABAD"),
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        LinearProgressIndicator(),
+                                    imageUrl: snapshot.data[index].photoURLS[0],
                                   ),
                                 ),
                                 Expanded(
