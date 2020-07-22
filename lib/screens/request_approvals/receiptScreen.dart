@@ -41,6 +41,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   double totalReceiptVale;
   String picturePath;
   Stream _stream;
+  List<Receipt> receipts;
 
   void _toogleExpand() {
     setState(() {
@@ -64,7 +65,6 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("trip approval: ${widget.tripApproval.tripName}");
     return Scaffold(
       backgroundColor: kBackGroundColor,
       appBar: AppBar(
@@ -94,11 +94,19 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   return Text('Awaiting Reciepts...',
                       style: TextStyle(color: Colors.white));
                 case ConnectionState.active:
+                  receipts = snapshot.data
+                      .map((receipt) {
+                        if (receipt.parentTrip.id == widget.tripApproval.id) {
+                          return receipt;
+                        }
+                        return null;
+                      })
+                      .where((receipt) => receipt != null)
+                      .toList();
                   return Expanded(
                     child: ListView.builder(
-                        itemCount: snapshot?.data?.length ?? 0,
+                        itemCount: receipts.length ?? 0,
                         itemBuilder: (context, index) {
-                          print(snapshot.data);
                           return Container(
                             padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             height: 120,
@@ -110,7 +118,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                   child: CachedNetworkImage(
                                     placeholder: (context, url) =>
                                         LinearProgressIndicator(),
-                                    imageUrl: snapshot.data[index].photoURLS[0],
+                                    imageUrl: receipts[index].photoURLS[0],
                                   ),
                                 ),
                                 Expanded(
@@ -127,19 +135,19 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             Text(
-                                              snapshot.data[index].vendor,
+                                              receipts[index].vendor,
                                               style: kReceiptCellTitleTextStyle,
                                             ),
                                             Text(
                                               DateFormat('MMMM dd, yyyy')
-                                                  .format(snapshot
-                                                      .data[index].receiptDate)
+                                                  .format(receipts[index]
+                                                      .receiptDate)
                                                   .toString(),
                                               style:
                                                   kReceiptCellSubTitleTextStyle,
                                             ),
                                             Text(
-                                              snapshot.data[index].reimbursed
+                                              receipts[index].reimbursed
                                                   ? "Submitted"
                                                   : "Pending".toString(),
                                               style:
